@@ -17,15 +17,16 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Maida AI – Tiny Models, Big Impact">
     <meta property="og:description" content="Lightning-fast AI that runs anywhere—no GPU, no cloud.">
-    <meta property="og:image" content="{{ url_for('static', filename='og/maida-card.png', v='1') }}" alt="Maida AI Open Graph Image">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:url" content="{{ base_url }}">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Maida AI – Tiny Models, Big Impact">
     <meta name="twitter:description" content="Lightning-fast AI that runs anywhere—no GPU, no cloud.">
-    <meta name="twitter:image" content="{{ url_for('static', filename='og/maida-card.png', v='1') }}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ base_url }}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='1') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
