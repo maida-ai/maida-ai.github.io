@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maida AI – Tiny Models, Big Impact</title>
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='css/style.css', v='1') }}" as="style">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Maida AI – Tiny Models, Big Impact">
+    <meta property="og:description" content="Lightning-fast AI that runs anywhere—no GPU, no cloud.">
+    <meta property="og:image" content="{{ url_for('static', filename='og/maida-card.png', v='1') }}" alt="Maida AI Open Graph Image">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maida AI – Tiny Models, Big Impact">
+    <meta name="twitter:description" content="Lightning-fast AI that runs anywhere—no GPU, no cloud.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='og/maida-card.png', v='1') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='1') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Maida AI</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#research">Research</a>
+                <a href="#waitlist">Waitlist</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="mobile-menu" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="fade-in">Tiny Models.<br>Big Impact.</h1>
+            <p class="subtitle fade-in">Lightning-fast AI you can run anywhere—no GPU, no cloud.</p>
+            <div class="cta-buttons fade-in">
+                <a href="#waitlist" class="btn primary">Join the Waitlist</a>
+                <a href="#contact" class="btn secondary">Get in Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title slide-in">Why Tiny-First AI?</h2>
+            <div class="features">
+                <div class="feature-card slide-in">
+                    <h3>Private by default</h3>
+                    <p>No data leaves your device.</p>
+                </div>
+                <div class="feature-card slide-in">
+                    <h3>Runs on anything</h3>
+                    <p>Laptop, Pi, or CI runner.</p>
+                </div>
+                <div class="feature-card slide-in">
+                    <h3>Open & verifiable</h3>
+                    <p>Apache-2.0, reproducible builds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="research" class="research">
+        <div class="container">
+            <h2 class="section-title slide-in">Our Approach</h2>
+            <div class="research-content">
+                <div class="research-text slide-in">
+                    <p class="problem-statement">Large language models are incredible—but 8 GB downloads and cloud latency make them impractical for many teams.</p>
+                    <p>We're a team of AI researchers and engineers focused on making artificial intelligence more accessible, efficient, and privacy-preserving. Our work combines cutting-edge research in model compression, quantization, and efficient inference to create powerful yet lightweight AI systems.</p>
+                </div>
+                <div class="tech-stack slide-in">
+                    <h3>Technical Foundation</h3>
+                    <ul>
+                        <li>Sub-2 B-param language models</li>
+                        <li>4-bit & sparse quantization</li>
+                        <li>CPU-first inference kernels</li>
+                        <li>Fully reproducible pipelines</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="models">
+        <div class="container">
+            <h2 class="section-title slide-in">What's coming first</h2>
+            <div class="features">
+                <div class="feature-card slide-in">
+                    <h3>Nano-PR-Splitter</h3>
+                    <p>Auto-breaks huge pull requests into digestible reviews.</p>
+                </div>
+                <div class="feature-card slide-in">
+                    <h3>Edge-Privacy-Scanner</h3>
+                    <p>Detects PII & secrets in logs directly on mobile devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="waitlist" class="waitlist">
+        <div class="container">
+            <h2 class="section-title slide-in">Be First in Line</h2>
+            <p class="subtitle fade-in">Be first in line for private alpha & investor updates.</p>
+            <form class="waitlist-form" action="https://<mailchimp-url>" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+                <input type="email" name="EMAIL" id="mce-EMAIL" placeholder="Enter your email" required>
+                <input type="hidden" name="FNAME" id="mce-FNAME" value="">
+                <input type="hidden" name="LNAME" id="mce-LNAME" value="">
+                <button type="submit" class="btn primary">Join the Waitlist</button>
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="b_<user-id>_<list-id>" tabindex="-1" value="">
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title slide-in">Get in Touch</h2>
+            <p class="contact-text slide-in">Interested in our work? We're always open to discussing new projects, creative ideas, or opportunities to be part of our vision.</p>
+            <a href="mailto:contact@maida.ai" class="btn primary slide-in">Contact Us</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now.year }} Maida AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js', v='1') }}"></script>
+</body>
+</html>
