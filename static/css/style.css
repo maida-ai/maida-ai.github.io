@@ -385,6 +385,9 @@ footer {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .models .feature-card h3 {
@@ -488,4 +491,93 @@ footer {
     height: 2px;
     background: var(--primary-color);
     border-radius: 2px;
+}
+
+/* Timeline Badge */
+.timeline-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* GitHub Corner */
+.github-corner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    transform: rotate(-45deg) translate(0%, 0%);
+    transform-origin: 30% 250%;
+    background: var(--primary-color);
+    padding: 0.5rem 0rem;
+    display: flex;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.github-corner iframe {
+    top: 50%;
+    left: 35%;
+    bottom: 50%;
+    right: 50%;
+    position: relative;
+}
+
+/* Hide GitHub corner on mobile */
+@media (max-width: 768px) {
+    .github-corner {
+        display: none;
+    }
+}
+
+/* Remove old social proof styles */
+.social-proof,
+.github-stars,
+.backing-text {
+    display: none;
+}
+
+/* Investor Checkbox */
+.investor-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    color: var(--light-text);
+}
+
+.investor-checkbox input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 0.25rem;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    position: relative;
+    background: transparent;
+}
+
+.investor-checkbox input[type="checkbox"]:checked {
+    background: var(--primary-color);
+}
+
+.investor-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 0.875rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.investor-checkbox label {
+    cursor: pointer;
+    user-select: none;
 }

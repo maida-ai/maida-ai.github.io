@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maida AI – Tiny Models, Big Impact</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.png', v='1') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/icon.png', v='1') }}">
+    <meta name="theme-color" content="#a786f5">
+
     <!-- Preload critical assets -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
     <link rel="preload" href="{{ url_for('static', filename='css/style.css', v='1') }}" as="style">
@@ -28,6 +33,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="github-corner">
+        <iframe src="https://ghbtns.com/github-btn.html?user=maida-ai&repo=#&type=star&size=large&text=false"
+                frameborder="0"
+                scrolling="0"
+                width="230"
+                height="30"
+                title="GitHub">
+        </iframe>
+    </div>
     <nav class="navbar">
         <div class="container">
             <div class="logo">Maida AI</div>
@@ -104,10 +118,12 @@
                 <div class="feature-card slide-in">
                     <h3>Nano-PR-Splitter</h3>
                     <p>Auto-breaks huge pull requests into digestible reviews.</p>
+                    <span class="timeline-badge">Coming Q3 '25</span>
                 </div>
                 <div class="feature-card slide-in">
                     <h3>Edge-Privacy-Scanner</h3>
                     <p>Detects PII & secrets in logs directly on mobile devices.</p>
+                    <span class="timeline-badge">Coming Q3 '25</span>
                 </div>
             </div>
         </div>
@@ -117,13 +133,23 @@
         <div class="container">
             <h2 class="section-title slide-in">Be First in Line</h2>
             <p class="subtitle fade-in">Be first in line for private alpha & investor updates.</p>
-            <form class="waitlist-form" action="https://<mailchimp-url>" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+            <form class="waitlist-form"
+                  action="https://maida.us4.list-manage.com/subscribe/post?u=1f7c1b13484f63ab60580e689&amp;id=d7ce8d86a9&amp;f_id=00e8ffe0f0"
+                  method="post"
+                  id="mc-embedded-subscribe-form"
+                  name="mc-embedded-subscribe-form"
+                  target="_blank"
+                  novalidate>
                 <input type="email" name="EMAIL" id="mce-EMAIL" placeholder="Enter your email" required>
                 <input type="hidden" name="FNAME" id="mce-FNAME" value="">
                 <input type="hidden" name="LNAME" id="mce-LNAME" value="">
+                <!-- <div class="investor-checkbox">
+                    <input type="checkbox" name="INVESTOR" id="mce-INVESTOR" value="1">
+                    <label for="mce-INVESTOR">✓ I'm an investor</label>
+                </div> -->
                 <button type="submit" class="btn primary">Join the Waitlist</button>
                 <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                    <input type="text" name="b_<user-id>_<list-id>" tabindex="-1" value="">
+                    <input type="text" name="b_1f7c1b13484f63ab60580e689_d7ce8d86a9" tabindex="-1" value="">
                 </div>
             </form>
         </div>
