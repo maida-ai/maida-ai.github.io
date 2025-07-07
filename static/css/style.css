@@ -631,3 +631,85 @@ a:focus-visible, .btn:focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
+
+/* === Tiny-Agent Swarm section =========================================== */
+.agents {
+    background: var(--section-bg);
+    text-align: center;
+}
+
+/* horizontal stepper */
+.agent-steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    padding: 1rem 0;
+}
+
+.agent-steps::before {           /* dotted connector line */
+    content: '';
+    position: absolute;
+    top: calc(50% - 1px);
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: repeating-linear-gradient(
+        to right,
+        var(--primary-color) 0 8px,
+        transparent 8px 16px
+    );
+    opacity: .35;
+    pointer-events: none;
+}
+
+.step-card {
+    background: var(--card-bg);
+    padding: 2rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,.2);
+    position: relative;
+    transition: transform .3s ease;
+    border: 1px solid rgba(139,92,246,.1);
+}
+
+.step-card:hover { transform: translateY(-5px); }
+
+.step-card h3 { color: var(--primary-color); margin-bottom: .75rem; }
+
+.step-card[data-step]::before {  /* numbered bubbles */
+    content: attr(data-step);
+    position: absolute;
+    top: -1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+}
+
+/* slight stagger using inline --i value */
+.step-card {
+    animation-delay: calc(0.1s * var(--i, 0));
+}
+
+/* mobile: stack & hide connector */
+@media (max-width: 768px) {
+    .agent-steps {
+        grid-template-columns: 1fr;
+    }
+    .agent-steps::before { display: none; }
+    .step-card[data-step]::before {
+        left: 0;
+        top: .5rem;
+        transform: none;
+    }
+}
