@@ -12,7 +12,8 @@
 
     <!-- Preload critical assets -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="{{ url_for('static', filename='css/style.css', v='1') }}" as="style">
+    <link rel="preload" as="style" href="{{ url_for('static', filename='css/style.css', v='1') }}" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='1') }}"></noscript>
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Maida AI – Tiny Models, Big Impact">
@@ -28,7 +29,6 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ base_url }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='1') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,13 +46,13 @@
     <nav class="navbar">
         <div class="container">
             <div class="logo">Maida AI</div>
-            <div class="nav-links">
+            <div class="nav-links" id="primary-navigation">
                 <a href="#about">About</a>
                 <a href="#research">Research</a>
                 <a href="#waitlist">Waitlist</a>
                 <a href="#contact">Contact</a>
             </div>
-            <button class="mobile-menu" aria-label="Toggle navigation">
+            <button class="mobile-menu" aria-label="Toggle navigation" aria-controls="primary-navigation">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -170,6 +170,6 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/main.js', v='1') }}"></script>
+    <script id="main-js" src="{{ url_for('static', filename='js/main.js', v='1') }}" defer></script>
 </body>
 </html>
