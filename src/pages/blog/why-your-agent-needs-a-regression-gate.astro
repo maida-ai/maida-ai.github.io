@@ -1,0 +1,1026 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const meta = {
+  title: "Why your agent needs a regression gate, not just a debugger",
+  description:
+    "Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions — and what a CI gate does differently.",
+  date: "April 11, 2026",
+  author: "Refine AI Team",
+  tags: ["CI", "Behavioral testing", "Regression gates"],
+  readingTime: "8 min read",
+};
+---
+
+<Layout title={`${meta.title} — Refine AI Blog`} description={meta.description}>
+  <!-- ═══════════════════════════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════════════════════════════ -->
+  <header
+    id="nav"
+    class="fixed top-0 left-0 right-0 z-50 border-b border-border/60 backdrop-blur-xl bg-bg/80"
+  >
+    <nav class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div
+          class="w-7 h-7 rounded bg-green/10 border border-green/30 flex items-center justify-center group-hover:bg-green/20 transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z"
+              stroke="#00ff88"
+              stroke-width="1.2"
+              fill="none"
+              stroke-linejoin="round"></path>
+            <polyline
+              points="5.5 8 7.2 9.8 10.5 6.5"
+              stroke="#00ff88"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"></polyline>
+          </svg>
+        </div>
+        <span
+          class="font-mono font-bold text-sm text-text-primary tracking-tight"
+          >Refine AI</span
+        >
+      </a>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a
+          href="/#how-it-works"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >How it works</a
+        >
+        <a
+          href="/#checks"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Checks</a
+        >
+        <a
+          href="/pricing"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Pricing</a
+        >
+        <a
+          href="/blog"
+          class="text-sm text-text-primary transition-colors hover-underline"
+          >Blog</a
+        >
+        <a
+          href="/about"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >About</a
+        >
+        <a
+          href="/docs"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Docs</a
+        >
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          href="https://github.com/agentdbg/agentdbg"
+          class="hidden sm:flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            ></path>
+          </svg>
+          GitHub
+        </a>
+        <a
+          href="https://zcal.co/refineai/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border-light text-text-secondary text-sm font-semibold hover:text-text-primary hover:border-green/30 transition-colors"
+        >
+          <span class="sm:hidden">Demo</span>
+          <span class="hidden sm:inline">Book a demo</span>
+        </a>
+        <a
+          href="/#get-started"
+          class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-green text-bg text-sm font-semibold hover:bg-green-dim transition-colors"
+        >
+          Get started free
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       POST HEADER
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="pt-28 pb-12 relative overflow-hidden">
+    <div
+      class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"
+    >
+    </div>
+    <div class="absolute inset-0 bg-green-radial pointer-events-none"></div>
+
+    <div class="relative max-w-3xl mx-auto px-6">
+      <div class="reveal">
+        <!-- Breadcrumb -->
+        <div
+          class="flex items-center gap-2 text-xs font-mono text-text-muted mb-6"
+        >
+          <a href="/blog" class="hover:text-green transition-colors">Blog</a>
+          <span>/</span>
+          <span class="text-text-secondary truncate"
+            >Why your agent needs a regression gate</span
+          >
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mb-5">
+          {
+            meta.tags.map((tag) => (
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono bg-green/10 text-green border border-green/20">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+
+        <h1
+          class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight mb-6"
+        >
+          Why your agent needs a<br class="hidden sm:block" />
+          <span class="text-gradient">regression gate,</span> not just a debugger
+        </h1>
+
+        <div class="flex items-center gap-4 text-sm text-text-muted font-mono">
+          <span>{meta.author}</span>
+          <span class="text-border">·</span>
+          <span>{meta.date}</span>
+          <span class="text-border">·</span>
+          <span>{meta.readingTime}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ARTICLE BODY
+  ═══════════════════════════════════════════════════════════════ -->
+  <article class="max-w-3xl mx-auto px-6 pb-24">
+    <!-- Opening hook -->
+    <div class="reveal prose-block mb-14">
+      <p class="text-lg text-text-secondary leading-relaxed mb-5">
+        It's a Tuesday afternoon. An engineer on your team ships a prompt update
+        — nothing dramatic, just tightening the system prompt wording and
+        swapping the retrieval model for one with a larger context window. The
+        PR description says "minor quality improvements." The eval suite runs.
+        Output quality: pass. Correctness on the golden dataset: pass. CI is
+        green. The PR merges.
+      </p>
+      <p class="text-lg text-text-secondary leading-relaxed mb-5">
+        Two days later, a user files a support ticket. "The agent seems really
+        slow." You dig in. Nothing looks obviously broken — responses are
+        accurate. Then you pull the trace. Your agent is now taking <strong
+          class="text-text-primary">22 steps</strong
+        > to complete tasks that previously took 6. Token cost has tripled. Latency
+        is up 4x at P95. A tool that should only fire in specific conditions is being
+        called on every single run.
+      </p>
+      <p class="text-lg text-text-secondary leading-relaxed">
+        Everything <em>looked</em> correct on the surface. Your evals said so. And
+        yet: a structural regression slipped through, lived in production for two
+        days, and was only found because a frustrated user happened to notice the
+        slowness.
+      </p>
+      <p class="text-lg text-text-secondary leading-relaxed mt-5">
+        This is not a hypothetical. This is the normal failure mode for agent
+        development in 2026 — and it's happening on teams that are doing
+        everything else right.
+      </p>
+    </div>
+
+    <!-- Section: The problem with debuggers alone -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          The problem with debuggers alone
+        </h2>
+      </div>
+      <div class="space-y-4 text-text-secondary leading-relaxed">
+        <p>
+          Debuggers are excellent tools. Refine AI ships one, and we mean it
+          when we say that. The trace viewer, step-by-step replay, diff view
+          between runs — these are genuinely useful for understanding what your
+          agent did.
+        </p>
+        <p>
+          But a debugger is a <strong class="text-text-primary">reactive</strong
+          > tool. You open it when you already know something is wrong. By that point,
+          the regression is already in production. The damage — in user experience,
+          in cost, in reliability — has already happened.
+        </p>
+        <p>
+          The mental model of "I'll use the debugger to catch problems" is like
+          saying "I'll investigate the crash after the car hits the wall." It's
+          better than nothing. But investigation after the fact is not
+          prevention. A debugger answers the question: <em
+            >"What went wrong?"</em
+          > It cannot answer: <em>"Will this PR make something go wrong?"</em>
+        </p>
+        <p>
+          That's a fundamentally different question. And answering it requires a
+          fundamentally different kind of tooling.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section: Why eval platforms don't close the gap -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          Why eval platforms don't close the gap
+        </h2>
+      </div>
+      <div class="space-y-4 text-text-secondary leading-relaxed">
+        <p>
+          Braintrust, LangSmith, Weave, and similar platforms do solve a real
+          problem. If you want to know whether your agent's <em>outputs</em> are correct,
+          these tools are purpose-built for that. They're genuinely useful for evaluating
+          answer quality, factual accuracy, rubric compliance, format correctness.
+        </p>
+        <p>
+          But there's a precision problem: they answer the question <em
+            >"Is my agent correct?"</em
+          > — not <em>"Did my agent's execution behavior change?"</em> These are different
+          questions. And the second question is the one that catches the failure mode
+          described above.
+        </p>
+        <p>
+          There are three structural reasons why output eval platforms don't
+          catch behavioral regressions:
+        </p>
+        <ul class="space-y-3 pl-4">
+          <li class="flex items-start gap-3">
+            <span class="text-green font-bold mt-0.5 shrink-0">1.</span>
+            <span
+              ><strong class="text-text-primary"
+                >They require ground truth.</strong
+              > Eval platforms need golden datasets, rubrics, or LLM-as-judge to score
+              outputs. Building and maintaining this is significant overhead. Worse,
+              for many agent tasks, correct output is not uniquely defined — multiple
+              different execution paths can produce correct final answers.</span
+            >
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green font-bold mt-0.5 shrink-0">2.</span>
+            <span
+              ><strong class="text-text-primary"
+                >LLM-as-judge adds latency and cost.</strong
+              > Using a model to evaluate another model's output adds at minimum one
+              LLM call to every CI run. For teams running hundreds of test cases across
+              every PR, this adds up fast — both in time and in API spend.</span
+            >
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green font-bold mt-0.5 shrink-0">3.</span>
+            <span
+              ><strong class="text-text-primary"
+                >They're blind to structural change.</strong
+              > An eval platform has no concept of "this agent used to take 6 steps
+              and now takes 22." It sees the final output. If the final output is
+              still correct by the rubric, the eval passes — even if the path to get
+              there is completely different and three times more expensive.</span
+            >
+          </li>
+        </ul>
+        <p>
+          The gap isn't about eval platforms being bad. It's about them
+          answering the wrong question for this class of failure.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section: Behavioral regressions are invisible to output eval -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          Behavioral regressions are invisible to output eval
+        </h2>
+      </div>
+      <div class="space-y-5 text-text-secondary leading-relaxed">
+        <p>
+          Let's make this concrete with three real scenarios — the kind that
+          happen on any team shipping agents at pace.
+        </p>
+
+        <!-- Example 1 -->
+        <div class="rounded-lg border border-border bg-surface p-5">
+          <div
+            class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
+          >
+            Scenario 1 — Model swap
+          </div>
+          <p class="text-text-primary font-medium mb-2">
+            Step count triples after upgrading the base model. Output is
+            correct.
+          </p>
+          <p class="text-sm">
+            Team swaps <code class="inline-code">gpt-4o-2024-08-06</code> for the
+            latest checkpoint. On the golden dataset, output quality is equal or slightly
+            better. Eval suite: green. What the eval doesn't see: the new model is
+            more verbose in its reasoning chain. The agent now re-queries the knowledge
+            base 4 times per task instead of 1.5. Step count goes from 8 to 24. Cost
+            per run triples. Nothing in the output diff reveals this.
+          </p>
+        </div>
+
+        <!-- Example 2 -->
+        <div class="rounded-lg border border-border bg-surface p-5">
+          <div
+            class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
+          >
+            Scenario 2 — Integration side effect
+          </div>
+          <p class="text-text-primary font-medium mb-2">
+            Adding Salesforce integration causes the agent to call it on every
+            request. Output unchanged.
+          </p>
+          <p class="text-sm">
+            A developer adds a Salesforce tool and updates the system prompt to
+            describe it. The intent is for the tool to be used only when the
+            user explicitly asks about CRM data. But a subtle wording choice
+            makes the agent treat it as a default enrichment step. The final
+            answer to every query is still correct — the CRM data is just
+            appended silently and ignored. Tool call count doubles. Cost per run
+            is now 40% higher. Your eval rubric doesn't check tool usage
+            patterns. The PR merges.
+          </p>
+        </div>
+
+        <!-- Example 3 -->
+        <div class="rounded-lg border border-border bg-surface p-5">
+          <div
+            class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
+          >
+            Scenario 3 — Latency cliff
+          </div>
+          <p class="text-text-primary font-medium mb-2">
+            Latency goes from 3s to 14s after a prompt change. Evals pass.
+          </p>
+          <p class="text-sm">
+            A rewording of the system prompt causes the agent to consistently
+            attempt a longer reasoning chain before invoking tools. Mean latency
+            stays similar in fast cases. But at P99, response time goes from
+            3.2s to 14.8s. The eval suite measures output quality, not latency
+            distribution. Users on slow queries start timing out. SLAs are
+            breached. The eval suite: never noticed.
+          </p>
+        </div>
+
+        <p>
+          In all three cases: output quality evaluation passes. The regression
+          is real. The regression is in production. And no eval platform was
+          designed to catch it — because the thing that changed wasn't
+          correctness, it was <em>execution structure</em>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section: The CI gate mental model -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          The CI gate mental model
+        </h2>
+      </div>
+      <div class="space-y-4 text-text-secondary leading-relaxed">
+        <p>
+          The right mental model for behavioral regression gating isn't "better
+          evals." It's closer to <strong class="text-text-primary"
+            >performance testing</strong
+          >.
+        </p>
+        <p>
+          Think about how PageSpeed Insights works. It doesn't care whether your
+          content is good. It doesn't evaluate the quality of your writing or
+          the correctness of your data. It checks a set of structural metrics —
+          First Contentful Paint, Cumulative Layout Shift, Total Blocking Time —
+          and fails you if they cross a threshold. The invariant is: <em
+            >"These metrics must stay within acceptable bounds across changes."</em
+          >
+        </p>
+        <p>
+          That's exactly the right mental model for agent behavior. The question
+          isn't "is the output correct?" — your eval suite handles that. The
+          question is: <em
+            >"Did the execution profile change in a way that violates our
+            invariants?"</em
+          >
+        </p>
+        <p>
+          If your agent ran in 6 steps on main, and now it runs in 22 steps on
+          this branch — that's a signal worth gating on, regardless of whether
+          the output looks good. If a new tool appears in the execution path
+          that was never there before, that needs human review before it ships.
+          If cost per run jumped 3x, the PR should be blocked until someone
+          signs off.
+        </p>
+        <p>
+          These aren't quality metrics. They're <strong
+            class="text-text-primary">structural invariants</strong
+          >. And CI is the right place to enforce them — automatically, on every
+          PR, before anything merges.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section: What a regression gate checks -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          What a regression gate checks
+        </h2>
+      </div>
+      <p class="text-text-secondary leading-relaxed mb-6">
+        Refine AI runs 8 behavioral check categories on every PR. Each one is
+        deterministic — no LLM calls, no probabilistic scoring, no ground truth
+        required.
+      </p>
+
+      <div class="space-y-3">
+        {
+          [
+            {
+              name: "step_count",
+              description:
+                "Total reasoning steps the agent took to complete the task. A meaningful increase often means a model change caused more verbose reasoning, or a prompt change caused the agent to second-guess itself.",
+            },
+            {
+              name: "tool_calls",
+              description:
+                "Number of tool invocations across the run. Sudden increases indicate unintended tool use patterns. Decreases might indicate a regression where the agent stopped using a critical tool.",
+            },
+            {
+              name: "unexpected_tool_path",
+              description:
+                'Flags any tool that appears in the new run\'s execution trace but was absent from the baseline. This catches "the agent started calling Salesforce on every request" before it ships.',
+            },
+            {
+              name: "loop_risk",
+              description:
+                "Detects repeated identical tool calls within a single run — a strong signal that the agent is stuck in a loop. Without a gate, looping agents can run for minutes and cost dollars per request.",
+            },
+            {
+              name: "guardrail_events",
+              description:
+                "Counts how many times the agent triggered a safety or policy boundary. A spike here often means a prompt change inadvertently caused the agent to explore restricted territory more often.",
+            },
+            {
+              name: "cost_estimate",
+              description:
+                "Estimated token cost per run, calculated from the trace. Threshold-based: if cost increases more than N% over baseline, the PR is blocked. No surprises on your API bill.",
+            },
+            {
+              name: "latency",
+              description:
+                "Wall-clock time per run, compared against baseline. Reports both mean and P95/P99 so latency tail regressions don't hide behind a healthy mean.",
+            },
+            {
+              name: "stop_condition",
+              description:
+                "Verifies the agent reached a clean stop in all test cases. If a code change causes the agent to hit max steps or fail to return a final answer, this check catches it.",
+            },
+          ].map((check) => (
+            <div class="flex items-start gap-4 p-4 rounded-lg border border-border bg-surface hover:border-green/20 transition-colors">
+              <code class="shrink-0 text-xs font-mono text-green bg-green/10 border border-green/20 px-2 py-1 rounded mt-0.5 whitespace-nowrap">
+                {check.name}
+              </code>
+              <p class="text-sm text-text-secondary leading-relaxed">
+                {check.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Section: How to add one to your CI in 5 minutes -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          How to add one to your CI in 5 minutes
+        </h2>
+      </div>
+      <div class="space-y-6 text-text-secondary leading-relaxed">
+        <p>
+          Setup is three steps: instrument your agent, capture a baseline, add
+          the GitHub Action.
+        </p>
+
+        <!-- Step 1 -->
+        <div>
+          <p class="text-text-primary font-semibold mb-3">
+            Step 1 — Instrument with <code class="inline-code">@trace</code>
+          </p>
+          <div
+            class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
+          >
+            <div
+              class="terminal-bar flex items-center gap-1.5 px-4 py-2.5 border-b border-[#1e1e1e]"
+            >
+              <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+              <span class="ml-2 text-xs text-[#555555] font-mono">agent.py</span
+              >
+            </div>
+            <pre
+              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">from</span> <span style="color: rgba(0,255,136,0.7)">agentdbg</span> <span class="text-[#555555]">import</span> <span style="color: rgba(0,255,136,0.9)">trace</span>
+
+<span style="color: rgba(0,255,136,0.5)">@trace</span>
+<span class="text-[#555555]">def</span> <span style="color: rgba(0,255,136,0.9)">run_agent</span>(user_input: str) <span class="text-[#555555]">-></span> str:
+    <span class="text-[#555555]"># your existing agent code — no other changes needed</span>
+    result = agent.invoke(&#123;"input": user_input&#125;)
+    <span class="text-[#555555]">return</span> result[<span style="color: rgba(0,255,136,0.6)">"output"</span>]</code></pre>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div>
+          <p class="text-text-primary font-semibold mb-3">
+            Step 2 — Capture a baseline from main
+          </p>
+          <div
+            class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
+          >
+            <div
+              class="terminal-bar flex items-center gap-1.5 px-4 py-2.5 border-b border-[#1e1e1e]"
+            >
+              <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+              <span class="ml-2 text-xs text-[#555555] font-mono">terminal</span
+              >
+            </div>
+            <pre
+              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$</span> <span style="color: rgba(0,255,136,0.9)">agentdbg baseline capture</span> <span class="text-[#555555]">--suite tests/agent_suite.py</span>
+
+<span class="text-[#555555]">Running 12 test cases against current branch...</span>
+<span style="color: rgba(0,255,136,0.7)">✓</span>  Baseline captured: <span style="color: rgba(0,255,136,0.9)">main@a3f72c1</span>
+<span class="text-[#555555]">    step_count p50: 6    p95: 9</span>
+<span class="text-[#555555]">    tool_calls p50: 4    p95: 6</span>
+<span class="text-[#555555]">    cost_est   p50: $0.011</span>
+<span class="text-[#555555]">    latency    p50: 2.8s  p95: 4.1s</span>
+<span style="color: rgba(0,255,136,0.7)">✓</span>  Saved to agentdbg.dev/baselines/your-repo</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div>
+        <p class="text-text-primary font-semibold mb-3">
+          Step 3 — Add the GitHub Action
+        </p>
+        <div
+          class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
+        >
+          <div
+            class="terminal-bar flex items-center gap-1.5 px-4 py-2.5 border-b border-[#1e1e1e]"
+          >
+            <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+            <span class="ml-2 text-xs text-[#555555] font-mono"
+              >.github/workflows/agentdbg.yml</span
+            >
+          </div>
+          <pre
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span style="color: rgba(0,255,136,0.7)">name</span><span class="text-[#555555]">:</span> Refine AI behavioral gate
+<span style="color: rgba(0,255,136,0.7)">on</span><span class="text-[#555555]">:</span> [pull_request]
+
+<span style="color: rgba(0,255,136,0.7)">jobs</span><span class="text-[#555555]">:</span>
+  <span style="color: rgba(0,255,136,0.7)">agentdbg</span><span class="text-[#555555]">:</span>
+    <span style="color: rgba(0,255,136,0.7)">runs-on</span><span class="text-[#555555]">:</span> ubuntu-latest
+    <span style="color: rgba(0,255,136,0.7)">steps</span><span class="text-[#555555]">:</span>
+      <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> actions/checkout@v4
+      <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> agentdbg/action@v1
+        <span style="color: rgba(0,255,136,0.7)">with</span><span class="text-[#555555]">:</span>
+          <span style="color: rgba(0,255,136,0.7)">api-key</span><span class="text-[#555555]">:</span> <span class="text-[#555555]">$&#123;&#123; secrets.AGENTDBG_API_KEY &#125;&#125;</span>
+          <span style="color: rgba(0,255,136,0.7)">suite</span><span class="text-[#555555]">:</span> tests/agent_suite.py
+          <span style="color: rgba(0,255,136,0.7)">baseline</span><span class="text-[#555555]">:</span> main</code></pre>
+        </div>
+      </div>
+
+      <!-- Failed PR output -->
+      <div>
+        <p class="text-text-primary font-semibold mb-3">
+          What a failed PR check looks like
+        </p>
+        <div
+          class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
+        >
+          <div
+            class="terminal-bar flex items-center justify-between px-4 py-2.5 border-b border-[#1e1e1e]"
+          >
+            <div class="flex items-center gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+            </div>
+            <span class="text-xs text-[#555555] font-mono"
+              >Refine AI CI · PR #847 · feat/new-retrieval-model</span
+            >
+            <div class="w-16"></div>
+          </div>
+          <pre
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ agentdbg assert --baseline main --compare HEAD</span>
+
+<span style="color: rgba(255,68,68,0.9)">✗</span>  step_count       <span class="text-[#555555]">6 →</span> <span style="color: rgba(255,68,68,0.9)">22</span>   <span class="text-[#555555]">(+267%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  tool_calls       <span class="text-[#555555]">4 →</span> <span style="color: rgba(255,68,68,0.9)">19</span>   <span class="text-[#555555]">(+375%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  unexpected_tool  <span style="color: rgba(255,170,0,0.9)">salesforce_api</span> <span class="text-[#555555]">(never seen before)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  cost_estimate    <span class="text-[#555555]">$0.012 →</span> <span style="color: rgba(255,68,68,0.9)">$0.041</span>  <span class="text-[#555555]">(+242%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(0,255,136,0.7)">✓</span>  loop_risk        <span class="text-[#555555]">none detected</span>          <span style="color: rgba(0,255,136,0.9)">PASS</span>
+<span style="color: rgba(0,255,136,0.7)">✓</span>  stop_condition   <span class="text-[#555555]">reached in all cases</span>   <span style="color: rgba(0,255,136,0.9)">PASS</span>
+
+<span style="color: rgba(255,68,68,0.9)">❌  4 checks failed · PR blocked</span>
+<span class="text-[#555555]">   Full trace diff: agentdbg.com/runs/pr-847</span></code></pre>
+        </div>
+      </div>
+
+      <p>
+        The PR is blocked. The engineer sees exactly which checks failed and by
+        how much. The trace diff link shows a step-by-step comparison between
+        the baseline run and the PR run. They can investigate, fix, and re-push
+        — with the gate enforcing the bar on every iteration.
+      </p>
+    </div>
+    <!-- Closing -->
+    <div class="reveal mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
+          The debugger and the gate work together
+        </h2>
+      </div>
+      <div class="space-y-4 text-text-secondary leading-relaxed">
+        <p>
+          The point of this post isn't to say "stop using debuggers" or "stop
+          using eval platforms." Both are useful. The debugger is indispensable
+          for investigation. Eval platforms are the right tool for measuring
+          output quality.
+        </p>
+        <p>
+          The point is that there's a third layer that most teams are missing:
+          something that sits in CI, runs on every PR, and checks whether the <em
+            >behavioral structure</em
+          > of your agent has changed in a way that violates your invariants — before
+          it ships.
+        </p>
+        <p>
+          The debugger becomes the investigation layer. The gate becomes the
+          prevention layer. They're complementary, not competing. When the gate
+          fires, you open the debugger to find out why. When the gate passes,
+          you can merge with confidence knowing that behavioral structure is
+          preserved.
+        </p>
+        <p>
+          You don't have to choose between "we move fast and hope nothing
+          breaks" and "we run slow eval suites on every PR." There's a third
+          path: deterministic behavioral checks in CI that run in seconds, catch
+          structural regressions before they merge, and give engineers a clear
+          signal when something needs investigation.
+        </p>
+        <p class="text-text-primary font-medium">
+          That's what a regression gate does. And it's something your agents
+          need whether you're using one today or not.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA Box -->
+    <div class="reveal mb-14 rounded-xl border border-green/30 bg-green/5 p-8">
+      <div class="flex items-start gap-4">
+        <div
+          class="w-10 h-10 rounded-lg bg-green/10 border border-green/30 flex items-center justify-center shrink-0 mt-0.5"
+        >
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="1.2"
+              fill="none"
+              stroke-linejoin="round"></path>
+            <polyline
+              points="5.5 8 7.2 9.8 10.5 6.5"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"></polyline>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-primary mb-2">
+            Try Refine AI on your next PR
+          </h3>
+          <p class="text-text-secondary text-sm leading-relaxed mb-5">
+            Free to start. No LLM calls in your critical path. 5-minute setup
+            via GitHub Action. Catches step count explosions, unexpected tool
+            calls, loop risk, cost spikes, and latency regressions — before they
+            merge.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/#get-started"
+              class="btn-glow inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-green text-bg text-sm font-bold hover:bg-green-dim transition-all"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                ></path>
+              </svg>
+              Add to GitHub Actions
+            </a>
+            <a
+              href="/docs"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-green/30 text-green text-sm font-medium hover:bg-green/10 transition-all"
+            >
+              Read the docs
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post footer: share + back link -->
+    <div
+      class="reveal border-t border-border pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6"
+    >
+      <a
+        href="/blog"
+        class="flex items-center gap-2 text-sm text-text-secondary hover:text-green transition-colors font-mono"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M19 12H5M12 5l-7 7 7 7"></path>
+        </svg>
+        More posts
+      </a>
+
+      <div class="flex items-center gap-1 text-xs text-text-muted font-mono">
+        <span class="mr-2">Share:</span>
+        <a
+          href="https://twitter.com/intent/tweet?text=Why+your+agent+needs+a+regression+gate%2C+not+just+a+debugger&url=https%3A%2F%2Fagentdbg.dev%2Fblog%2Fwhy-your-agent-needs-a-regression-gate&via=agent_dbg"
+          target="_blank"
+          rel="noopener"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-text-secondary hover:text-text-primary hover:border-green/30 transition-all"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
+            ><path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            ></path></svg
+          >
+          Share on X
+        </a>
+        <button
+          id="copy-link-btn"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-text-secondary hover:text-text-primary hover:border-green/30 transition-all"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><rect x="9" y="9" width="13" height="13" rx="2"></rect><path
+              d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+            ></path></svg
+          >
+          <span id="copy-link-label">Copy link</span>
+        </button>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════════ -->
+  <footer class="border-t border-border py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <div class="md:col-span-1">
+          <a href="/" class="flex items-center gap-2.5 mb-4 group">
+            <div
+              class="w-7 h-7 rounded bg-green/10 border border-green/30 flex items-center justify-center"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z"
+                  stroke="#00ff88"
+                  stroke-width="1.2"
+                  fill="none"
+                  stroke-linejoin="round"></path>
+                <polyline
+                  points="5.5 8 7.2 9.8 10.5 6.5"
+                  stroke="#00ff88"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></polyline>
+              </svg>
+            </div>
+            <span class="font-mono font-bold text-sm text-text-primary"
+              >Refine AI</span
+            >
+          </a>
+          <p class="text-text-muted text-sm leading-relaxed mb-4">
+            The behavioral regression gate for AI agents.
+          </p>
+          <div class="flex items-center gap-3">
+            <a
+              href="https://github.com/agentdbg/agentdbg"
+              class="text-text-muted hover:text-text-primary transition-colors"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                ><path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                ></path></svg
+              >
+            </a>
+            <a
+              href="https://x.com/agent_dbg"
+              class="text-text-muted hover:text-text-primary transition-colors"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                ><path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                ></path></svg
+              >
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">
+            Product
+          </div>
+          <ul class="space-y-2.5">
+            {
+              [
+                { label: "How it works", href: "/#how-it-works" },
+                { label: "Behavioral checks", href: "/#checks" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "Blog", href: "/blog" },
+                { label: "About", href: "/about" },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">Docs</div>
+          <ul class="space-y-2.5">
+            {
+              [
+                {
+                  label: "Quickstart",
+                  href: "/docs/quickstart",
+                },
+                { label: "Documentation", href: "/docs" },
+                { label: "GitHub Action", href: "https://github.com/agentdbg" },
+                {
+                  label: "Repository",
+                  href: "https://github.com/agentdbg/agentdbg",
+                },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">
+            Company
+          </div>
+          <ul class="space-y-2.5">
+            {
+              [
+                { label: "Contact", href: "mailto:founders@refinehq.ai" },
+                {
+                  label: "Security",
+                  href: "https://github.com/agentdbg/agentdbg/blob/main/SECURITY.md",
+                },
+                {
+                  label: "Changelog",
+                  href: "https://github.com/agentdbg/agentdbg/releases",
+                },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <p class="text-text-muted text-xs">© 2026 Refine AI.</p>
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <div class="w-1.5 h-1.5 rounded-full bg-green animate-pulse-slow">
+          </div>
+          <span class="text-text-muted">All systems operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  .inline-code {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.85em;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    background: rgb(var(--green-rgb) / 0.08);
+    color: rgb(var(--green-rgb));
+    border: 1px solid rgb(var(--green-rgb) / 0.15);
+  }
+</style>
+
+<script>
+  const copyBtn = document.getElementById("copy-link-btn");
+  const copyLabel = document.getElementById("copy-link-label");
+  if (copyBtn && copyLabel) {
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        copyLabel.textContent = "Copied!";
+        setTimeout(() => {
+          copyLabel.textContent = "Copy link";
+        }, 2000);
+      } catch {
+        copyLabel.textContent = "Copy link";
+      }
+    });
+  }
+</script>

@@ -1,0 +1,171 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+const competitors = [
+  { name: "Braintrust", slug: "braintrust", desc: "Prompt playground and LLM eval for product teams", category: "Eval Platform" },
+  { name: "LangSmith", slug: "langsmith", desc: "LangChain's native tracing and eval platform", category: "Observability" },
+  { name: "Confident AI", slug: "confident-ai", desc: "Code-first LLM testing with DeepEval metrics", category: "Eval Framework" },
+  { name: "Arize AI", slug: "arize-ai", desc: "Enterprise ML and LLM observability platform", category: "Observability" },
+  { name: "HoneyHive", slug: "honeyhive", desc: "LLM evaluation and monitoring with human feedback", category: "Eval Platform" },
+  { name: "Galileo", slug: "galileo", desc: "Hallucination detection and LLM reliability platform", category: "Eval Platform" },
+  { name: "Maxim AI", slug: "maxim-ai", desc: "LLM testing platform with structured test suites", category: "Eval Platform" },
+  { name: "Patronus AI", slug: "patronus-ai", desc: "Automated red-teaming and safety evaluation", category: "Eval Platform" },
+  { name: "Cascade", slug: "cascade", desc: "Scenario-based agent testing and regression detection", category: "Agent Testing" },
+  { name: "Respan", slug: "respan", desc: "Agent debugging and run replay platform", category: "Observability" },
+  { name: "Langfuse", slug: "langfuse", desc: "Open source LLM observability and tracing", category: "Observability" },
+  { name: "Helicone", slug: "helicone", desc: "LLM proxy with cost tracking and request logging", category: "Observability" },
+];
+
+const criteria = [
+  {
+    icon: `<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>`,
+    title: "CI/CD enforcement",
+    desc: "Does it automatically fail the PR when behavior regresses? A dashboard you have to remember to check is not enforcement.",
+  },
+  {
+    icon: `<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>`,
+    title: "Deterministic checks",
+    desc: "LLM judges introduce flakiness: the same code can pass today and fail tomorrow. Structural checks (step count, tool calls) are either true or false.",
+  },
+  {
+    icon: `<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>`,
+    title: "Framework-agnostic",
+    desc: "Your agent stack will change. A CI gate that only works with one framework is a gate you'll eventually rip out.",
+  },
+  {
+    icon: `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
+    title: "Developer experience",
+    desc: "A tool that takes weeks to configure won't get used. Look for 5-minute setup, YAML configuration, and zero infrastructure to maintain.",
+  },
+];
+---
+
+<Layout
+  title="Refine AI Alternatives — Compare AI Agent Testing Tools"
+  description="Evaluating Refine AI alternatives? Compare behavioral CI enforcement vs dashboard-only tools. See how Refine AI gates PRs with deterministic checks — no LLM judge required."
+>
+  <!-- NAV -->
+  <header id="nav" class="fixed top-0 left-0 right-0 z-50 border-b border-border/60 backdrop-blur-xl bg-bg/80">
+    <nav class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-7 h-7 rounded bg-green/10 border border-green/30 flex items-center justify-center group-hover:bg-green/20 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z" stroke="#00ff88" stroke-width="1.2" fill="none" stroke-linejoin="round"></path>
+            <polyline points="5.5 8 7.2 9.8 10.5 6.5" stroke="#00ff88" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          </svg>
+        </div>
+        <span class="font-mono font-bold text-sm text-text-primary tracking-tight">Refine AI</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/#how-it-works" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">How it works</a>
+        <a href="/#checks" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">Checks</a>
+        <a href="/pricing" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">Pricing</a>
+        <a href="/blog" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">Blog</a>
+        <a href="/about" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">About</a>
+        <a href="/docs" class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline">Docs</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/agentdbg/agentdbg" class="hidden sm:flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+          GitHub
+        </a>
+        <a href="https://zcal.co/refineai/30min" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border-light text-text-secondary text-sm font-semibold hover:text-text-primary hover:border-green/30 transition-colors">
+          <span class="sm:hidden">Demo</span>
+          <span class="hidden sm:inline">Book a demo</span>
+        </a>
+        <a href="/#get-started" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-green text-bg text-sm font-semibold hover:bg-green-dim transition-colors">Get started free</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-14">
+    <!-- HERO -->
+    <section class="relative pt-20 pb-16 overflow-hidden">
+      <div class="absolute inset-0 bg-green-radial pointer-events-none"></div>
+      <div class="relative max-w-6xl mx-auto px-6 text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green/20 bg-green/5 text-green text-xs font-mono mb-8">
+          Comparing AI agent tools
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-6">
+          Evaluating AI agent<br /><span class="text-gradient">testing tools?</span>
+        </h1>
+        <p class="text-text-secondary text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+          Most tools show you dashboards. Refine AI fails your PR.
+          There's a meaningful difference between observing a regression and preventing one from shipping.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="/#get-started" class="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-green text-bg text-base font-bold hover:bg-green-dim transition-all">
+            Get started free
+          </a>
+          <a href="/docs" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30 transition-all text-base font-medium">
+            View docs →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT TO LOOK FOR -->
+    <section class="py-20 reveal">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-black tracking-tight mb-4">What to look for in an AI agent testing tool</h2>
+          <p class="text-text-secondary max-w-xl mx-auto">Four criteria that separate useful tools from ones that create false confidence.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {criteria.map((c) => (
+            <div class="bg-surface border border-border rounded-xl p-6">
+              <div class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-4">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon}></svg>
+              </div>
+              <h3 class="font-bold text-text-primary mb-2">{c.title}</h3>
+              <p class="text-text-secondary text-sm leading-relaxed">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPETITOR GRID -->
+    <section class="py-20 reveal">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-black tracking-tight mb-4">Compare Refine AI to alternatives</h2>
+          <p class="text-text-secondary max-w-xl mx-auto">Detailed comparisons covering CI enforcement, evaluation approach, pricing, and who each tool is actually built for.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {competitors.map((c) => (
+            <a href={`/alternatives/${c.slug}`} class="group bg-surface border border-border hover:border-green/30 rounded-xl p-6 transition-all hover:shadow-green">
+              <div class="flex items-start justify-between mb-3">
+                <span class="font-mono font-bold text-text-primary group-hover:text-green transition-colors">{c.name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full border border-border-light text-text-muted font-mono">{c.category}</span>
+              </div>
+              <p class="text-text-secondary text-sm leading-relaxed mb-4">{c.desc}</p>
+              <span class="text-green text-sm font-medium group-hover:underline">Compare →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="get-started" class="py-24 reveal">
+      <div class="max-w-3xl mx-auto px-6 text-center">
+        <div class="bg-surface border border-green/20 rounded-2xl p-12 shadow-green-lg">
+          <h2 class="text-3xl font-black tracking-tight mb-4">Stop debugging regressions manually</h2>
+          <p class="text-text-secondary text-lg mb-8">Add the GitHub Action. Define your thresholds. The PR fails automatically when your agent regresses.</p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://github.com/agentdbg/agentdbg" class="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-green text-bg text-base font-bold hover:bg-green-dim transition-all">
+              Add to GitHub Actions
+            </a>
+            <a href="/docs" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-border-light text-text-secondary hover:text-text-primary transition-all text-base font-medium">
+              Read the docs →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

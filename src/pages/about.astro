@@ -1,0 +1,623 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="About — Refine AI"
+  description="Refine AI is the behavioral regression gate for AI agents. We're building the PR gate that catches broken agent behavior before it reaches production."
+>
+  <!-- ═══════════════════════════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════════════════════════ -->
+  <header
+    id="nav"
+    class="fixed top-0 left-0 right-0 z-50 border-b border-border/60 backdrop-blur-xl bg-bg/80"
+  >
+    <nav class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div
+          class="w-7 h-7 rounded bg-green/10 border border-green/30 flex items-center justify-center group-hover:bg-green/20 transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z"
+              stroke="#00ff88"
+              stroke-width="1.2"
+              fill="none"
+              stroke-linejoin="round"></path>
+            <polyline
+              points="5.5 8 7.2 9.8 10.5 6.5"
+              stroke="#00ff88"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"></polyline>
+          </svg>
+        </div>
+        <span
+          class="font-mono font-bold text-sm text-text-primary tracking-tight"
+          >Refine AI</span
+        >
+      </a>
+
+      <!-- Center links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a
+          href="/#how-it-works"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >How it works</a
+        >
+        <a
+          href="/#checks"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Checks</a
+        >
+        <a
+          href="/pricing"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Pricing</a
+        >
+        <a
+          href="/blog"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Blog</a
+        >
+        <a
+          href="/about"
+          class="text-sm text-text-primary transition-colors hover-underline"
+          >About</a
+        >
+        <a
+          href="/docs"
+          class="text-sm text-text-secondary hover:text-text-primary transition-colors hover-underline"
+          >Docs</a
+        >
+      </div>
+
+      <!-- CTA -->
+      <div class="flex items-center gap-3">
+        <a
+          href="https://github.com/agentdbg/agentdbg"
+          class="hidden sm:flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            ></path>
+          </svg>
+          GitHub
+        </a>
+        <a
+          href="https://zcal.co/refineai/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border-light text-text-secondary text-sm font-semibold hover:text-text-primary hover:border-green/30 transition-colors"
+        >
+          <span class="sm:hidden">Demo</span>
+          <span class="hidden sm:inline">Book a demo</span>
+        </a>
+        <a
+          href="/#get-started"
+          class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-green text-bg text-sm font-semibold hover:bg-green-dim transition-colors"
+        >
+          Get started free
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="relative pt-32 pb-24 overflow-hidden">
+    <div
+      class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"
+    >
+    </div>
+    <div class="absolute inset-0 bg-green-radial pointer-events-none"></div>
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-green/5 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-6">
+      <!-- Label -->
+      <div class="flex justify-center mb-6">
+        <span
+          class="inline-flex items-center px-3 py-1 rounded-full border border-green/20 bg-green/5 text-green text-xs font-mono tracking-wider uppercase"
+        >
+          About
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1
+        class="text-center text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] mb-6 max-w-4xl mx-auto"
+      >
+        We're building the gate that keeps<br class="hidden sm:block" />
+        <span class="text-gradient">broken agents</span> out of production.
+      </h1>
+
+      <p
+        class="text-center text-text-secondary text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
+      >
+        Refine AI started as a local debugger. Talking to teams building AI
+        agents in production taught us the real problem: nobody catches
+        behavioral regressions before they merge. We're fixing that.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MISSION — The problem we're solving
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="py-24 border-t border-border reveal">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-12 text-text-primary">
+        The problem we're solving
+      </h2>
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            Every week, engineering teams ship AI agent changes that silently
+            break behavioral properties. Step counts triple. Unexpected APIs get
+            called. Latency doubles. Eval tools pass. Users notice first.
+          </p>
+        </div>
+        <div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            We think every PR touching an AI agent should be gated on behavioral
+            invariants — the same way every PR touching network code gets
+            latency budgets. That's what Refine AI does.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       OUR APPROACH — 3 cards
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="py-24 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-12 text-text-primary reveal">
+        Our approach
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <!-- Checkmark / deterministic icon -->
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-3 text-base">
+            Deterministic over probabilistic
+          </h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            No LLM-as-judge in our check path. Behavioral checks compare
+            measured properties (step count, tool calls, latency) against
+            baselines. No false positives from scoring variance.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors"
+          style="transition-delay: 0.1s"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <!-- PR / gate icon -->
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"
+              ></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line
+                x1="6"
+                y1="9"
+                x2="6"
+                y2="21"></line>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-3 text-base">
+            CI-first, not production-first
+          </h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            The right place to catch a regression is the PR, not the incident.
+            We gate before merge so you never have to chase a production
+            regression.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors"
+          style="transition-delay: 0.2s"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <!-- Lock icon -->
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"
+              ></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-3 text-base">
+            Local-first trust
+          </h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Your traces never leave your environment. Refine AI runs on your CI
+            runner. No telemetry without consent. Open-source core.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       WHAT WE BELIEVE
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="py-24 border-t border-border reveal">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-12 text-text-primary">
+        What we believe
+      </h2>
+      <div class="max-w-3xl space-y-5">
+        <div class="flex gap-4 items-start">
+          <div
+            class="mt-1 w-0.5 h-full min-h-[3rem] self-stretch bg-green/40 rounded-full flex-shrink-0"
+          >
+          </div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            AI agents will be held to the same engineering standards as any
+            production system.
+          </p>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div
+            class="mt-1 w-0.5 h-full min-h-[3rem] self-stretch bg-green/40 rounded-full flex-shrink-0"
+          >
+          </div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            Behavioral testing for agents is still manual and reactive — that's
+            the problem we solve.
+          </p>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div
+            class="mt-1 w-0.5 h-full min-h-[3rem] self-stretch bg-green/40 rounded-full flex-shrink-0"
+          >
+          </div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            The devtools model is proven: free for individuals, paid for teams.
+            Codecov and Snyk showed the way.
+          </p>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div
+            class="mt-1 w-0.5 h-full min-h-[3rem] self-stretch bg-green/40 rounded-full flex-shrink-0"
+          >
+          </div>
+          <p class="text-text-secondary text-base leading-relaxed">
+            No golden dataset should be required to catch a behavioral
+            regression.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CONTACT / GET IN TOUCH
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="py-24 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-12 text-text-primary reveal">
+        Get in touch
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Email -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors group"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgb(var(--green-rgb))"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path><polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-2 text-base">
+            For pilots and partnerships
+          </h3>
+          <a
+            href="mailto:founders@refinehq.ai"
+            class="font-mono text-green text-sm hover:text-green-dim transition-colors block mb-3"
+            >founders@refinehq.ai</a
+          >
+          <p class="text-text-muted text-sm leading-relaxed">
+            We respond to every email from teams building AI agents in
+            production.
+          </p>
+        </div>
+
+        <!-- GitHub -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors"
+          style="transition-delay: 0.1s"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="rgb(var(--green-rgb))"
+            >
+              <path
+                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-2 text-base">GitHub</h3>
+          <a
+            href="https://github.com/agentdbg"
+            class="font-mono text-green text-sm hover:text-green-dim transition-colors block mb-3"
+            >github.com/agentdbg</a
+          >
+          <p class="text-text-muted text-sm leading-relaxed">
+            File issues, read release notes, and follow product updates.
+          </p>
+        </div>
+
+        <!-- Twitter/X -->
+        <div
+          class="reveal rounded-xl border border-border bg-surface p-6 hover:border-green/20 transition-colors"
+          style="transition-delay: 0.2s"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center mb-5"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="rgb(var(--green-rgb))"
+            >
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text-primary mb-2 text-base">
+            Twitter / X
+          </h3>
+          <a
+            href="https://x.com/agent_dbg"
+            class="font-mono text-green text-sm hover:text-green-dim transition-colors block mb-3"
+            >@agent_dbg</a
+          >
+          <p class="text-text-muted text-sm leading-relaxed">
+            We post about behavioral testing, agent reliability, and devtools.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer class="border-t border-border py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <!-- Brand -->
+        <div class="md:col-span-1">
+          <a href="/" class="flex items-center gap-2.5 mb-4 group">
+            <div
+              class="w-7 h-7 rounded bg-green/10 border border-green/30 flex items-center justify-center"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M8 2L3 4.5v4c0 2.5 2.2 4.8 5 5.5 2.8-.7 5-3 5-5.5v-4L8 2z"
+                  stroke="#00ff88"
+                  stroke-width="1.2"
+                  fill="none"
+                  stroke-linejoin="round"></path>
+                <polyline
+                  points="5.5 8 7.2 9.8 10.5 6.5"
+                  stroke="#00ff88"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></polyline>
+              </svg>
+            </div>
+            <span class="font-mono font-bold text-sm text-text-primary"
+              >Refine AI</span
+            >
+          </a>
+          <p class="text-text-muted text-sm leading-relaxed mb-4">
+            The behavioral regression gate for AI agents.
+          </p>
+          <div class="flex items-center gap-3">
+            <a
+              href="https://github.com/agentdbg/agentdbg"
+              class="text-text-muted hover:text-text-primary transition-colors"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                ><path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                ></path></svg
+              >
+            </a>
+            <a
+              href="https://x.com/agent_dbg"
+              class="text-text-muted hover:text-text-primary transition-colors"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                ><path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                ></path></svg
+              >
+            </a>
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">
+            Product
+          </div>
+          <ul class="space-y-2.5">
+            {
+              [
+                { label: "How it works", href: "/#how-it-works" },
+                { label: "Behavioral checks", href: "/#checks" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "Blog", href: "/blog" },
+                { label: "About", href: "/about" },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Docs -->
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">Docs</div>
+          <ul class="space-y-2.5">
+            {
+              [
+                {
+                  label: "Quickstart",
+                  href: "/docs/quickstart",
+                },
+                { label: "Documentation", href: "/docs" },
+                { label: "GitHub Action", href: "https://github.com/agentdbd" },
+                {
+                  label: "Repository",
+                  href: "https://github.com/agentdbg/agentdbg",
+                },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <div class="font-semibold text-sm mb-4 text-text-primary">
+            Company
+          </div>
+          <ul class="space-y-2.5">
+            {
+              [
+                { label: "Contact", href: "mailto:founders@refinehq.ai" },
+                {
+                  label: "Security",
+                  href: "https://github.com/agentdbg/agentdbg/blob/main/SECURITY.md",
+                },
+                {
+                  label: "Changelog",
+                  href: "https://github.com/agentdbg/agentdbg/releases",
+                },
+              ].map(({ label, href }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-text-muted text-sm hover:text-text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <p class="text-text-muted text-xs">© 2026 Refine AI.</p>
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <div class="w-1.5 h-1.5 rounded-full bg-green animate-pulse-slow">
+          </div>
+          <span class="text-text-muted">All systems operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</Layout>
