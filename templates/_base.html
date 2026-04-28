@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}" />
+
+    <!-- Primary Meta -->
+    <title>{% block title %}Refine AI — Debug AI Agents in Production{% endblock %}</title>
+    <meta name="description" content="{% block description %}Behavioral observability for AI agents. Catch hallucinations, tool misuse, and goal drift before your users do.{% endblock %}" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ SITE_URL }}{{ request.path }}" />
+    <meta property="og:title" content="{% block og_title %}Refine AI — Debug AI Agents in Production{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}Behavioral observability for AI agents. Catch hallucinations, tool misuse, and goal drift before your users do.{% endblock %}" />
+    <meta property="og:image" content="{% block og_image %}/og.png{% endblock %}" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{% block tw_title %}Refine AI — Debug AI Agents in Production{% endblock %}" />
+    <meta name="twitter:description" content="{% block tw_description %}Behavioral observability for AI agents. Catch hallucinations, tool misuse, and goal drift before your users do.{% endblock %}" />
+    <meta name="twitter:image" content="{% block tw_image %}/og.png{% endblock %}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body class="bg-bg text-text-primary font-sans antialiased">
+    {% block content %}{% endblock %}
+
+    <script>
+      // Intersection observer for scroll reveals
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

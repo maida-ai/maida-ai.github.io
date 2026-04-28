@@ -57,24 +57,22 @@
       <div>
         <div class="font-semibold text-sm mb-4 text-text-primary">Product</div>
         <ul class="space-y-2.5">
-          {
-            [
-              { label: "How it works", href: "/#how-it-works" },
-              { label: "Behavioral checks", href: "/#checks" },
-              { label: "Pricing", href: "/pricing" },
-              { label: "Blog", href: "/blog" },
-              { label: "About", href: "/about" },
-            ].map(({ label, href }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-text-muted text-sm hover:text-text-primary transition-colors"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
+          {% for item in [
+            {"label": "How it works", "href": "/#how-it-works"},
+            {"label": "Behavioral checks", "href": "/#checks"},
+            {"label": "Pricing", "href": "/pricing"},
+            {"label": "Blog", "href": "/blog"},
+            {"label": "About", "href": "/about"},
+          ] %}
+            <li>
+              <a
+                href="{{ item.href }}"
+                class="text-text-muted text-sm hover:text-text-primary transition-colors"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
@@ -82,29 +80,21 @@
       <div>
         <div class="font-semibold text-sm mb-4 text-text-primary">Docs</div>
         <ul class="space-y-2.5">
-          {
-            [
-              {
-                label: "Quickstart",
-                href: "/docs/quickstart",
-              },
-              { label: "Documentation", href: "/docs" },
-              { label: "GitHub Action", href: "https://github.com/agentdbg" },
-              {
-                label: "Repository",
-                href: "https://github.com/agentdbg/agentdbg",
-              },
-            ].map(({ label, href }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-text-muted text-sm hover:text-text-primary transition-colors"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
+          {% for item in [
+            {"label": "Quickstart", "href": "/docs/quickstart"},
+            {"label": "Documentation", "href": "/docs"},
+            {"label": "GitHub Action", "href": "https://github.com/agentdbg"},
+            {"label": "Repository", "href": "https://github.com/agentdbg/agentdbg"},
+          ] %}
+            <li>
+              <a
+                href="{{ item.href }}"
+                class="text-text-muted text-sm hover:text-text-primary transition-colors"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
@@ -114,26 +104,24 @@
           Alternatives
         </div>
         <ul class="space-y-2.5">
-          {
-            [
-              { label: "Braintrust", href: "/alternatives/braintrust" },
-              { label: "Aarize AI", href: "/alternatives/arize-ai" },
-              { label: "Confident AI", href: "/alternatives/confident-ai" },
-              { label: "Galileo", href: "/alternatives/galileo" },
-              { label: "Honeyhive", href: "/alternatives/honeyhive" },
-              { label: "Langsmith", href: "/alternatives/langsmith" },
-              { label: "Respan", href: "/alternatives/respan" },
-            ].map(({ label, href }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-text-muted text-sm hover:text-text-primary transition-colors"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
+          {% for item in [
+            {"label": "Braintrust", "href": "/alternatives/braintrust"},
+            {"label": "Aarize AI", "href": "/alternatives/arize-ai"},
+            {"label": "Confident AI", "href": "/alternatives/confident-ai"},
+            {"label": "Galileo", "href": "/alternatives/galileo"},
+            {"label": "Honeyhive", "href": "/alternatives/honeyhive"},
+            {"label": "Langsmith", "href": "/alternatives/langsmith"},
+            {"label": "Respan", "href": "/alternatives/respan"},
+          ] %}
+            <li>
+              <a
+                href="{{ item.href }}"
+                class="text-text-muted text-sm hover:text-text-primary transition-colors"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
@@ -141,28 +129,20 @@
       <div>
         <div class="font-semibold text-sm mb-4 text-text-primary">Company</div>
         <ul class="space-y-2.5">
-          {
-            [
-              { label: "Contact", href: "mailto:founders@refinehq.ai" },
-              {
-                label: "Security",
-                href: "https://github.com/agentdbg/agentdbg/blob/main/SECURITY.md",
-              },
-              {
-                label: "Changelog",
-                href: "https://github.com/agentdbg/agentdbg/releases",
-              },
-            ].map(({ label, href }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-text-muted text-sm hover:text-text-primary transition-colors"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
+          {% for item in [
+            {"label": "Contact", "href": "mailto:founders@refinehq.ai"},
+            {"label": "Security", "href": "https://github.com/agentdbg/agentdbg/blob/main/SECURITY.md"},
+            {"label": "Changelog", "href": "https://github.com/agentdbg/agentdbg/releases"},
+          ] %}
+            <li>
+              <a
+                href="{{ item.href }}"
+                class="text-text-muted text-sm hover:text-text-primary transition-colors"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -170,7 +150,7 @@
     <div
       class="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
     >
-      <p class="text-text-muted text-xs">© 2026 Refine AI.</p>
+      <p class="text-text-muted text-xs">&copy; 2026 Refine AI.</p>
       <div class="flex items-center gap-1.5 text-xs font-mono">
         <div class="w-1.5 h-1.5 rounded-full bg-green animate-pulse-slow"></div>
         <span class="text-text-muted">All systems operational</span>
