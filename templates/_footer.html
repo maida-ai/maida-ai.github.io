@@ -1,6 +1,6 @@
 <footer class="border-t border-border py-16">
   <div class="max-w-6xl mx-auto px-6">
-    <div class="grid md:grid-cols-5 gap-10 mb-12">
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
       <!-- Brand -->
       <div class="md:col-span-1">
         <a href="/" class="flex items-center gap-2.5 mb-4 group">
@@ -23,7 +23,7 @@
             </svg>
           </div>
           <span class="font-mono font-bold text-sm text-text-primary"
-            >Refine AI</span
+            >Maida.AI</span
           >
         </a>
         <p class="text-text-muted text-sm leading-relaxed mb-4">
@@ -98,33 +98,6 @@
         </ul>
       </div>
 
-      <!-- Alternatives -->
-      <div>
-        <div class="font-semibold text-sm mb-4 text-text-primary">
-          Alternatives
-        </div>
-        <ul class="space-y-2.5">
-          {% for item in [
-            {"label": "Braintrust", "href": "/alternatives/braintrust"},
-            {"label": "Aarize AI", "href": "/alternatives/arize-ai"},
-            {"label": "Confident AI", "href": "/alternatives/confident-ai"},
-            {"label": "Galileo", "href": "/alternatives/galileo"},
-            {"label": "Honeyhive", "href": "/alternatives/honeyhive"},
-            {"label": "Langsmith", "href": "/alternatives/langsmith"},
-            {"label": "Respan", "href": "/alternatives/respan"},
-          ] %}
-            <li>
-              <a
-                href="{{ item.href }}"
-                class="text-text-muted text-sm hover:text-text-primary transition-colors"
-              >
-                {{ item.label }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-
       <!-- Company -->
       <div>
         <div class="font-semibold text-sm mb-4 text-text-primary">Company</div>
@@ -150,7 +123,7 @@
     <div
       class="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
     >
-      <p class="text-text-muted text-xs">&copy; 2026 Refine AI.</p>
+      <p class="text-text-muted text-xs">&copy; 2026 Maida.AI.</p>
       <div class="flex items-center gap-1.5 text-xs font-mono">
         <div class="w-1.5 h-1.5 rounded-full bg-green animate-pulse-slow"></div>
         <span class="text-text-muted">All systems operational</span>

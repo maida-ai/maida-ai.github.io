@@ -1,17 +1,11 @@
 from flask_frozen import Freezer
-from app import app, ALTERNATIVES, BLOG_POSTS
+from app import app, BLOG_POSTS
 
 app.config["FREEZER_DESTINATION"] = "dist"
 app.config["FREEZER_RELATIVE_URLS"] = False
 app.config["FREEZER_IGNORE"] = ["/docs", "/docs/"]
 
 freezer = Freezer(app)
-
-
-@freezer.register_generator
-def alternative():
-    for slug in ALTERNATIVES:
-        yield {"slug": slug}
 
 
 @freezer.register_generator

@@ -8,16 +8,6 @@ DOCS_BUILD_DIR = os.path.join(os.path.dirname(__file__), "site")
 
 SITE_URL = "https://maida.ai"
 
-ALTERNATIVES = [
-    "arize-ai",
-    "braintrust",
-    "confident-ai",
-    "galileo",
-    "honeyhive",
-    "langsmith",
-    "respan",
-]
-
 BLOG_POSTS = [
     "why-your-agent-needs-a-regression-gate",
 ]
@@ -51,16 +41,6 @@ def blog_index():
 @app.route("/blog/<slug>/")
 def blog_post(slug):
     return render_template(f"blog/{slug}.html")
-
-
-@app.route("/alternatives/")
-def alternatives_index():
-    return render_template("alternatives/index.html")
-
-
-@app.route("/alternatives/<slug>/")
-def alternative(slug):
-    return render_template(f"alternatives/{slug}.html")
 
 
 @app.route("/docs/")
