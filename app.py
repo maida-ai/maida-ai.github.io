@@ -1,6 +1,10 @@
-from flask import Flask, render_template
+import os
+
+from flask import Flask, render_template, send_from_directory, abort
 
 app = Flask(__name__)
+
+DOCS_BUILD_DIR = os.path.join(os.path.dirname(__file__), "site")
 
 SITE_URL = "https://maida.ai"
 
@@ -57,3 +61,14 @@ def alternatives_index():
 @app.route("/alternatives/<slug>/")
 def alternative(slug):
     return render_template(f"alternatives/{slug}.html")
+
+
+@app.route("/docs/")
+@app.route("/docs/<path:path>")
+def docs(path=""):
+    """Serve MkDocs build output from site/ during local dev."""
+    if not os.path.isdir(DOCS_BUILD_DIR):
+        abort(404)
+    if not path or os.path.isdir(os.path.join(DOCS_BUILD_DIR, path)):
+        path = os.path.join(path, "index.html")
+    return send_from_directory(DOCS_BUILD_DIR, path)

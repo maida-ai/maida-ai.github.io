@@ -1,0 +1,29 @@
+site_name: Refine AI Docs
+site_url: https://maida.ai/docs/
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: custom
+    accent: custom
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Guardrails: guardrails.md
+  - Regression testing: regression-testing.md
+  - CLI: cli.md
+  - Viewer: viewer.md
+  - SDK: sdk.md
+  - Integrations: integrations.md
+  - Architecture: architecture.md
+  - Reference:
+      - Configuration: reference/config.md
+      - Policy YAML: reference/policy.md
+      - Trace format: reference/trace-format.md

@@ -5,4 +5,6 @@ requires-python = ">=3.10"
 dependencies = [
     "flask>=3.1",
     "frozen-flask>=1.0",
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.6",
 ]

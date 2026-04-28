@@ -31,9 +31,13 @@ jobs:
       - name: Build CSS
         run: ./bin/tailwindcss -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
+      - name: Build docs
+        run: uv run mkdocs build
+
       - name: Freeze site
         run: |
           uv run python freeze.py
+          cp -r site/ dist/docs/
           cp CNAME dist/CNAME
 
       - name: Upload Pages artifact
