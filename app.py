@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-SITE_URL = "https://agentdbg.dev"
+SITE_URL = "https://maida.ai"
 
 ALTERNATIVES = [
     "arize-ai",

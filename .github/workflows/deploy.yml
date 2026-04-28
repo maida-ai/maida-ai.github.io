@@ -1,0 +1,53 @@
+name: Build & Deploy (Frozen Flask → GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Download Tailwind standalone CLI
+        run: |
+          mkdir -p bin
+          curl -sL https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.17/tailwindcss-linux-x64 -o bin/tailwindcss
+          chmod +x bin/tailwindcss
+
+      - name: Build CSS
+        run: ./bin/tailwindcss -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
+
+      - name: Freeze site
+        run: |
+          uv run python freeze.py
+          cp CNAME dist/CNAME
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

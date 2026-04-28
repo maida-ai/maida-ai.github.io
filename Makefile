@@ -1,4 +1,4 @@
-.PHONY: dev css build deploy clean
+.PHONY: dev css build clean
 
 TAILWIND_BIN ?= ./bin/tailwindcss
 
@@ -12,10 +12,7 @@ css:
 build: css
 	rm -rf dist
 	uv run python freeze.py
-	cp _worker.js dist/_worker.js
-
-deploy: build
-	wrangler pages deploy ./dist
+	cp CNAME dist/CNAME
 
 clean:
 	rm -rf dist static/styles.css __pycache__
