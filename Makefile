@@ -15,7 +15,7 @@ docs:
 build: css docs
 	rm -rf dist
 	uv run python freeze.py
-	cp -r site/ dist/docs/
+	cp -rT site/ dist/docs/
 	cp CNAME dist/CNAME
 
 clean:

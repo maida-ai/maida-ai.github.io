@@ -37,7 +37,7 @@ jobs:
       - name: Freeze site
         run: |
           uv run python freeze.py
-          cp -r site/ dist/docs/
+          cp -rT site/ dist/docs/
           cp CNAME dist/CNAME
 
       - name: Upload Pages artifact

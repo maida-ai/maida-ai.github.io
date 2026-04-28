@@ -3,7 +3,7 @@ from app import app, ALTERNATIVES, BLOG_POSTS
 
 app.config["FREEZER_DESTINATION"] = "dist"
 app.config["FREEZER_RELATIVE_URLS"] = False
-
+app.config["FREEZER_IGNORE"] = ["/docs", "/docs/"]
 
 freezer = Freezer(app)
 
