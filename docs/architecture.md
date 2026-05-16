@@ -1,6 +1,6 @@
 # Architecture
 
-How AgentDbg works: event schema, storage, viewer API, UI, and loop detection. For the full public contract (envelope, event types, payload schemas, run.json), see the [Trace format](reference/trace-format.md) reference.
+How Maida works: event schema, storage, viewer API, UI, and loop detection. For the full public contract (envelope, event types, payload schemas, run.json), see the [Trace format](reference/trace-format.md) reference.
 
 ---
 
@@ -39,7 +39,7 @@ Events are written as one JSON object per line (JSONL) and flushed after each wr
 
 ## Storage layout
 
-- **Base directory:** `~/.agentdbg/` (or `AGENTDBG_DATA_DIR`).
+- **Base directory:** `~/.maida/` (or `MAIDA_DATA_DIR`).
 - **Per run:** `runs/<run_id>/`
   - **run.json** - Run metadata: `run_id`, `run_name`, `started_at`, `ended_at`, `duration_ms`, `status`, `counts` (llm_calls, tool_calls, errors, loop_warnings), `last_event_ts`.
   - **events.jsonl** - Append-only; one event per line.
@@ -60,7 +60,7 @@ The local server (FastAPI) exposes:
 | `GET /api/runs/{run_id}/paths` | Local filesystem paths for the run (run_dir, run_json, events_jsonl). |
 | `POST /api/runs/{run_id}/rename` | Rename a run (body: `{"run_name": "..."}`, updates run.json). |
 | `DELETE /api/runs/{run_id}` | Delete a run directory and its contents (returns 204). |
-| `GET /` | Static UI (`agentdbg/ui_static/index.html`). |
+| `GET /` | Static UI (`maida/ui_static/index.html`). |
 
 Default bind: `127.0.0.1:8712`. The UI fetches runs and events from these endpoints and renders a timeline.
 
@@ -68,7 +68,7 @@ Default bind: `127.0.0.1:8712`. The UI fetches runs and events from these endpoi
 
 ## UI overview
 
-- **Multi-file static UI** (HTML, JS, CSS); no build step. Served from `agentdbg/ui_static/`.
+- **Multi-file static UI** (HTML, JS, CSS); no build step. Served from `maida/ui_static/`.
 - Loads run list from `/api/runs`; when a run is selected (or `run_id` in query), loads `/api/runs/{run_id}/events`.
 - **Flat timeline:** events are shown in chronological order (write order / `ts`). Each event is expandable with payload shown as formatted JSON. Nesting by `parent_id` is not required.
 - `LOOP_WARNING` events are displayed prominently.
@@ -84,7 +84,7 @@ Guardrails are opt-in limits that stop a run before it burns more time, tokens, 
 **Behavior when a guardrail triggers:**
 
 1. The triggering event is recorded using existing event types (no new types)
-2. `AgentDbgLoopAbort` or `AgentDbgGuardrailExceeded` is raised
+2. `MaidaLoopAbort` or `MaidaGuardrailExceeded` is raised
 3. `ERROR` event is recorded (payload includes `guardrail`, `threshold`, `actual`)
 4. `RUN_END(status="error")` finalizes the run
 5. The exception propagates to the caller
@@ -97,7 +97,7 @@ See [Guardrails](guardrails.md) for usage examples, [Configuration reference](re
 
 ## Live-refresh viewer
 
-The UI supports automatic polling so you can start `agentdbg view` once and re-run your agent without manually refreshing.
+The UI supports automatic polling so you can start `maida view` once and re-run your agent without manually refreshing.
 
 - **Run list sidebar:** polls `GET /api/runs` every 3 seconds (configurable via `poll_runs` URL param, 1–60s). New runs appear automatically; removed runs are cleared from the sidebar.
 - **Event timeline:** when the current run has `status: "running"`, events poll every 2 seconds (configurable via `poll_events` URL param, 1–60s). Polling stops when the run finishes.
@@ -108,17 +108,17 @@ The UI supports automatic polling so you can start `agentdbg view` once and re-r
 
 ## Integration architecture
 
-AgentDbg adapters are thin translation layers that hook into a framework's callbacks and emit `record_llm_call` / `record_tool_call` events. They do not introduce new event types.
+Maida adapters are thin translation layers that hook into a framework's callbacks and emit `record_llm_call` / `record_tool_call` events. They do not introduce new event types.
 
 | Integration | Module | Hook mechanism |
 |-------------|--------|----------------|
-| LangChain / LangGraph | `agentdbg.integrations.langchain` | Callback handler (`on_llm_start`/`on_tool_start`) |
-| OpenAI Agents SDK | `agentdbg.integrations.openai_agents` | Tracing processor (`GenerationSpanData`, `FunctionSpanData`, `HandoffSpanData`) |
-| CrewAI | `agentdbg.integrations.crewai` | Execution hooks (`before/after_llm_call`, `before/after_tool_call`) |
+| LangChain / LangGraph | `maida.integrations.langchain` | Callback handler (`on_llm_start`/`on_tool_start`) |
+| OpenAI Agents SDK | `maida.integrations.openai_agents` | Tracing processor (`GenerationSpanData`, `FunctionSpanData`, `HandoffSpanData`) |
+| CrewAI | `maida.integrations.crewai` | Execution hooks (`before/after_llm_call`, `before/after_tool_call`) |
 
-**Integration lifecycle:** `agentdbg._integration_utils` provides `_invoke_run_enter` / `_invoke_run_exit` callbacks that adapters register with. This ensures adapters activate only when an explicit AgentDbg run is active.
+**Integration lifecycle:** `maida._integration_utils` provides `_invoke_run_enter` / `_invoke_run_exit` callbacks that adapters register with. This ensures adapters activate only when an explicit Maida run is active.
 
-**Guardrails with integrations:** when a guardrail fires inside a framework callback, adapters raise `_AgentDbgAbortSignal` (a `BaseException` subclass) to bypass the framework's `except Exception` error handling and stop execution immediately.
+**Guardrails with integrations:** when a guardrail fires inside a framework callback, adapters raise `_MaidaAbortSignal` (a `BaseException` subclass) to bypass the framework's `except Exception` error handling and stop execution immediately.
 
 All integrations are optional dependencies; the core package does not depend on any framework. See [Integrations](integrations.md) for usage details.
 
@@ -126,9 +126,9 @@ All integrations are optional dependencies; the core package does not depend on 
 
 ## Loop detection
 
-- **Input:** A sliding window of the last N events (default N=12; `AGENTDBG_LOOP_WINDOW`).
+- **Input:** A sliding window of the last N events (default N=12; `MAIDA_LOOP_WINDOW`).
 - **Signature:** Each event is reduced to a string: for `LLM_CALL` -> `"LLM_CALL:"+model`, for `TOOL_CALL` -> `"TOOL_CALL:"+tool_name`, else `event_type`.
-- **Rule:** Look for a contiguous block of signatures that repeats K times (default K=3; `AGENTDBG_LOOP_REPETITIONS`) at the end of the window. If found, emit one `LOOP_WARNING` per distinct pattern per run (deduplicated by pattern + repetitions).
+- **Rule:** Look for a contiguous block of signatures that repeats K times (default K=3; `MAIDA_LOOP_REPETITIONS`) at the end of the window. If found, emit one `LOOP_WARNING` per distinct pattern per run (deduplicated by pattern + repetitions).
 - **Payload:** `pattern` (e.g. "LLM_CALL:gpt-4 -> TOOL_CALL:search"), `repetitions`, `window_size`, `evidence_event_ids`.
 
 No ML; purely pattern-based on event type and name to give quick feedback on repetitive agent behavior.

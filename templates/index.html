@@ -1,902 +1,473 @@
 {% extends "_base.html" %}
 
-{% block title %}Maida.AI — The PR Gate for AI Agents{% endblock %}
-{% block description %}Maida.AI fails your PR when your agent's behavior structurally changes. Step count, tool calls, loop risk, cost, latency — no LLM-as-judge required.{% endblock %}
+{% block title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
+{% block description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
+{% block og_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
+{% block og_description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
+{% block tw_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
+{% block tw_description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
 
 {% block content %}
-  <!-- ═══════════════════════════════════════════════════════════
-       NAV
-  ═══════════════════════════════════════════════════════════ -->
   {% include "_nav.html" %}
 
-  <!-- ═══════════════════════════════════════════════════════════
-       HERO
-  ═══════════════════════════════════════════════════════════ -->
   <section class="relative pt-32 pb-24 overflow-hidden">
-    <!-- Background grid + radial -->
-    <div
-      class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"
-    >
-    </div>
+    <div class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"></div>
     <div class="absolute inset-0 bg-green-radial pointer-events-none"></div>
-    <div
-      class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-green/5 rounded-full blur-3xl pointer-events-none"
-    >
-    </div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-green/5 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="relative max-w-6xl mx-auto px-6">
-      <!-- Badge -->
       <div class="flex justify-center mb-8">
         <a
-          href="https://github.com/agentdbg"
+          href="https://github.com/maida-ai/maida"
           class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green/20 bg-green/5 text-green text-xs font-mono hover:bg-green/10 transition-colors"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <circle cx="12" cy="12" r="10"></circle><polyline
-              points="12 8 16 12 12 16"></polyline><line
-              x1="8"
-              y1="12"
-              x2="16"
-              y2="12"></line>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 8 16 12 12 16"></polyline>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
           </svg>
-          GitHub Action · Free to try · 5 min setup →
+          GitHub Action · Local-first · CI gate
         </a>
       </div>
 
-      <!-- Headline -->
-      <h1
-        class="text-center text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6"
-      >
+      <h1 class="text-center text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6">
         Don't let broken<br />
         <span class="text-gradient">agent changes</span> merge.
       </h1>
 
-      <p
-        class="text-center text-text-secondary text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-      >
-        Maida.AI gates your PRs with opinionated behavioral checks. When your
-        agent regresses — more steps, unexpected tool calls, cost spikes — the
-        PR fails. The built-in debugger shows you exactly what changed.
+      <p class="text-center text-text-secondary text-lg sm:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
+        Maida gates your PRs with behavioral checks for AI agents. It compares
+        current runs against checked-in baselines and fails CI when structural
+        behavior regresses: more steps, unexpected tool calls, loops, latency
+        spikes, or cost blowups.
       </p>
 
-      <!-- CTAs -->
-      <div
-        class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-      >
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
         <a
           href="#get-started"
           class="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-green text-bg text-base font-bold hover:bg-green-dim transition-all"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
-            <path
-              d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-            ></path>
-          </svg>
-          Add to GitHub Actions
+          Get started
         </a>
         <a
-          href="/docs"
+          href="https://github.com/maida-ai/maida"
           class="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30 transition-all text-base font-medium"
         >
-          View docs
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
+          View GitHub
         </a>
       </div>
 
-      <!-- Hero terminal — PR check failure output -->
       <div class="max-w-3xl mx-auto">
-        <div
-          class="rounded-xl border border-border bg-surface overflow-hidden shadow-green-lg"
-        >
-          <!-- Terminal bar -->
-          <div
-            class="flex items-center justify-between px-4 py-3 border-b border-border bg-[#0d0d0d]"
-          >
+        <div class="rounded-xl border border-border bg-surface overflow-hidden shadow-green-lg">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-[#0d0d0d]">
             <div class="flex items-center gap-1.5">
               <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
               <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
               <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
             </div>
-            <span class="font-mono text-xs text-text-muted"
-              >Maida.AI CI · PR #847 · feat/new-retrieval-model</span
-            >
+            <span class="font-mono text-xs text-text-muted">Example CI output</span>
             <div class="w-16"></div>
           </div>
-          <!-- Terminal body -->
-          <div class="p-6 font-mono text-sm leading-loose">
-            <div class="text-text-muted mb-3">
-              $ agentdbg assert --baseline main --compare HEAD
-            </div>
+          <div class="p-6 font-mono text-sm leading-loose overflow-x-auto">
+            <pre class="whitespace-pre text-text-secondary"><span class="text-text-muted">$ maida assert &lt;RUN_ID&gt; --baseline baselines/main.json --policy .maida/policy.yaml --format markdown</span>
 
-            <div class="space-y-1 mb-5">
-              <div class="flex items-start gap-3">
-                <span class="text-danger shrink-0 font-bold">✗</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">step_count</span
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="text-text-muted">6 → </span><span
-                    class="text-danger font-bold">22</span
-                  >
-                  <span class="text-text-muted ml-2">(+267%)</span>
-                  <span class="text-danger ml-2 font-bold">FAIL</span>
-                </span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-danger shrink-0 font-bold">✗</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">tool_calls</span
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="text-text-muted">4 → </span><span
-                    class="text-danger font-bold">19</span
-                  >
-                  <span class="text-text-muted ml-2">(+375%)</span>
-                  <span class="text-danger ml-2 font-bold">FAIL</span>
-                </span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-danger shrink-0 font-bold">✗</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">new_tool_path</span
-                  >&nbsp;&nbsp;
-                  <span class="text-warning">salesforce_api</span>
-                  <span class="text-text-muted ml-2">(never seen before)</span>
-                  <span class="text-danger ml-2 font-bold">FAIL</span>
-                </span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-danger shrink-0 font-bold">✗</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">cost_estimate</span
-                  >&nbsp;&nbsp;
-                  <span class="text-text-muted">$0.012 → </span><span
-                    class="text-danger font-bold">$0.041</span
-                  >
-                  <span class="text-text-muted ml-2">(+242%)</span>
-                  <span class="text-danger ml-2 font-bold">FAIL</span>
-                </span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-green shrink-0">✓</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">loop_risk</span
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="text-text-muted">none detected</span>
-                  <span class="text-green ml-2 font-bold">PASS</span>
-                </span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-green shrink-0">✓</span>
-                <span class="text-text-secondary">
-                  <span class="text-text-primary">stop_condition</span>&nbsp;
-                  <span class="text-text-muted">reached in all test cases</span>
-                  <span class="text-green ml-2 font-bold">PASS</span>
-                </span>
-              </div>
-            </div>
+<span class="text-danger">[FAIL]</span> step_count       <span class="text-text-muted">6 -&gt;</span> <span class="text-danger font-bold">22</span> <span class="text-text-muted">(+267%)</span>
+<span class="text-danger">[FAIL]</span> tool_calls       <span class="text-text-muted">4 -&gt;</span> <span class="text-danger font-bold">19</span> <span class="text-text-muted">(+375%)</span>
+<span class="text-danger">[FAIL]</span> new_tool_path    <span class="text-warning">salesforce_api</span>
+<span class="text-danger">[FAIL]</span> cost_estimate    <span class="text-text-muted">$0.012 -&gt;</span> <span class="text-danger font-bold">$0.041</span> <span class="text-text-muted">(+242%)</span>
+<span class="text-green">[PASS]</span> loop_risk        <span class="text-text-muted">none detected</span>
 
-            <div class="border-t border-border pt-4">
-              <div class="text-danger font-bold text-sm mb-1">
-                ❌ 4 checks failed · PR blocked
-              </div>
-              <div class="text-text-muted text-xs">
-                Full trace diff: agentdbg.com/runs/pr-847
-              </div>
-            </div>
+<span class="text-danger font-bold">4 checks failed. PR blocked.</span></pre>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SOCIAL PROOF STRIP
-  ═══════════════════════════════════════════════════════════ -->
   <section class="py-16 border-y border-border">
     <div class="max-w-6xl mx-auto px-6">
-      <p
-        class="text-center text-text-muted text-xs font-mono uppercase tracking-widest mb-10"
-      >
-        Built for teams shipping AI agents in production
-      </p>
-
-      <!-- Stats row -->
-      <div
-        class="grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden"
-      >
-        {% set stats = [
-          {'value': '0', 'label': 'LLM calls in your critical path'},
-          {'value': '5 min', 'label': 'setup in any GitHub repo'},
-          {'value': '8+', 'label': 'behavioral check categories'},
-          {'value': '100%', 'label': 'deterministic — no ML scoring'},
+      <div class="grid md:grid-cols-3 gap-px bg-border rounded-xl overflow-hidden">
+        {% set contrasts = [
+          {"label": "Output evals", "question": "Was the answer good?"},
+          {"label": "Production tools", "question": "What happened after deploy?"},
+          {"label": "Maida", "question": "Did this PR change agent behavior before merge?"},
         ] %}
-        {% for stat in stats %}
-            <div class="bg-surface px-8 py-8 text-center">
-              <div class="text-3xl font-black text-green mb-1">
-                {{ stat.value }}
-              </div>
-              <div class="text-text-muted text-sm">{{ stat.label }}</div>
-            </div>
+        {% for item in contrasts %}
+          <div class="bg-surface px-8 py-8 text-center">
+            <div class="font-mono text-green text-xs font-bold mb-3">{{ item.label }}</div>
+            <div class="text-text-primary font-semibold">{{ item.question }}</div>
+          </div>
         {% endfor %}
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PROBLEM
-  ═══════════════════════════════════════════════════════════ -->
   <section class="py-24">
     <div class="max-w-6xl mx-auto px-6">
       <div class="max-w-3xl mx-auto text-center mb-16 reveal">
-        <div
-          class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4"
-        >
+        <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
           The problem
         </div>
         <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
-          Code changes break agents.<br /><span class="text-danger"
-            >Nobody notices.</span
-          >
+          Code changes break agents.<br /><span class="text-danger">Nobody notices.</span>
         </h2>
         <p class="text-text-secondary text-lg leading-relaxed">
-          A prompt tweak, a model swap, an infra update — any change can alter
-          how your agent behaves. Output looks correct. Tests pass. But your
-          agent is now taking 22 steps instead of 6, calling Salesforce, and
-          costing 3x more. You won't know until a user reports it.
+          A prompt tweak can preserve the final answer while changing the
+          execution path completely. The agent may take more steps, call a new
+          tool, retry more often, or enter a loop. Manual smoke tests and
+          output-only checks often miss that kind of regression.
         </p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-5">
-        {% set problems = [
-          {
-            'icon': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#febc2e" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-            'title': 'Step count explodes',
-            'body': 'Your agent used to complete the task in 6-9 steps. A new model version finds a different reasoning path. Now it takes 22. Output is correct. Cost is not.',
-            'color': 'text-warning',
-          },
-          {
-            'icon': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-            'title': 'Unexpected tool calls appear',
-            'body': 'A developer adds a Salesforce integration and forgets to add guardrails. Your agent starts calling it mid-session. Nobody sees it until the audit.',
-            'color': 'text-danger',
-          },
-          {
-            'icon': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#febc2e" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-            'title': 'Latency quietly doubles',
-            'body': 'P95 latency goes from 3s to 14s. Users churn before you correlate the deploy to the slowdown. This happens at every company, every size.',
-            'color': 'text-warning',
-          },
-        ] %}
-        {% for item in problems %}
-            <div class="reveal rounded-xl border border-border bg-surface p-6 hover:border-border-light transition-colors">
-              <div class="mb-4">{{ item.icon | safe }}</div>
-              <h3 class="font-bold text-lg mb-3 {{ item.color }}">
-                {{ item.title }}
-              </h3>
-              <p class="text-text-secondary text-sm leading-relaxed">
-                {{ item.body }}
-              </p>
-            </div>
-        {% endfor %}
-      </div>
-
-      <!-- Callout -->
-      <div
-        class="mt-10 rounded-xl border border-green/20 bg-green/5 p-6 flex items-start gap-4 reveal"
-      >
-        <div
-          class="w-8 h-8 rounded-lg bg-green/10 border border-green/20 flex items-center justify-center shrink-0 mt-0.5"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#00ff88"
-            stroke-width="2"
-          >
-            <path d="M12 2L3 7l9 5 9-5-9-5z"></path><path d="M3 12l9 5 9-5"
-            ></path><path d="M3 17l9 5 9-5"></path>
-          </svg>
-        </div>
-        <div>
-          <p class="text-text-primary font-semibold mb-1">
-            Eval tools ask: "Is my output correct?" — we ask: "Did behavior
-            change?"
-          </p>
-          <p class="text-text-secondary text-sm leading-relaxed">
-            Braintrust, LangSmith, and Confident AI are great at evaluating
-            output quality. Maida.AI checks something different: structural
-            behavioral change. No golden dataset. No LLM-as-judge. No rubrics.
-            Just: did your agent do something different than before?
-          </p>
-        </div>
+      <div class="rounded-xl border border-green/20 bg-green/5 p-6 reveal">
+        <p class="text-text-primary font-semibold mb-2">
+          Output evals ask whether the answer was good. Maida asks whether behavior changed.
+        </p>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Output evals are useful. Production tools are useful. Maida sits
+          earlier in the workflow: before merge, inside CI, where a PR can still
+          be blocked.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       HOW IT WORKS
-  ═══════════════════════════════════════════════════════════ -->
   <section id="how-it-works" class="py-24 bg-surface border-y border-border">
     <div class="max-w-6xl mx-auto px-6">
       <div class="max-w-2xl mx-auto text-center mb-16 reveal">
-        <div
-          class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4"
-        >
+        <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
           How it works
         </div>
         <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
-          Gate every PR.<br /><span class="text-gradient">In 5 minutes.</span>
+          Install. Record. Baseline.<br /><span class="text-gradient">Block regressions.</span>
         </h2>
         <p class="text-text-secondary text-lg">
-          Add one decorator. Capture a baseline. Gate every PR. No hosted
-          infrastructure, no cloud required — your traces stay on your CI
-          runner.
+          Maida is the pre-merge behavioral regression gate for AI agents.
         </p>
       </div>
 
-      <!-- Steps -->
-      <div class="grid md:grid-cols-3 gap-8 mb-16">
+      <div class="grid md:grid-cols-2 gap-6">
         {% set steps = [
           {
-            'step': '01',
-            'title': 'Instrument your agent',
-            'body': 'Add one decorator to your agent entry point. Works with LangChain, LlamaIndex, AutoGen, or any raw Python agent. Takes under 5 minutes.',
-            'code': 'from agentdbg import trace
-
-@trace
-def run_agent(input: str):
-    # your existing code
-    # nothing else changes
-    ...',
+            "step": "01",
+            "title": "Install Maida",
+            "body": "Install the `maida-ai` package from PyPI. It provides the `maida` CLI and the `maida` Python module.",
+            "code": "pip install maida-ai",
           },
           {
-            'step': '02',
-            'title': 'Capture a baseline',
-            'body': 'Run your agent on a fixed set of test inputs. Maida.AI records the full execution trace — steps, tool calls, cost, latency. This becomes your regression baseline.',
-            'code': '# On main branch:
-agentdbg baseline capture \\
-  --suite ./tests/agent_scenarios/ \\
-  --save baseline.json
-
-# Baseline stored. Ready to gate.',
+            "step": "02",
+            "title": "Instrument your agent",
+            "body": "Wrap one agent entrypoint so Maida can record runs.",
+            "code": "from maida import trace\n\n@trace\ndef run_agent(input: str):\n    # Your existing agent code\n    ...",
           },
           {
-            'step': '03',
-            'title': 'Gate every PR',
-            'body': 'Add the GitHub Action. On every PR, Maida.AI replays the same test suite against the new branch and compares. Behavioral regression = PR fails.',
-            'code': '# .github/workflows/agent-check.yml
-- uses: agentdbg/action@v1
-  with:
-    baseline: baseline.json
-    max-steps: 15
-    max-tool-calls: 10
-    no-loops: true
-    max-cost: 0.05',
+            "step": "03",
+            "title": "Capture a known-good baseline",
+            "body": "Run your agent once on main, find the run ID, and check in the baseline JSON.",
+            "code": "python my_agent.py\nmaida list --json\nmaida baseline <RUN_ID> --out baselines/my_agent.json",
+          },
+          {
+            "step": "04",
+            "title": "Assert future runs",
+            "body": "Compare each new run against the baseline and fail when policy says behavior regressed.",
+            "code": "python my_agent.py\nmaida assert <RUN_ID> --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown\nmaida diff <RUN_ID> --baseline baselines/my_agent.json\nmaida view <RUN_ID>",
           },
         ] %}
         {% for item in steps %}
-            <div class="reveal">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="font-mono text-green text-xs font-bold">
-                  {{ item.step }}
-                </span>
-                <div class="flex-1 h-px bg-border"></div>
-              </div>
-              <h3 class="font-bold text-lg mb-2">{{ item.title }}</h3>
-              <p class="text-text-secondary text-sm leading-relaxed mb-4">
-                {{ item.body }}
-              </p>
-              <div class="rounded-lg border border-border bg-bg overflow-hidden">
-                <pre class="p-4 text-xs font-mono text-green/90 leading-relaxed overflow-x-auto whitespace-pre">{{ item.code }}</pre>
-              </div>
+          <div class="reveal rounded-xl border border-border bg-bg p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="font-mono text-green text-xs font-bold">{{ item.step }}</span>
+              <div class="flex-1 h-px bg-border"></div>
             </div>
+            <h3 class="font-bold text-lg mb-2">{{ item.title }}</h3>
+            <p class="text-text-secondary text-sm leading-relaxed mb-4">{{ item.body }}</p>
+            <div class="rounded-lg border border-border bg-surface overflow-hidden">
+              <pre class="p-4 text-xs font-mono text-green/90 leading-relaxed overflow-x-auto whitespace-pre">{{ item.code }}</pre>
+            </div>
+          </div>
         {% endfor %}
-      </div>
-
-      <!-- Flow diagram -->
-      <div class="reveal rounded-xl border border-green/20 bg-bg p-8">
-        <div
-          class="text-center text-text-muted text-xs font-mono uppercase tracking-widest mb-8"
-        >
-          PR gate flow
-        </div>
-        <div
-          class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-0 font-mono text-sm"
-        >
-          {% set flow_items = [
-            {'label': 'PR opened', 'sub': 'code change', 'highlight': false},
-            none,
-            {'label': 'Maida.AI', 'sub': 'replay + diff', 'highlight': true},
-            none,
-            {'label': 'Baseline', 'sub': 'main branch', 'highlight': false},
-            none,
-            {'label': 'Pass / Fail', 'sub': 'PR check', 'highlight': false},
-          ] %}
-          {% for item in flow_items %}
-            {% if item is none %}
-                  <div class="hidden sm:flex items-center mx-2 text-text-muted">
-                    <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
-                      <path
-                        d="M0 6h20M16 2l4 4-4 4"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-            {% else %}
-                <div
-                  class="px-5 py-3 rounded-lg border text-center min-w-[110px] {{ 'border-green/40 bg-green/10 text-green' if item.highlight else 'border-border bg-surface text-text-primary' }}"
-                >
-                  <div class="font-bold text-xs">{{ item.label }}</div>
-                  <div class="text-[10px] mt-0.5 opacity-60">{{ item.sub }}</div>
-                </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-        <p class="text-center text-text-muted text-xs mt-6">
-          No hosted infra. Runs on your GitHub Actions runner. Traces never
-          leave your environment.
-        </p>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       BEHAVIORAL CHECKS
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="checks" class="py-24">
+  <section id="github-action" class="py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
+        <div class="reveal">
+          <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
+            GitHub Action
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
+            Block bad PRs<br /><span class="text-gradient">before merge.</span>
+          </h2>
+          <p class="text-text-secondary text-lg leading-relaxed mb-5">
+            Add <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">maida-ai/maida-assert@v2</code>
+            to pull requests. Your <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">agent-script</code>
+            must use <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">@trace</code>
+            or <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">traced_run()</code>
+            so Maida can record a run.
+          </p>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            See the action repo for the current inputs: agent-script, baseline,
+            policy, maida-version, python-version, extra-args, and post-comment.
+          </p>
+        </div>
+
+        <div class="reveal rounded-xl border border-border bg-surface overflow-hidden">
+          <div class="px-4 py-3 border-b border-border bg-[#0d0d0d] font-mono text-xs text-text-muted">
+            .github/workflows/agent-regression-check.yml
+          </div>
+          <pre class="p-5 text-sm font-mono text-green/90 leading-relaxed overflow-x-auto"><code>name: Agent Regression Check
+
+on: [pull_request]
+
+jobs:
+  agent-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maida-ai/maida-assert@v2
+        with:
+          agent-script: my_agent.py
+          baseline: baselines/my_agent.json
+          policy: .maida/policy.yaml
+          python-version: '3.12'</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="checks" class="py-24 bg-surface border-y border-border">
     <div class="max-w-6xl mx-auto px-6">
       <div class="max-w-2xl mx-auto text-center mb-16 reveal">
-        <div
-          class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4"
-        >
+        <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
           Behavioral checks
         </div>
         <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
-          8 checks that block<br /><span class="text-gradient"
-            >the regressions that matter.</span
-          >
+          What Maida flags<br /><span class="text-gradient">before merge.</span>
         </h2>
         <p class="text-text-secondary text-lg">
-          Every check is deterministic. No ML classifiers. No LLM scoring. Each
-          check compares a measured property of the current run against the
-          baseline — and fails the PR if it exceeds your threshold.
+          These are behavioral regression signals. They do not prove output
+          quality. They tell you when the agent's execution behavior changed
+          relative to a baseline.
         </p>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
         {% set checks = [
-          {
-            'name': 'Step Count',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-            'signal': 'Was 6-9 steps. Now 22.',
-            'desc': 'Catches when a code change causes your agent to take a dramatically different number of reasoning steps to complete the same task.',
-          },
-          {
-            'name': 'Tool Call Count',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
-            'signal': 'Was 4 calls. Now 19.',
-            'desc': 'Detects when total tool invocations spike across a test case, indicating a more expensive or less efficient execution path.',
-          },
-          {
-            'name': 'Unexpected Tool Path',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-            'signal': 'salesforce_api (never seen).',
-            'desc': 'Flags any tool call that did not appear in the baseline trace. A new Salesforce call, a new DB read — anything your agent was not doing before.',
-          },
-          {
-            'name': 'Loop Risk',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
-            'signal': 'Same subgraph hit 7× in a row.',
-            'desc': 'Detects when the agent revisits the same reasoning subgraph repeatedly — a sign of an infinite loop that will burn tokens and never resolve.',
-          },
-          {
-            'name': 'Guardrail Events',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>',
-            'signal': 'Guardrail fired that never fired before.',
-            'desc': 'If a guardrail that never triggered on the baseline now triggers on the new branch, Maida.AI surfaces it — even if the agent continued.',
-          },
-          {
-            'name': 'Token Cost',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-            'signal': 'Median spend up 3.4×.',
-            'desc': 'Compares estimated token cost per test case against the baseline. A 3x cost increase on a code change is a regression, even if output looks correct.',
-          },
-          {
-            'name': 'Latency',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-            'signal': 'P95 went from 3s to 14s.',
-            'desc': 'Tracks wall-clock time per run. Latency regressions are often invisible in evals but immediately visible to users. Catch them before merge.',
-          },
-          {
-            'name': 'Stop Condition',
-            'icon': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>',
-            'signal': 'Agent no longer reaches final state.',
-            'desc': 'Verifies your agent still reaches its expected terminal state (task_complete, handoff, etc.) across all test cases. Regression = agent never finishes.',
-          },
+          "step count",
+          "tool call count",
+          "unexpected tool path",
+          "loop risk",
+          "guardrail events",
+          "latency envelope",
+          "cost envelope",
+          "stop condition",
         ] %}
         {% for check in checks %}
-            <div class="reveal rounded-xl border border-border bg-surface p-5 hover:border-green/30 transition-colors group">
-              <div
-                class="text-text-secondary group-hover:text-green transition-colors mb-3"
-              >{{ check.icon | safe }}</div>
-              <div class="font-bold text-sm mb-1">{{ check.name }}</div>
-              <div class="font-mono text-xs text-warning mb-3">
-                e.g. {{ check.signal }}
-              </div>
-              <p class="text-text-muted text-xs leading-relaxed">
-                {{ check.desc }}
-              </p>
-            </div>
+          <div class="reveal rounded-xl border border-border bg-bg p-5">
+            <div class="font-mono text-green text-xs font-bold mb-2">{{ "%02d"|format(loop.index) }}</div>
+            <div class="font-bold text-sm capitalize">{{ check }}</div>
+          </div>
         {% endfor %}
       </div>
 
-      <div class="mt-4 text-center reveal">
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="reveal rounded-xl border border-border bg-bg overflow-hidden">
+          <div class="px-4 py-3 border-b border-border bg-[#0d0d0d] font-mono text-xs text-text-muted">
+            .maida/policy.yaml
+          </div>
+          <pre class="p-5 text-sm font-mono text-green/90 leading-relaxed overflow-x-auto"><code>assert:
+  no_loops: true
+  no_guardrails: true
+  step_tolerance: 0.5
+  expect_status: ok</code></pre>
+        </div>
+        <div class="reveal rounded-xl border border-border bg-bg p-6">
+          <h3 class="font-bold text-lg mb-3">Policy-as-code</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Commit the policy file beside your baseline. The policy defines
+            which behavior changes the CI check should tolerate and which
+            changes should block the pull request.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-2xl mx-auto text-center mb-16 reveal">
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight mb-4">
+          Example regressions Maida catches
+        </h2>
+        <p class="text-text-secondary">
+          These are product examples, not customer testimonials.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        {% set examples = [
+          {
+            "title": "Prompt change increases steps",
+            "body": "The final answer still looks fine, but the agent now takes 22 steps instead of 6. Maida flags the step-count regression before the PR merges.",
+          },
+          {
+            "title": "New tool path appears",
+            "body": "A refactor introduces a tool call that never appeared in the baseline. Maida fails the check until the behavior is fixed or explicitly accepted in policy.",
+          },
+          {
+            "title": "Agent stops reaching its final state",
+            "body": "The run produces partial output, but no longer reaches the expected terminal condition. Maida catches the missing stop condition in CI.",
+          },
+          {
+            "title": "Loop risk appears",
+            "body": "A model or prompt change causes repeated calls with similar inputs. Maida records the pattern and fails the PR when policy says loops are not allowed.",
+          },
+        ] %}
+        {% for item in examples %}
+          <div class="reveal rounded-xl border border-border bg-surface p-7">
+            <h3 class="font-bold text-lg mb-3">{{ item.title }}</h3>
+            <p class="text-text-secondary text-sm leading-relaxed">{{ item.body }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-surface border-y border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-8 items-start">
+        <div class="reveal">
+          <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
+            Local-first
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
+            Runs stay in<br /><span class="text-gradient">your environment.</span>
+          </h2>
+        </div>
+        <div class="reveal space-y-4 text-text-secondary leading-relaxed">
+          <p>
+            Runs on your machine or GitHub Actions runner. No cloud account
+            required. No telemetry by default. Runs stay in your environment
+            unless you explicitly export them.
+          </p>
+          <p>
+            Maida writes local JSONL files under
+            <code class="font-mono text-sm bg-bg px-1.5 py-0.5 rounded border border-border">~/.maida/runs/</code>.
+            You can inspect them, archive them, or delete them.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="get-started" class="py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-3xl mx-auto text-center mb-12 reveal">
+        <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
+          Start with one agent workflow
+        </div>
+        <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
+          Try Maida on<br /><span class="text-gradient">your next agent change.</span>
+        </h2>
+        <p class="text-text-secondary text-lg leading-relaxed">
+          Install Maida, capture a known-good baseline, and run a behavioral
+          check against your next prompt, model, tool, or framework change. No
+          cloud account required. No telemetry by default. Runs locally or in
+          your GitHub Actions runner.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-3 mb-10">
+        {% set setup = [
+          "Install `maida-ai`",
+          "Add `@trace` to one agent entrypoint",
+          "Capture a known-good baseline",
+          "Add `.maida/policy.yaml`",
+          "Run `maida-ai/maida-assert@v2` on pull requests",
+        ] %}
+        {% for item in setup %}
+          <div class="reveal rounded-lg border border-border bg-surface p-4 text-sm text-text-secondary">
+            {{ item }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
         <a
-          href="/docs/checks"
-          class="inline-flex items-center gap-2 text-sm text-green hover:text-green-dim transition-colors font-mono"
+          href="/docs/getting-started/"
+          class="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-green text-bg text-base font-bold hover:bg-green-dim transition-all"
         >
-          Configure thresholds and custom checks in docs
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
+          Get started
+        </a>
+        <a
+          href="https://github.com/maida-ai/maida"
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-lg border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30 transition-all text-base font-medium"
+        >
+          View GitHub
+        </a>
+        <a
+          href="mailto:zafar@maida.ai"
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-lg border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30 transition-all text-base font-medium"
+        >
+          Email zafar@maida.ai
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SOCIAL PROOF / QUOTES
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="max-w-2xl mx-auto text-center mb-16 reveal">
-        <h2 class="text-3xl font-black tracking-tight mb-4">
-          What teams are finding
+  <section class="py-24 bg-surface border-y border-border">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-14 reveal">
+        <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
+          FAQ
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">
+          Common questions
         </h2>
-        <p class="text-text-secondary">
-          Real signals from engineers using Maida.AI in CI.
-        </p>
       </div>
-      <div class="grid md:grid-cols-3 gap-5">
-        {% set testimonials = [
+
+      <div class="space-y-2 reveal">
+        {% set faqs = [
           {
-            "quote": "A new model version tripled our step count on the summarization agent. Maida.AI caught it on the PR. We would never have noticed from evals alone — the output quality didn't change at all.",
-            "name": "Eng team lead",
-            "role": "AI-first SaaS startup",
+            "q": "Do I need a Maida cloud account?",
+            "a": "No. Maida is local-first. It runs on your machine or CI runner, and runs stay in your environment unless you explicitly export them.",
           },
           {
-            "quote": "We added a new tool to the agent and forgot to test it. Maida.AI flagged it as an unexpected tool path on the PR. Two lines of YAML later and it's explicitly approved in our policy.",
-            "name": "Founding engineer",
-            "role": "Series A fintech",
+            "q": "Can I use Maida in GitHub Actions?",
+            "a": "Yes. Use maida-ai/maida-assert@v2 to run behavioral checks in CI.",
           },
           {
-            "quote": "Our agent stopped reaching the handoff state after a prompt change. Evals still passed because the early steps were fine. Maida.AI blocked the PR because the stop condition wasn't hit.",
-            "name": "Platform engineer",
-            "role": "Enterprise AI team",
+            "q": "Is Maida an eval tool?",
+            "a": "No. Output evals ask whether the answer is good. Maida asks whether the agent's execution behavior changed before merge.",
+          },
+          {
+            "q": "Why is the package called `maida-ai` but the CLI is `maida`?",
+            "a": "The PyPI package is maida-ai. It installs the maida command-line tool and the maida Python module.",
           },
         ] %}
-        {% for t in testimonials %}
-            <div class="reveal rounded-xl border border-border bg-surface p-7 flex flex-col gap-5 hover:border-border-light transition-colors">
-              <div class="flex gap-1">
-                {% for _ in range(5) %}
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="#00ff88"
-                  >
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
-                {% endfor %}
-              </div>
-              <p class="text-text-secondary text-sm leading-relaxed flex-1">
-                "{{ t.quote }}"
-              </p>
-              <div class="flex items-center gap-3 pt-2 border-t border-border">
-                <div class="w-8 h-8 rounded-full bg-green/10 border border-green/20 flex items-center justify-center font-bold text-green text-xs">
-                  {{ t.name[0] | upper }}
-                </div>
-                <div>
-                  <div class="font-semibold text-sm">{{ t.name }}</div>
-                  <div class="text-text-muted text-xs">{{ t.role }}</div>
-                </div>
-              </div>
+        {% for item in faqs %}
+          <details class="faq-item border border-border rounded-lg overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer text-sm font-semibold text-text-primary select-none list-none">
+              {{ item.q }}
+              <span class="faq-arrow shrink-0 text-text-muted transition-transform duration-200">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-sm text-text-secondary leading-relaxed border-t border-border/60 pt-4">
+              {{ item.a }}
             </div>
+          </details>
         {% endfor %}
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PRICING
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="pricing" class="py-24 bg-surface border-y border-border">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="max-w-2xl mx-auto text-center mb-16 reveal">
-        <div
-          class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4"
-        >
-          Pricing
-        </div>
-        <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
-          Free to debug.<br /><span class="text-gradient"
-            >Pay to gate your PRs.</span
-          >
-        </h2>
-        <p class="text-text-secondary text-lg">
-          The local debugger is free, forever. You pay for CI assertions — the
-          same model Codecov and Snyk use.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-        {% set plans = [
-          {
-            'name': 'Free',
-            'price': '$0',
-            'sub': 'forever',
-            'highlight': false,
-            'features': [
-              'Local debugging — unlimited runs',
-              'Full timeline viewer (agentdbg view)',
-              'Loop detection & guardrails',
-              'Step-through trace inspection',
-              'Community Slack',
-            ],
-            'cta': 'Install free',
-            'ctaHref': '#get-started',
-          },
-          {
-            'name': 'Team',
-            'price': '$40',
-            'sub': '/ seat / month',
-            'highlight': true,
-            'features': [
-              'Everything in Free',
-              'CI gate — agentdbg assert',
-              'GitHub Action (agentdbg/action@v1)',
-              'PR comments with trace diffs',
-              'Baseline management',
-              'All 8 behavioral check types',
-              'Custom thresholds per check',
-              'Slack / webhook alerts on fail',
-            ],
-            'cta': 'Start 14-day trial',
-            'ctaHref': '#get-started',
-          },
-          {
-            'name': 'Enterprise',
-            'price': 'Custom',
-            'sub': 'volume pricing',
-            'highlight': false,
-            'features': [
-              'Everything in Team',
-              'Unlimited seats',
-              'SSO / SAML',
-              'On-prem / VPC deployment',
-              'SLA + dedicated support',
-              'Audit log export',
-              'Custom check authoring',
-              'Compliance packages',
-            ],
-            'cta': 'Talk to us',
-            'ctaHref': 'https://cal.com/maida.ai/15min',
-          },
-        ] %}
-        {% for plan in plans %}
-            <div
-              class="reveal rounded-xl border overflow-hidden relative {{ 'border-green/40 bg-bg shadow-green' if plan.highlight else 'border-border bg-bg' }}"
-            >
-              {% if plan.highlight %}
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-green to-transparent"></div>
-              {% endif %}
-              <div class="p-7">
-                {% if plan.highlight %}
-                  <div class="inline-block mb-3 px-2 py-0.5 rounded bg-green/10 border border-green/20 text-green text-xs font-mono font-bold">
-                    Most popular
-                  </div>
-                {% endif %}
-                <div class="font-bold text-lg mb-1">{{ plan.name }}</div>
-                <div class="flex items-baseline gap-1.5 mb-1">
-                  <span class="text-4xl font-black">{{ plan.price }}</span>
-                  <span class="text-text-muted text-sm">{{ plan.sub }}</span>
-                </div>
-                <div class="h-px bg-border my-5"></div>
-                <ul class="space-y-3 mb-7">
-                  {% for f in plan.features %}
-                    <li class="flex items-start gap-2.5 text-sm text-text-secondary">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#00ff88"
-                        stroke-width="2.5"
-                        class="mt-0.5 shrink-0"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      {{ f }}
-                    </li>
-                  {% endfor %}
-                </ul>
-                <a
-                  href="{{ plan.ctaHref }}"
-                  class="block w-full text-center py-2.5 rounded-lg font-semibold text-sm transition-all {{ 'bg-green text-bg hover:bg-green-dim' if plan.highlight else 'border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30' }}"
-                >
-                  {{ plan.cta }}
-                </a>
-              </div>
-            </div>
-        {% endfor %}
-      </div>
-
-      <p class="text-center text-text-muted text-xs mt-8 reveal">
-        No credit card for the free tier. Team trial requires no card for 14
-        days. Cancel any time.
-      </p>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       GETTING STARTED
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="get-started" class="py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="max-w-2xl mx-auto text-center mb-16 reveal">
-        <div
-          class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4"
-        >
-          Get started
-        </div>
-        <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
-          In production<br /><span class="text-gradient"
-            >in under 5 minutes.</span
-          >
-        </h2>
-        <p class="text-text-secondary text-lg">
-          Three steps. No sign-up required to start.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <!-- Step 1: Install + instrument -->
-        <div class="reveal space-y-4">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="font-mono text-green text-xs font-bold"
-              >Step 1 — Install & instrument</span
-            >
-          </div>
-          <div
-            class="rounded-xl border border-border bg-surface overflow-hidden"
-          >
-            <div
-              class="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-[#0d0d0d]"
-            >
-              <div class="w-2 h-2 rounded-full bg-[#ff5f57]"></div>
-              <div class="w-2 h-2 rounded-full bg-[#febc2e]"></div>
-              <div class="w-2 h-2 rounded-full bg-[#28c840]"></div>
-              <span class="font-mono text-xs text-text-muted ml-2"
-                >terminal</span
-              >
-            </div>
-            <pre
-              class="p-5 font-mono text-sm text-green/90 leading-relaxed">pip install agentdbg
-
-<span class="text-text-muted"># Add @trace to your agent entry point</span>
-<span class="text-text-secondary">from</span> agentdbg <span class="text-text-secondary">import</span> trace
-
-@trace
-<span class="text-text-secondary">def</span> run_agent(input: str):
-    ...</pre>
-          </div>
-        </div>
-
-        <!-- Step 2: GitHub Action -->
-        <div class="reveal space-y-4">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="font-mono text-green text-xs font-bold"
-              >Step 2 — Add to GitHub Actions</span
-            >
-          </div>
-          <div
-            class="rounded-xl border border-border bg-surface overflow-hidden"
-          >
-            <div
-              class="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-[#0d0d0d]"
-            >
-              <div class="w-2 h-2 rounded-full bg-[#ff5f57]"></div>
-              <div class="w-2 h-2 rounded-full bg-[#febc2e]"></div>
-              <div class="w-2 h-2 rounded-full bg-[#28c840]"></div>
-              <span class="font-mono text-xs text-text-muted ml-2"
-                >.github/workflows/agent-check.yml</span
-              >
-            </div>
-            <pre
-              class="p-5 font-mono text-sm text-green/90 leading-relaxed"><span class="text-text-muted">- name: Maida.AI behavioral check</span>
-  uses: agentdbg/action@v1
-  with:
-    baseline: baseline.json
-    max-steps: 15
-    max-tool-calls: 10
-    no-loops: <span class="text-warning">true</span>
-    max-cost: 0.05
-    max-latency-p95: 5000</pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- Final CTA -->
-      <div class="mt-16 text-center reveal">
-        <div class="inline-flex flex-col sm:flex-row items-center gap-4">
-          <a
-            href="/docs/getting-started/"
-            class="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-green text-bg text-base font-bold hover:bg-green-dim transition-all"
-          >
-            Read the 5-minute quickstart
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </a>
-          <a
-            href="https://github.com/agentdbg/agentdbg"
-            class="inline-flex items-center gap-2 px-8 py-4 rounded-lg border border-border-light text-text-secondary hover:text-text-primary hover:border-green/30 transition-all text-base font-medium"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
-              ></path>
-            </svg>
-            View on GitHub
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════════════════ -->
   {% include "_footer.html" %}
 {% endblock %}

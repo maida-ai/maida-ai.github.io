@@ -1,11 +1,11 @@
 {% extends "_base.html" %}
 
-{% block title %}Why your agent needs a regression gate, not just a debugger — Maida.AI Blog{% endblock %}
+{% block title %}Why your agent needs a regression gate, not just output evals — Maida.AI Blog{% endblock %}
 
 {% block description %}Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions — and what a CI gate does differently.{% endblock %}
 
 {% block content %}
-{% set title = "Why your agent needs a regression gate, not just a debugger" %}
+{% set title = "Why your agent needs a regression gate, not just output evals" %}
 {% set description = "Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions — and what a CI gate does differently." %}
 {% set date = "April 11, 2026" %}
 {% set author = "Maida.AI Team" %}
@@ -53,7 +53,7 @@
           class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight mb-6"
         >
           Why your agent needs a<br class="hidden sm:block" />
-          <span class="text-gradient">regression gate,</span> not just a debugger
+          <span class="text-gradient">regression gate,</span> not just output evals
         </h1>
 
         <div class="flex items-center gap-4 text-sm text-text-muted font-mono">
@@ -97,40 +97,28 @@
         slowness.
       </p>
       <p class="text-lg text-text-secondary leading-relaxed mt-5">
-        This is not a hypothetical. This is the normal failure mode for agent
-        development in 2026 — and it's happening on teams that are doing
-        everything else right.
+        This is the failure mode Maida is designed to catch: acceptable-looking
+        output hiding a structural behavior change.
       </p>
     </div>
 
-    <!-- Section: The problem with debuggers alone -->
+    <!-- Section: The problem with output checks alone -->
     <div class="reveal mb-14">
       <div class="flex items-center gap-3 mb-5">
         <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
         <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
-          The problem with debuggers alone
+          The problem with output checks alone
         </h2>
       </div>
       <div class="space-y-4 text-text-secondary leading-relaxed">
         <p>
-          Debuggers are excellent tools. Maida.AI ships one, and we mean it
-          when we say that. The trace viewer, step-by-step replay, diff view
-          between runs — these are genuinely useful for understanding what your
-          agent did.
+          Output checks are excellent tools when you need to measure final-answer quality. They are useful for correctness, format, and rubric checks.
         </p>
         <p>
-          But a debugger is a <strong class="text-text-primary">reactive</strong
-          > tool. You open it when you already know something is wrong. By that point,
-          the regression is already in production. The damage — in user experience,
-          in cost, in reliability — has already happened.
+          But output checks can miss structural changes. By the time a user notices higher latency, extra tool calls, or loops, the regression has already shipped.
         </p>
         <p>
-          The mental model of "I'll use the debugger to catch problems" is like
-          saying "I'll investigate the crash after the car hits the wall." It's
-          better than nothing. But investigation after the fact is not
-          prevention. A debugger answers the question: <em
-            >"What went wrong?"</em
-          > It cannot answer: <em>"Will this PR make something go wrong?"</em>
+          An output check answers the question: <em>"Was the answer good?"</em> It often cannot answer: <em>"Did this PR change how the agent behaves?"</em>
         </p>
         <p>
           That's a fundamentally different question. And answering it requires a
@@ -216,8 +204,7 @@
       </div>
       <div class="space-y-5 text-text-secondary leading-relaxed">
         <p>
-          Let's make this concrete with three real scenarios — the kind that
-          happen on any team shipping agents at pace.
+          Let's make this concrete with three example scenarios.
         </p>
 
         <!-- Example 1 -->
@@ -436,7 +423,7 @@
               >
             </div>
             <pre
-              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">from</span> <span style="color: rgba(0,255,136,0.7)">agentdbg</span> <span class="text-[#555555]">import</span> <span style="color: rgba(0,255,136,0.9)">trace</span>
+              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">from</span> <span style="color: rgba(0,255,136,0.7)">maida</span> <span class="text-[#555555]">import</span> <span style="color: rgba(0,255,136,0.9)">trace</span>
 
 <span style="color: rgba(0,255,136,0.5)">@trace</span>
 <span class="text-[#555555]">def</span> <span style="color: rgba(0,255,136,0.9)">run_agent</span>(user_input: str) <span class="text-[#555555]">-></span> str:
@@ -464,15 +451,11 @@
               >
             </div>
             <pre
-              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$</span> <span style="color: rgba(0,255,136,0.9)">agentdbg baseline capture</span> <span class="text-[#555555]">--suite tests/agent_suite.py</span>
+              class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$</span> <span style="color: rgba(0,255,136,0.9)">python my_agent.py</span>
+<span class="text-[#555555]">$</span> <span style="color: rgba(0,255,136,0.9)">maida list --json</span>
+<span class="text-[#555555]">$</span> <span style="color: rgba(0,255,136,0.9)">maida baseline &lt;RUN_ID&gt; --out baselines/my_agent.json</span>
 
-<span class="text-[#555555]">Running 12 test cases against current branch...</span>
-<span style="color: rgba(0,255,136,0.7)">✓</span>  Baseline captured: <span style="color: rgba(0,255,136,0.9)">main@a3f72c1</span>
-<span class="text-[#555555]">    step_count p50: 6    p95: 9</span>
-<span class="text-[#555555]">    tool_calls p50: 4    p95: 6</span>
-<span class="text-[#555555]">    cost_est   p50: $0.011</span>
-<span class="text-[#555555]">    latency    p50: 2.8s  p95: 4.1s</span>
-<span style="color: rgba(0,255,136,0.7)">✓</span>  Saved to agentdbg.dev/baselines/your-repo</code></pre>
+<span style="color: rgba(0,255,136,0.7)">✓</span>  Baseline saved to baselines/my_agent.json</code></pre>
           </div>
         </div>
       </div>
@@ -492,23 +475,27 @@
             <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
             <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
             <span class="ml-2 text-xs text-[#555555] font-mono"
-              >.github/workflows/agentdbg.yml</span
+              >.github/workflows/maida.yml</span
             >
           </div>
           <pre
-            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span style="color: rgba(0,255,136,0.7)">name</span><span class="text-[#555555]">:</span> Maida.AI behavioral gate
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span style="color: rgba(0,255,136,0.7)">name</span><span class="text-[#555555]">:</span> Agent Regression Check
 <span style="color: rgba(0,255,136,0.7)">on</span><span class="text-[#555555]">:</span> [pull_request]
 
 <span style="color: rgba(0,255,136,0.7)">jobs</span><span class="text-[#555555]">:</span>
-  <span style="color: rgba(0,255,136,0.7)">agentdbg</span><span class="text-[#555555]">:</span>
+  <span style="color: rgba(0,255,136,0.7)">agent-check</span><span class="text-[#555555]">:</span>
     <span style="color: rgba(0,255,136,0.7)">runs-on</span><span class="text-[#555555]">:</span> ubuntu-latest
+    <span style="color: rgba(0,255,136,0.7)">permissions</span><span class="text-[#555555]">:</span>
+      <span style="color: rgba(0,255,136,0.7)">contents</span><span class="text-[#555555]">:</span> read
+      <span style="color: rgba(0,255,136,0.7)">pull-requests</span><span class="text-[#555555]">:</span> write
     <span style="color: rgba(0,255,136,0.7)">steps</span><span class="text-[#555555]">:</span>
       <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> actions/checkout@v4
-      <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> agentdbg/action@v1
+      <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> maida-ai/maida-assert@v2
         <span style="color: rgba(0,255,136,0.7)">with</span><span class="text-[#555555]">:</span>
-          <span style="color: rgba(0,255,136,0.7)">api-key</span><span class="text-[#555555]">:</span> <span class="text-[#555555]">$&#123;&#123; secrets.AGENTDBG_API_KEY &#125;&#125;</span>
-          <span style="color: rgba(0,255,136,0.7)">suite</span><span class="text-[#555555]">:</span> tests/agent_suite.py
-          <span style="color: rgba(0,255,136,0.7)">baseline</span><span class="text-[#555555]">:</span> main</code></pre>
+          <span style="color: rgba(0,255,136,0.7)">agent-script</span><span class="text-[#555555]">:</span> my_agent.py
+          <span style="color: rgba(0,255,136,0.7)">baseline</span><span class="text-[#555555]">:</span> baselines/my_agent.json
+          <span style="color: rgba(0,255,136,0.7)">policy</span><span class="text-[#555555]">:</span> .maida/policy.yaml
+          <span style="color: rgba(0,255,136,0.7)">python-version</span><span class="text-[#555555]">:</span> '3.12'</code></pre>
         </div>
       </div>
 
@@ -534,7 +521,7 @@
             <div class="w-16"></div>
           </div>
           <pre
-            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ agentdbg assert --baseline main --compare HEAD</span>
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ maida assert &lt;RUN_ID&gt; --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown</span>
 
 <span style="color: rgba(255,68,68,0.9)">✗</span>  step_count       <span class="text-[#555555]">6 →</span> <span style="color: rgba(255,68,68,0.9)">22</span>   <span class="text-[#555555]">(+267%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
 <span style="color: rgba(255,68,68,0.9)">✗</span>  tool_calls       <span class="text-[#555555]">4 →</span> <span style="color: rgba(255,68,68,0.9)">19</span>   <span class="text-[#555555]">(+375%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
@@ -543,8 +530,8 @@
 <span style="color: rgba(0,255,136,0.7)">✓</span>  loop_risk        <span class="text-[#555555]">none detected</span>          <span style="color: rgba(0,255,136,0.9)">PASS</span>
 <span style="color: rgba(0,255,136,0.7)">✓</span>  stop_condition   <span class="text-[#555555]">reached in all cases</span>   <span style="color: rgba(0,255,136,0.9)">PASS</span>
 
-<span style="color: rgba(255,68,68,0.9)">❌  4 checks failed · PR blocked</span>
-<span class="text-[#555555]">   Full trace diff: agentdbg.com/runs/pr-847</span></code></pre>
+<span style="color: rgba(255,68,68,0.9)">4 checks failed. PR blocked.</span>
+<span class="text-[#555555]">   Run details available from the local timeline or CI artifact.</span></code></pre>
         </div>
       </div>
 
@@ -560,15 +547,12 @@
       <div class="flex items-center gap-3 mb-5">
         <div class="w-1 h-7 rounded-full bg-green shrink-0"></div>
         <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
-          The debugger and the gate work together
+          Output evals and the gate work together
         </h2>
       </div>
       <div class="space-y-4 text-text-secondary leading-relaxed">
         <p>
-          The point of this post isn't to say "stop using debuggers" or "stop
-          using eval platforms." Both are useful. The debugger is indispensable
-          for investigation. Eval platforms are the right tool for measuring
-          output quality.
+          The point of this post is not to say "stop using eval platforms." They are the right tool for measuring output quality.
         </p>
         <p>
           The point is that there's a third layer that most teams are missing:
@@ -578,11 +562,7 @@
           it ships.
         </p>
         <p>
-          The debugger becomes the investigation layer. The gate becomes the
-          prevention layer. They're complementary, not competing. When the gate
-          fires, you open the debugger to find out why. When the gate passes,
-          you can merge with confidence knowing that behavioral structure is
-          preserved.
+          Output evals remain the quality layer. Maida becomes the prevention layer for behavioral regressions before merge.
         </p>
         <p>
           You don't have to choose between "we move fast and hope nothing
@@ -693,7 +673,7 @@
       <div class="flex items-center gap-1 text-xs text-text-muted font-mono">
         <span class="mr-2">Share:</span>
         <a
-          href="https://twitter.com/intent/tweet?text=Why+your+agent+needs+a+regression+gate%2C+not+just+a+debugger&url=https%3A%2F%2Fagentdbg.dev%2Fblog%2Fwhy-your-agent-needs-a-regression-gate&via=agent_dbg"
+          href="https://twitter.com/intent/tweet?text=Why+your+agent+needs+a+regression+gate%2C+not+just+output+evals&url=https%3A%2F%2Fmaida.ai%2Fblog%2Fwhy-your-agent-needs-a-regression-gate"
           target="_blank"
           rel="noopener"
           class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-text-secondary hover:text-text-primary hover:border-green/30 transition-all"
@@ -761,7 +741,7 @@
           </p>
           <div class="flex items-center gap-3">
             <a
-              href="https://github.com/agentdbg/agentdbg"
+              href="https://github.com/maida-ai/maida"
               class="text-text-muted hover:text-text-primary transition-colors"
             >
               <svg
@@ -775,7 +755,7 @@
               >
             </a>
             <a
-              href="https://x.com/agent_dbg"
+              href="mailto:zafar@maida.ai"
               class="text-text-muted hover:text-text-primary transition-colors"
             >
               <svg
@@ -799,7 +779,7 @@
             {% set product_links = [
               {"label": "How it works", "href": "/#how-it-works"},
               {"label": "Behavioral checks", "href": "/#checks"},
-              {"label": "Pricing", "href": "/pricing"},
+              {"label": "GitHub Action", "href": "/#github-action"},
               {"label": "Blog", "href": "/blog"},
               {"label": "About", "href": "/about"}
             ] %}
@@ -822,8 +802,8 @@
             {% set docs_links = [
               {"label": "Quickstart", "href": "/docs/getting-started/"},
               {"label": "Documentation", "href": "/docs"},
-              {"label": "GitHub Action", "href": "https://github.com/agentdbg"},
-              {"label": "Repository", "href": "https://github.com/agentdbg/agentdbg"}
+              {"label": "GitHub Action", "href": "https://github.com/maida-ai/maida-assert"},
+              {"label": "Repository", "href": "https://github.com/maida-ai/maida"}
             ] %}
             {% for link in docs_links %}
               <li>
@@ -844,9 +824,9 @@
           </div>
           <ul class="space-y-2.5">
             {% set company_links = [
-              {"label": "Contact", "href": "mailto:founders@maida.ai"},
-              {"label": "Security", "href": "https://github.com/agentdbg/agentdbg/blob/main/SECURITY.md"},
-              {"label": "Changelog", "href": "https://github.com/agentdbg/agentdbg/releases"}
+              {"label": "Contact", "href": "mailto:zafar@maida.ai"},
+              {"label": "Security", "href": "https://github.com/maida-ai/maida/blob/main/SECURITY.md"},
+              {"label": "Changelog", "href": "https://github.com/maida-ai/maida/releases"}
             ] %}
             {% for link in company_links %}
               <li>

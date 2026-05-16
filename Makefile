@@ -4,13 +4,13 @@ TAILWIND_BIN ?= ./bin/tailwindcss
 
 dev: docs
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --watch &
-	uv run flask --app app run --debug
+	uv run python -m flask --app app run --debug
 
 css:
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
 docs:
-	uv run mkdocs build
+	uv run python -m mkdocs build
 
 build: css docs
 	rm -rf dist

@@ -1,8 +1,8 @@
-# AgentDbg
+# Maida
 
-**AgentDbg** is a local-first debugger for AI agents. It captures structured traces (LLM calls, tool calls, state, errors) and gives you a timeline UI to inspect what happened-inputs, outputs, latency, and loop warnings.
+**Maida** is the pre-merge behavioral regression gate for AI agents. It records agent runs, compares current behavior against a known-good baseline, and fails CI when structural behavior regresses: more steps, unexpected tool calls, loops, latency spikes, or cost blowups.
 
-**What it is:** A developer tool to instrument your agent, run it, and see a full event timeline locally. No cloud, no accounts.
+**What it is:** A local-first, CI-first developer tool for recording runs, capturing baselines, and blocking bad PRs before merge.
 
 **What it is not:** It is not observability or production monitoring. It does not do deterministic replay (planned for a later version), and it does not lock you into any framework.
 
@@ -13,14 +13,14 @@
 **1. Install:**
 
 ```bash
-pip install agentdbg
+pip install maida-ai
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/AgentDbg/AgentDbg.git
-cd AgentDbg/agentdbg
+git clone https://github.com/maida-ai/maida.git
+cd maida
 uv sync
 ```
 
@@ -30,13 +30,14 @@ uv sync
 python examples/minimal/simple_agent.py
 ```
 
-**3. Open the timeline viewer:**
+**3. Open the timeline viewer or capture a baseline:**
 
 ```bash
-agentdbg view
+maida view
+maida baseline <RUN_ID> --out baselines/my_agent.json
 ```
 
-A browser tab opens showing every event in the run - tool calls, LLM calls, timing. Data is stored locally under `~/.agentdbg/runs/<run_id>/`.
+A browser tab opens showing every event in the run - tool calls, LLM calls, timing. Data is stored locally under `~/.maida/runs/<run_id>/`.
 
 ---
 
@@ -50,7 +51,7 @@ A browser tab opens showing every event in the run - tool calls, LLM calls, timi
 | **LangChain customer support** (advanced) | `examples/langchain/` | Set API keys, then follow `_customer_support/README.md` |
 | **Demos** (short scripts) | `examples/demo/` | `python examples/demo/pure_python.py` or `python examples/demo/langchain.py` |
 
-After any run, open the timeline with `agentdbg view`.
+After any run, open the timeline with `maida view`.
 
 ---
 
