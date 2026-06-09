@@ -26,11 +26,11 @@ If `langchain-core` is not installed, importing the integration raises a clear `
 
 ```python
 from maida import trace
-from maida.integrations import MaidaLangChainCallbackHandler
+from maida.integrations import LangChainCallbackHandler
 
 @trace
 def run_agent():
-    handler = MaidaLangChainCallbackHandler()
+    handler = LangChainCallbackHandler()
     config = {"callbacks": [handler]}
 
     # Use config with any LangChain chain, LLM, or tool:
@@ -103,7 +103,7 @@ maida view
 All guardrails work with the tracing processor. When a guardrail fires, the processor raises `_MaidaAbortSignal` (a `BaseException`) which bypasses the SDK's `except Exception` error handling — stopping the run immediately:
 
 ```python
-from maida import trace, MaidaLoopAbort
+from maida import trace, LoopAbort
 
 @trace(stop_on_loop=True)
 def run_agent():
@@ -137,7 +137,7 @@ If `crewai` is not installed, importing the integration raises a clear `ImportEr
 
 ```python
 import maida
-from maida.integrations import crewai as adbg_crewai  # registers hooks
+from maida.integrations import crewai as maida_crewai  # registers hooks
 
 @maida.trace
 def run_crew():
@@ -156,7 +156,7 @@ Framework-specific context (agent role, task description, executor ID) is stored
 
 - The adapter requires an active Maida run — wrap your entrypoint with `@trace` or `traced_run(...)`.
 - Hook ordering caveat: if another before-hook returns `False` and blocks execution, that specific call may not be captured.
-- No runnable example script yet — see the [Known issues in CHANGELOG](../CHANGELOG.md) for status.
+- No runnable example script yet.
 
 ---
 
@@ -167,4 +167,4 @@ Planned framework adapters (not yet implemented):
 1. **Agno** - optional adapter for Agno-based agents.
 2. Others as needed (e.g. AutoGen, custom loops).
 
-For guidance on adding new integrations (optional deps, mapping callbacks to `record_*`, tests), see [CONTRIBUTING.md](../CONTRIBUTING.md#adding-integrations--adapters) in the repo root.
+For guidance on adding new integrations (optional deps, mapping callbacks to `record_*`, tests), see the [Maida contributing guide](https://github.com/maida-ai/maida/blob/main/CONTRIBUTING.md#adding-integrations--adapters).

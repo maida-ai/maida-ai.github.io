@@ -2,7 +2,7 @@
 
 The Maida Python SDK exposes a decorator, a context manager, and three recording functions. All recording attaches to the current active run (via contextvars). If there is no active run, recorders no-op unless implicit runs are enabled.
 
-For the exact shape of stored events and run metadata, see the [Trace format](reference/trace-format.md) reference.
+For the exact shape of stored OTel spans, projected events, and run metadata, see the [Trace format](reference/trace-format.md) reference.
 
 ---
 
@@ -40,7 +40,7 @@ def run_agent():
 
 - When the function is called **and no run is active:** creates a new run, emits `RUN_START`, runs the function, then emits `RUN_END`. On exception, emits `ERROR` then `RUN_END` with status `error` and re-raises.
 - When called **inside an already active run:** runs the function without creating a new run or extra run events. All `record_*` calls inside still attach to the outer run.
-- When a guardrail is enabled and crossed: records the triggering event, raises `MaidaLoopAbort` or `MaidaGuardrailExceeded`, records `ERROR`, records `RUN_END(status="error")`, and re-raises.
+- When a guardrail is enabled and crossed: records the triggering event, raises `LoopAbort` or `GuardrailExceeded`, records `ERROR`, records `RUN_END(status="error")`, and re-raises.
 
 **Parameters:**
 
@@ -75,7 +75,7 @@ from maida import traced_run
 
 
 with traced_run(
-    name="react_debug",
+    name="react_guarded",
     stop_on_loop=True,
     max_llm_calls=8,
     max_tool_calls=12,

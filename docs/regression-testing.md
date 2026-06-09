@@ -14,10 +14,10 @@ Agent behavior is non-deterministic. A prompt tweak, model upgrade, or tool chan
 
 ```
 1. Run your agent              python your_agent.py
-2. Capture a baseline          maida baseline <run_id>
+2. Capture a baseline          maida baseline <trace_id_or_prefix>
 3. Run the agent again         python your_agent.py
-4. Assert against baseline     maida assert <new_run_id> --baseline .maida/baselines/my_agent.json
-5. If it fails, diff           maida diff <new_run_id> --baseline .maida/baselines/my_agent.json
+4. Assert against baseline     maida assert <new_trace_id_or_prefix> --baseline .maida/baselines/my_agent.json
+5. If it fails, diff           maida diff <new_trace_id_or_prefix> --baseline .maida/baselines/my_agent.json
 ```
 
 ---
@@ -40,8 +40,8 @@ maida baseline a1b2c3d4 --out baselines/support_agent_v1.json
 
 | Field | Description |
 |---|---|
-| `schema_version` | Baseline format version (`"0.1"`) |
-| `source_run_id` | The run this baseline was created from |
+| `schema_version` | Baseline format version (`"0.2"`) |
+| `source_run_id` | The resolved OTel trace ID this baseline was created from |
 | `source_run_name` | Run name (if set) |
 | `summary` | Aggregate metrics: total events, LLM calls, tool calls, errors, loop warnings, duration, tokens |
 | `tool_path` | Sorted list of unique tool names used |
@@ -138,8 +138,8 @@ maida assert <RUN_ID> --baseline baseline.json --format json
 
 ```json
 {
-  "run_id": "a1b2c3d4-...",
-  "baseline_run_id": "e5f6a7b8-...",
+  "run_id": "a1b2c3d4e5f67890a1b2c3d4e5f67890",
+  "baseline_run_id": "e5f6a7b8c9d001122334455667788990",
   "passed": false,
   "results": [
     {
@@ -230,7 +230,7 @@ Run your agent in CI, then assert against the checked-in baseline. For the packa
 
 - name: Assert agent behavior
   run: |
-    RUN_ID=$(maida list --json | python -c "import sys,json; print(json.load(sys.stdin)['runs'][0]['run_id'])")
+    RUN_ID=$(maida list --json | python -c "import sys,json; run=json.load(sys.stdin)['runs'][0]; print(run.get('trace_id') or run['run_id'])")
     maida assert "$RUN_ID" \
       --baseline .maida/baselines/my_agent.json \
       --format markdown >> "$GITHUB_STEP_SUMMARY"

@@ -31,7 +31,7 @@ pip install -e .
 
 ## Quickstart
 
-**1. Decorate your entrypoint with `@trace`** so each invocation becomes a run (RUN_START / RUN_END, ERROR on exception).
+**1. Decorate your entrypoint with `@trace`** so each invocation becomes a run. Maida stores the run as OTel-compatible spans and projects those spans into familiar `RUN_START`, `RUN_END`, `LLM_CALL`, `TOOL_CALL`, and `ERROR` event views for the viewer, baselines, assertions, and diffs.
 
 **2. Call the recorders** inside that function so events attach to the current run:
 
@@ -64,7 +64,7 @@ The viewer starts a local server (default `127.0.0.1:8712`) and opens the latest
 
 ---
 
-## Add guardrails while you debug
+## Add guardrails during iteration
 
 If you are iterating on an agent loop, add guardrails early so a bad prompt or tool policy does not spiral into dozens of repeated calls.
 
@@ -83,7 +83,7 @@ def run_agent():
     ...
 ```
 
-Useful defaults for local debugging:
+Useful defaults for local iteration:
 
 - `stop_on_loop=True` for ReAct-style loops
 - `max_llm_calls` when you want a token-budget ceiling
@@ -99,9 +99,11 @@ See [Guardrails](guardrails.md) for examples and [Configuration reference](refer
 
 ## Where data is stored
 
-- **Default:** `~/.maida/runs/<run_id>/`
-  - `run.json` - run metadata (status, counts, started_at, ended_at)
-  - `events.jsonl` - one JSON object per line (append-only)
+- **Default:** `~/.maida/runs/<trace_id_hex>/`
+  - `meta.json` - run metadata (trace ID, status, counts, started_at, ended_at)
+  - `spans.jsonl` - one OTel span record per line (append-only)
+
+The CLI still uses the user-facing name `RUN_ID` in command arguments and JSON fields in a few places. Current runs are backed by OTel trace IDs, and short prefixes are resolved to the full trace ID.
 
 ---
 
@@ -119,7 +121,7 @@ Config can also be set in `~/.maida/config.yaml` or `.maida/config.yaml` in the 
 
 ## Redaction (defaults and config)
 
-- **Redaction is on by default.** Payloads are scanned for sensitive keys (e.g. `api_key`, `token`, `authorization`, `password`); matching values are replaced with `__REDACTED__`.
+- **Redaction is on by default.** Span attributes and projected event payloads are scanned for sensitive keys (e.g. `api_key`, `token`, `authorization`, `password`); matching values are replaced with `__REDACTED__`.
 - **Large values** are truncated to a maximum size (default 20_000 bytes) and suffixed with `__TRUNCATED__`.
 
 **Environment variables (override config files):**
@@ -130,7 +132,7 @@ Config can also be set in `~/.maida/config.yaml` or `.maida/config.yaml` in the 
 | `MAIDA_REDACT_KEYS` | `api_key,token,authorization,cookie,secret,password` | Comma-separated keys (case-insensitive substring match) |
 | `MAIDA_MAX_FIELD_BYTES` | `20000` | Max size for string/field before truncation |
 
-Example: disable redaction (e.g. for local debugging):
+Example: disable redaction (e.g. for trusted local inspection):
 
 ```bash
 export MAIDA_REDACT=0

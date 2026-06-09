@@ -1,11 +1,11 @@
 {% extends "_base.html" %}
 
 {% block title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
-{% block description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
+{% block description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}
 {% block og_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
-{% block og_description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
+{% block og_description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}
 {% block tw_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}
-{% block tw_description %}Maida catches behavioral regressions in AI agents before merge. Compare runs against baselines, enforce policy-as-code, and fail CI when agent behavior changes.{% endblock %}
+{% block tw_description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}
 
 {% block content %}
   {% include "_nav.html" %}
@@ -26,7 +26,7 @@
             <polyline points="12 8 16 12 12 16"></polyline>
             <line x1="8" y1="12" x2="16" y2="12"></line>
           </svg>
-          GitHub Action · Local-first · CI gate
+          GitHub Action · OTel spans · CI gate
         </a>
       </div>
 
@@ -163,7 +163,7 @@
           {
             "step": "03",
             "title": "Capture a known-good baseline",
-            "body": "Run your agent once on main, find the run ID, and check in the baseline JSON.",
+            "body": "Run your agent once on main, find the trace-backed run ID, and check in the baseline JSON.",
             "code": "python my_agent.py\nmaida list --json\nmaida baseline <RUN_ID> --out baselines/my_agent.json",
           },
           {
@@ -186,6 +186,49 @@
             </div>
           </div>
         {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="otel-traces" class="py-24 border-y border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
+        <div class="reveal">
+          <div class="inline-block font-mono text-xs text-text-muted border border-border px-3 py-1 rounded mb-4">
+            OpenTelemetry traces
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
+            Local trace evidence,<br /><span class="text-gradient">OTel-compatible.</span>
+          </h2>
+          <p class="text-text-secondary text-lg leading-relaxed">
+            Maida stores each run as OpenTelemetry-compatible spans, keeps the
+            files local by default, and still feeds the same baselines,
+            assertions, diffs, and timeline viewer.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 reveal">
+          {% set trace_files = [
+            {
+              "title": "spans.jsonl",
+              "body": "Append-only span records with trace_id, span_id, parent_span_id, timing, attributes, and status.",
+            },
+            {
+              "title": "meta.json",
+              "body": "Run metadata keyed by the OTel trace ID, including status, counts, duration, and run name.",
+            },
+            {
+              "title": "events",
+              "body": "A compatibility projection via spans_to_events() for baselines, policy checks, diffs, and the UI.",
+            },
+          ] %}
+          {% for item in trace_files %}
+            <div class="rounded-xl border border-border bg-surface p-5">
+              <h3 class="font-mono text-green text-sm font-bold mb-3">{{ item.title }}</h3>
+              <p class="text-text-secondary text-sm leading-relaxed">{{ item.body }}</p>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </section>
@@ -352,13 +395,16 @@ jobs:
         <div class="reveal space-y-4 text-text-secondary leading-relaxed">
           <p>
             Runs on your machine or GitHub Actions runner. No cloud account
-            required. No telemetry by default. Runs stay in your environment
-            unless you explicitly export them.
+            required. No telemetry by default. Maida.AI does not receive your
+            traces unless you explicitly export them or configure external
+            telemetry.
           </p>
           <p>
-            Maida writes local JSONL files under
+            Maida writes local OTel span files under
             <code class="font-mono text-sm bg-bg px-1.5 py-0.5 rounded border border-border">~/.maida/runs/</code>.
-            You can inspect them, archive them, or delete them.
+            You can inspect them, archive them, or delete them. Local traces can
+            still contain sensitive content depending on what your code records,
+            so redaction stays on by default.
           </p>
         </div>
       </div>
@@ -378,7 +424,8 @@ jobs:
           Install Maida, capture a known-good baseline, and run a behavioral
           check against your next prompt, model, tool, or framework change. No
           cloud account required. No telemetry by default. Runs locally or in
-          your GitHub Actions runner.
+          your GitHub Actions runner, and Maida.AI does not receive them by
+          default.
         </p>
       </div>
 
@@ -435,7 +482,7 @@ jobs:
         {% set faqs = [
           {
             "q": "Do I need a Maida cloud account?",
-            "a": "No. Maida is local-first. It runs on your machine or CI runner, and runs stay in your environment unless you explicitly export them.",
+            "a": "No. Maida is local-first. It runs on your machine or CI runner, and Maida.AI does not receive runs by default unless you explicitly export them or configure external telemetry.",
           },
           {
             "q": "Can I use Maida in GitHub Actions?",

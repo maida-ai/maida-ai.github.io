@@ -1,6 +1,6 @@
 # CLI
 
-The `maida` CLI lists runs, starts the local viewer, and exports runs to JSON. Storage is under `~/.maida/` by default (overridable with `MAIDA_DATA_DIR`). For all configuration options and precedence, see the [configuration reference](reference/config.md).
+The `maida` CLI lists trace-backed runs, starts the local viewer, and exports runs to JSON. Storage is under `~/.maida/` by default (overridable with `MAIDA_DATA_DIR`). Current runs are identified by OTel trace IDs; the CLI keeps the user-facing argument name `RUN_ID` for compatibility and accepts short trace ID prefixes. For all configuration options and precedence, see the [configuration reference](reference/config.md).
 
 ---
 
@@ -31,7 +31,7 @@ maida list --json
 
 **Exit codes:** `0` success; `10` internal error.
 
-**Text columns:** run_id (short), run_name, started_at, duration_ms, llm_calls, tool_calls, status.
+**Text columns:** run_id (short trace ID), run_name, started_at, duration_ms, llm_calls, tool_calls, status.
 
 ---
 
@@ -49,7 +49,7 @@ maida view [RUN_ID] [--host HOST] [--port PORT] [--no-browser] [--json]
 
 | Argument/Option | Default | Description |
 |-----------------|---------|-------------|
-| `RUN_ID` | (latest) | Run to view; can be a short prefix (e.g. first 8 chars of UUID) |
+| `RUN_ID` | (latest) | Run to view; can be a short trace ID prefix (e.g. first 8 hex chars) |
 | `--host`, `-H` | 127.0.0.1 | Bind host |
 | `--port`, `-p` | 8712 | Bind port |
 | `--no-browser` | - | Do not open the browser; only start the server |
@@ -66,13 +66,24 @@ maida view --json
 
 **Exit codes:** `0` success; `2` run not found (or no runs); `10` internal error.
 
-With `--json`, output shape: `{"spec_version":"0.1","run_id":"...","url":"http://127.0.0.1:8712/?run_id=...","status":"serving"}`.
+With `--json`, output shape:
+
+```json
+{
+  "spec_version": "0.2",
+  "run_id": "...",
+  "url": "http://127.0.0.1:8712/?run_id=...",
+  "status": "serving"
+}
+```
+
+The `run_id` value is the resolved OTel trace ID.
 
 ---
 
 ## `maida export`
 
-Exports one run to a single JSON file (run metadata + events array).
+Exports one run to a single JSON file (run metadata + projected events array).
 
 **Usage:**
 
@@ -84,19 +95,19 @@ maida export RUN_ID --out FILE
 
 | Argument/Option | Description |
 |---|---|
-| `RUN_ID` | Run to export; can be a short prefix (e.g. first 8 chars of UUID) |
+| `RUN_ID` | Run to export; can be a short trace ID prefix (e.g. first 8 hex chars) |
 | `--out`, `-o` | Output file path (JSON) |
 
 **Examples:**
 
 ```bash
-maida export a1b2c3d4-1234-5678-90ab-cdef12345678 --out run.json
-maida export a1b2c3d4 -o ./exports/run.json
+maida export a1b2c3d4e5f67890a1b2c3d4e5f67890 --out trace-export.json
+maida export a1b2c3d4 -o ./exports/trace-export.json
 ```
 
 **Exit codes:** `0` success; `2` run not found; `10` internal error.
 
-Output file contains: `spec_version`, `run` (run metadata), `events` (array of event objects).
+Output file contains: `spec_version`, `run` (run metadata), and `events` (array of event objects projected from spans).
 
 ---
 
@@ -114,7 +125,7 @@ maida baseline RUN_ID [--out PATH]
 
 | Argument/Option | Default | Description |
 |---|---|---|
-| `RUN_ID` | *(required)* | Run ID or prefix to snapshot |
+| `RUN_ID` | *(required)* | OTel trace ID or prefix to snapshot |
 | `--out`, `-o` | `.maida/baselines/<run_name>.json` | Output path for the baseline JSON file |
 
 **Examples:**
@@ -126,7 +137,7 @@ maida baseline a1b2c3d4 --out baselines/support_agent_v1.json
 
 **Exit codes:** `0` success; `2` run not found; `10` internal error.
 
-The output file is a JSON object containing `schema_version`, `source_run_id`, summary metrics, `tool_path`, `tool_call_counts`, `llm_models_used`, `event_type_sequence`, and `final_status`. Check it into version control to share the baseline with your team.
+The output file is a JSON object containing `schema_version`, `source_run_id` (the resolved OTel trace ID), summary metrics, `tool_path`, `tool_call_counts`, `llm_models_used`, `event_type_sequence`, and `final_status`. Check it into version control to share the baseline with your team.
 
 ---
 
@@ -144,7 +155,7 @@ maida assert RUN_ID [options]
 
 | Argument/Option | Default | Description |
 |---|---|---|
-| `RUN_ID` | *(required)* | Run ID or prefix to check |
+| `RUN_ID` | *(required)* | OTel trace ID or prefix to check |
 | `--baseline`, `-b` | - | Baseline JSON file to compare against |
 | `--policy` | `.maida/policy.yaml` (auto-detected) | Policy YAML file with assertion thresholds |
 | `--max-steps` | - | Max total events allowed |
@@ -199,8 +210,8 @@ Exactly one of `RUN_B` or `--baseline` must be provided.
 
 | Argument/Option | Description |
 |---|---|
-| `RUN_A` | First run ID or prefix |
-| `RUN_B` | Second run ID or prefix (mutually exclusive with `--baseline`) |
+| `RUN_A` | First OTel trace ID or prefix |
+| `RUN_B` | Second OTel trace ID or prefix (mutually exclusive with `--baseline`) |
 | `--baseline`, `-b` | Baseline JSON file to compare against (mutually exclusive with `RUN_B`) |
 | `--format`, `-f` | Output format: `text` (default) |
 

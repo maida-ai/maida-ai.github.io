@@ -4,7 +4,7 @@
 
 **What it is:** A local-first, CI-first developer tool for recording runs, capturing baselines, and blocking bad PRs before merge.
 
-**What it is not:** It is not observability or production monitoring. It does not do deterministic replay (planned for a later version), and it does not lock you into any framework.
+**What it is not:** It is not a hosted telemetry product, a generic output eval platform, or a framework lock-in layer. The local viewer helps inspect evidence, but the core product is behavioral regression gating.
 
 ---
 
@@ -37,7 +37,7 @@ maida view
 maida baseline <RUN_ID> --out baselines/my_agent.json
 ```
 
-A browser tab opens showing every event in the run - tool calls, LLM calls, timing. Data is stored locally under `~/.maida/runs/<run_id>/`.
+A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id_hex>/` as OTel-compatible spans plus metadata.
 
 ---
 
@@ -66,8 +66,8 @@ After any run, open the timeline with `maida view`.
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain handler, OpenAI Agents adapter, and planned adapters |
-| [Architecture](architecture.md) | Event schema, storage layout, viewer API, loop detection |
+| [Architecture](architecture.md) | OTel span schema, storage layout, viewer API, loop detection |
 | **Reference** | |
-| [Trace format](reference/trace-format.md) | Event envelope, event types, payload schemas, run.json (public contract) |
+| [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |
 | [Configuration](reference/config.md) | Env vars, YAML precedence, redaction, truncation, loop detection, guardrails |
 | [Policy YAML](reference/policy.md) | Assertion policy file format, fields, threshold semantics, CLI mapping |

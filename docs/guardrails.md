@@ -2,12 +2,14 @@
 
 Guardrails are Maida's opt-in way to stop a run before it burns more time, tokens, or tool calls than you intended.
 
-They are designed for local debugging loops, not policy enforcement:
+They are runtime safety limits and evidence capture tools, not the post-run policy gate:
 
-- Use existing v0.1 event types only
+- Use the normal projected event view only
 - Record normal trace evidence before aborting
 - Raise a dedicated exception so your code knows the run was stopped on purpose
 - Keep default behavior unchanged unless you enable a guardrail
+
+Use `maida assert` for behavioral policy enforcement against a completed run.
 
 ---
 
@@ -16,7 +18,7 @@ They are designed for local debugging loops, not policy enforcement:
 When a configured threshold is crossed, Maida:
 
 1. Records the relevant warning or event using the existing trace format
-2. Raises `MaidaLoopAbort` or `MaidaGuardrailExceeded`
+2. Raises `LoopAbort` or `GuardrailExceeded`
 3. Records `ERROR`
 4. Finalizes the run with `RUN_END` and `status="error"`
 
@@ -53,22 +55,22 @@ Notes:
 
 ## LangChain / LangGraph
 
-Guardrails work with LangChain/LangGraph via `MaidaLangChainCallbackHandler`. When a guardrail fires, the handler raises `_MaidaAbortSignal` (a `BaseException`) which bypasses both LangChain's callback error handling and LangGraph's graph executor — stopping the run immediately and preventing further token-wasting LLM calls.
+Guardrails work with LangChain/LangGraph via `LangChainCallbackHandler`. When a guardrail fires, the handler raises `_MaidaAbortSignal` (a `BaseException`) which bypasses both LangChain's callback error handling and LangGraph's graph executor — stopping the run immediately and preventing further token-wasting LLM calls.
 
 ```python
-from maida import MaidaLoopAbort, trace
-from maida.integrations import MaidaLangChainCallbackHandler
+from maida import LoopAbort, trace
+from maida.integrations import LangChainCallbackHandler
 
 
 @trace(stop_on_loop=True, stop_on_loop_min_repetitions=3)
 def run_agent():
-    handler = MaidaLangChainCallbackHandler()
+    handler = LangChainCallbackHandler()
     return graph.invoke(state, config={"callbacks": [handler]})
 
 
 try:
     run_agent()
-except MaidaLoopAbort as exc:
+except LoopAbort as exc:
     print(f"Stopped the loop: {exc}")
 ```
 
@@ -79,7 +81,7 @@ The handler also stores the exception on `handler.abort_exception` as a defensiv
 Guardrails work with the OpenAI Agents SDK via the tracing processor. When a guardrail fires, the processor raises `_MaidaAbortSignal` (a `BaseException`) which bypasses the SDK's `except Exception` error handling — stopping the run immediately.
 
 ```python
-from maida import trace, MaidaLoopAbort
+from maida import trace, LoopAbort
 from maida.integrations import openai_agents
 
 
@@ -91,7 +93,7 @@ def run_agent():
 
 try:
     run_agent()
-except MaidaLoopAbort as exc:
+except LoopAbort as exc:
     print(f"Loop detected: {exc}")
 ```
 
@@ -104,7 +106,7 @@ As a defensive fallback, the exception is also stored on `PROCESSOR.abort_except
 ### Stop a looping agent immediately
 
 ```python
-from maida import MaidaLoopAbort, record_llm_call, record_tool_call, trace
+from maida import LoopAbort, record_llm_call, record_tool_call, trace
 
 
 @trace(stop_on_loop=True)
@@ -116,19 +118,19 @@ def run_agent():
 
 try:
     run_agent()
-except MaidaLoopAbort as exc:
+except LoopAbort as exc:
     print(f"Stopped because of a loop: {exc}")
 ```
 
 ### Cap LLM and tool usage during development
 
 ```python
-from maida import MaidaGuardrailExceeded, record_llm_call, record_tool_call, traced_run
+from maida import GuardrailExceeded, record_llm_call, record_tool_call, traced_run
 
 
 try:
     with traced_run(
-        name="react_debug",
+        name="react_guarded",
         max_llm_calls=8,
         max_tool_calls=12,
         max_events=40,
@@ -137,7 +139,7 @@ try:
         # ... your agent loop ...
         record_llm_call(model="gpt-4.1", prompt="...", response="...")
         record_tool_call(name="search", args={"q": "docs"}, result={"hits": 2})
-except MaidaGuardrailExceeded as exc:
+except GuardrailExceeded as exc:
     print(exc.guardrail, exc.threshold, exc.actual)
 ```
 
@@ -210,7 +212,7 @@ guardrails:
 If loop detection fires and `stop_on_loop=True`:
 
 - Maida first writes `LOOP_WARNING`
-- Then raises `MaidaLoopAbort`
+- Then raises `LoopAbort`
 - Then writes `ERROR`
 - Then writes `RUN_END(status="error")`
 
@@ -219,7 +221,7 @@ If loop detection fires and `stop_on_loop=True`:
 For `max_llm_calls`, `max_tool_calls`, `max_events`, and `max_duration_s`:
 
 - Maida writes the event that crossed the limit
-- Then raises `MaidaGuardrailExceeded`
+- Then raises `GuardrailExceeded`
 - Then writes `ERROR`
 - Then writes `RUN_END(status="error")`
 
@@ -233,7 +235,7 @@ Some practical starting points for local development:
 
 - `stop_on_loop=True` for ReAct-style or planner/executor loops
 - `max_llm_calls=10` to `30` for prompt iteration
-- `max_tool_calls=10` to `25` for tool-heavy debugging
+- `max_tool_calls=10` to `25` for tool-heavy development
 - `max_events=50` to `200` when you want a hard ceiling on trace size
 - `max_duration_s=15` to `60` for runs that should finish quickly
 

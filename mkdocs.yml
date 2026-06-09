@@ -1,6 +1,6 @@
 site_name: Maida.AI Docs
 site_url: https://maida.ai/docs/
-site_description: Documentation for Maida.AI, the behavioral regression gate for AI agents. Learn setup, policy-as-code checks, trace inspection, and CI enforcement.
+site_description: Documentation for Maida.AI, the behavioral regression gate for AI agents. Learn setup, local OTel-compatible traces, policy-as-code checks, and CI enforcement.
 docs_dir: docs
 site_dir: site
 
