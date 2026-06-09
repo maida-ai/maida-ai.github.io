@@ -1,11 +1,13 @@
 site_name: Maida.AI Docs
 site_url: https://maida.ai/docs/
 site_description: Documentation for Maida.AI, the behavioral regression gate for AI agents. Learn setup, local OTel-compatible traces, policy-as-code checks, and CI enforcement.
+repo_url: https://github.com/maida-ai/maida
 docs_dir: docs
 site_dir: site
 
 theme:
   name: material
+  favicon: assets/favicon.svg
   palette:
     scheme: slate
     primary: custom
@@ -13,6 +15,9 @@ theme:
   font:
     text: Inter
     code: JetBrains Mono
+
+extra_css:
+  - styles/maida-docs.css
 
 nav:
   - Home: index.md
