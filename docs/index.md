@@ -16,28 +16,28 @@
 pip install maida-ai
 ```
 
-Or from source:
+**2. Run the bundled demo agent** (simulated; no repo clone, no API keys):
 
 ```bash
-git clone https://github.com/maida-ai/maida.git
-cd maida
-uv sync
-```
-
-**2. Run the example agent:**
-
-```bash
-python examples/minimal/simple_agent.py
+maida demo
 ```
 
 **3. Open the timeline viewer or capture a baseline:**
 
 ```bash
 maida view
-maida baseline <RUN_ID> --out baselines/my_agent.json
+maida baseline --out baselines/my_agent.json
 ```
 
 A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id_hex>/` as OTel-compatible spans plus metadata.
+
+To watch the gate catch a regression end-to-end on canned data — baseline a good run, run a "refactored" agent that loops and calls a new tool, see the failing report with a PR-comment preview:
+
+```bash
+maida demo --regression
+```
+
+When you're ready to wire up your own project, `maida init` scaffolds a starter `.maida/policy.yaml` (add `--github` for a ready-to-edit CI workflow).
 
 ---
 
@@ -62,7 +62,7 @@ After any run, open the timeline with `maida view`.
 | [Getting started](getting-started.md) | Installation (uv/pip), quickstart, data dir, redaction |
 | [Guardrails](guardrails.md) | Stop runaway runs with loop, count, and duration limits |
 | [Regression testing](regression-testing.md) | Baseline, assert, and diff workflow for catching agent regressions |
-| [CLI](cli.md) | `list`, `view`, `export`, `baseline`, `assert`, `diff` with options and exit codes |
+| [CLI](cli.md) | `demo`, `init`, `list`, `view`, `export`, `baseline`, `assert`, `diff` with options and exit codes |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain handler, OpenAI Agents adapter, and planned adapters |
