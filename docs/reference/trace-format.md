@@ -6,15 +6,29 @@ This page describes the **public trace format** for Maida (`spec_version: "0.2"`
 
 ---
 
-## Overview
+## Run storage layout
 
-- **Per run:** One directory `runs/<trace_id_hex>/` containing:
-  - **spans.jsonl** - required append-only span log; one JSON object per line (one OTel span per line).
-  - **meta.json** - required run metadata; created while the run is active and finalized when the root span ends.
-- **Ordering:** Spans in `spans.jsonl` are in export order; `start_time` provides logical ordering.
+Maida stores local runs under the configured data directory. The default is `~/.maida`, and callers can override it with `MAIDA_DATA_DIR` or config. The canonical per-run directory is `<data_dir>/runs/<trace_id>/`, where `<trace_id>` is the lowercase 32-hex-character OpenTelemetry trace ID.
+
+```text
+<data_dir>/
+  runs/
+    <trace_id>/
+      meta.json
+      spans.jsonl
+```
+
+`meta.json` and `spans.jsonl` are the required files for a completed `spec_version: "0.2"` run directory:
+
+- **`meta.json`** - run metadata. It may be created while the run is active and is finalized when the root span ends.
+- **`spans.jsonl`** - append-only span log. Each non-empty line is one serialized OpenTelemetry span JSON object.
+
+Active runs are provisional: a viewer or external tool may observe `status: "running"`, `ended_at: null`, `duration_ms: null`, or a partially populated `spans.jsonl` while the process is still executing. For completed runs, consumers should require both files, use `meta.json.status` to distinguish `ok` from `error`, and tolerate additive files that are not part of this public contract.
+
+- **Ordering:** Spans in `spans.jsonl` are in export order; use `start_time` for logical ordering.
 - **Span hierarchy:** Root span (no `parent_span_id`) represents the run itself; child spans represent LLM calls, tool calls, state updates, warnings, and errors.
 
-`trace_id_hex` is the 32-character lowercase hexadecimal OTel trace ID. The CLI still uses the user-facing argument name `RUN_ID` in several commands for compatibility; in current storage that value resolves to a full OTel `trace_id`, and short prefixes are accepted when they uniquely match a run.
+The CLI still uses the user-facing argument name `RUN_ID` in several commands for compatibility; in current storage that value resolves to a full OTel `trace_id`, and short prefixes are accepted when they uniquely match a run.
 
 ### Files and readers
 
@@ -53,7 +67,16 @@ Every OTel span is serialized as a single JSON object with these fields:
 
 ### Derived event view
 
-Consumers that need the v0.1-style event list can use `spans_to_events()` to project the span tree into a flat event list with `spec_version`, `event_type`, `ts`, `payload`, and related fields. This compatibility projection is what baselines, assertions, diffs, exports, and the local viewer use when they need event-like records.
+Consumers that need the v0.1-style event list can use the `spans_to_events()` projection, which projects the span tree into a flat event list with `spec_version`, `event_type`, `ts`, `payload`, and related fields. This compatibility projection is what baselines, assertions, diffs, exports, and the local viewer use when they need event-like records.
+
+The projection is deterministic for a given span list:
+
+- every stored span becomes one primary event-like object
+- the root span becomes `RUN_START`
+- child spans become `LLM_CALL`, `TOOL_CALL`, `STATE_UPDATE`, `LOOP_WARNING`, `ERROR`, or `UNKNOWN` based on documented attributes and span events
+- root-span `exception`, `state`, and `maida.loop.warning` span events are surfaced as additional projected events
+- a synthetic `RUN_END` event is appended from the root span's end state
+- projected events are sorted by `ts`
 
 Projection rules are part of the public contract at the event-type level: Maida preserves the event types and payload shapes below for consumer-facing workflows. The exact internal helper names and private implementation modules that perform the projection are not public API.
 
@@ -182,7 +205,7 @@ Error payloads use a consistent shape (same for standalone ERROR events and nest
 
 Each run has a `meta.json` file in its directory. It is created as running metadata when child spans are exported and overwritten with final metadata when the root span ends. `meta.json` itself does not currently include a top-level `spec_version`; `spec_version` is exposed by consumer-facing envelopes such as `maida export`, viewer API responses, and projected event records.
 
-**Required fields:**
+All fields in this table are required keys for the current `meta.json` contract. Fields whose type includes `null` are still required keys, but may be `null` while a run is active or when the value is not available.
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -194,8 +217,6 @@ Each run has a `meta.json` file in its directory. It is created as running metad
 | `status` | string | `"running"` \| `"ok"` \| `"error"` |
 | `counts` | object | See below |
 
-Writers may add optional fields in future `spec_version "0.2"` releases. Readers should preserve unknown fields when modifying metadata and ignore unknown fields when reading.
-
 **counts** object:
 
 ```json
@@ -206,6 +227,17 @@ Writers may add optional fields in future `spec_version "0.2"` releases. Readers
   "loop_warnings": 0
 }
 ```
+
+There are no stable optional `meta.json` fields in the current contract. Future optional fields may be added without a `spec_version` bump, so external tools should ignore unknown fields rather than fail closed. Tools that modify metadata should preserve unknown fields.
+
+Local `meta.json` does not include `spec_version`. The storage contract version is declared by this reference page and by public API/export/projection envelopes that include `spec_version: "0.2"`:
+
+- `GET /api/runs`
+- `GET /api/runs/{trace_id}/spans`
+- `GET /api/runs/{trace_id}/paths`
+- `maida list --json`
+- `maida export`
+- projected event objects returned by `spans_to_events()`
 
 ### Lifecycle semantics
 
@@ -224,8 +256,10 @@ External tooling may rely on:
 
 - The `runs/<trace_id>/meta.json` and `runs/<trace_id>/spans.jsonl` storage layout.
 - The required fields, types, and lifecycle semantics documented on this page.
+- The required span envelope keys documented on this page.
+- The `spans_to_events()` projection keys: `spec_version`, `event_id`, `run_id`, `parent_id`, `event_type`, `ts`, `duration_ms`, `name`, `payload`, and `meta`.
 - The projected event types and payload shapes documented here.
-- `maida export` and viewer API response envelopes that include `spec_version`.
+- Public API, export, and projection envelopes that include `spec_version`.
 - Short trace ID prefix resolution through the CLI.
 
 External tooling should not rely on:
