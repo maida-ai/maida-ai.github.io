@@ -29,7 +29,7 @@ maida view
 maida baseline --out baselines/my_agent.json
 ```
 
-A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id_hex>/` as OTel-compatible spans plus metadata.
+A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id>/` as OTel-compatible spans plus metadata.
 
 To watch the gate catch a regression end-to-end on canned data — baseline a good run, run a "refactored" agent that loops and calls a new tool, see the failing report with a PR-comment preview:
 

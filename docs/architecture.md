@@ -34,7 +34,7 @@ Some Maida workflows still need a flat event list. `spans_to_events()` projects 
 ## Storage layout
 
 - **Base directory:** `~/.maida/` (or `MAIDA_DATA_DIR`).
-- **Per run:** `runs/<trace_id_hex>/`
+- **Per run:** `runs/<trace_id>/`
   - **meta.json** - Run metadata: `trace_id`, `run_name`, `started_at`, `ended_at`, `duration_ms`, `status`, `counts` (llm_calls, tool_calls, errors, loop_warnings).
   - **spans.jsonl** - Append-only OTel span records; one span JSON object per line.
 

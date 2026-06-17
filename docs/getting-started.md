@@ -124,7 +124,7 @@ See [Guardrails](guardrails.md) for examples and [Configuration reference](refer
 
 ## Where data is stored
 
-- **Default:** `~/.maida/runs/<trace_id_hex>/`
+- **Default:** `~/.maida/runs/<trace_id>/`
   - `meta.json` - run metadata (trace ID, status, counts, started_at, ended_at)
   - `spans.jsonl` - one OTel span record per line (append-only)
 
