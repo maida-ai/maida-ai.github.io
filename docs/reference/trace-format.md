@@ -269,6 +269,12 @@ External tooling should not rely on:
 - Undocumented span attributes or event attributes staying unchanged.
 - Legacy v0.1 files (`run.json`, `events.jsonl`) for new runs.
 
+### Compatibility expectations
+
+The public compatibility boundary starts at `spec_version: "0.2"`. Maida does not promise full backwards compatibility for pre-v0.2 local run directories. Legacy v0.1 files (`run.json`, `events.jsonl`) may be recognized by thin compatibility readers so commands can fail with clear upgrade or migration guidance, but external tools should not treat v0.1 as a supported storage contract.
+
+For current-format traces, readers should fail closed on malformed required files or unsupported future `spec_version` values, while keeping validation errors actionable and free of raw prompt, response, tool-argument, or secret payloads. Additive fields in v0.2 should be ignored unless this page documents them as required.
+
 ### CLI commands that read and write runs
 
 - [`maida demo`](../cli.md#maida-demo) and instrumented SDK runs write local traces.
