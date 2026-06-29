@@ -324,10 +324,15 @@ jobs:
             .maida/policy.yaml
           </div>
           <pre class="p-5 text-sm font-mono text-green/90 leading-relaxed overflow-x-auto"><code>assert:
-  no_loops: true
-  no_guardrails: true
   step_tolerance: 0.5
-  expect_status: ok</code></pre>
+  tool_call_tolerance: 0.5
+  cost_tolerance: 0.5
+  duration_tolerance: 0.5
+
+  # no_loops: true
+  # no_guardrails: true
+  # no_new_tools: true
+  # expect_status: ok</code></pre>
         </div>
         <div class="reveal rounded-xl border border-border bg-bg p-6">
           <h3 class="font-bold text-lg mb-3">Policy-as-code</h3>

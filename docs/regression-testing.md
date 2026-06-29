@@ -97,13 +97,22 @@ Instead of passing many CLI flags, commit a `.maida/policy.yaml` file:
 
 ```yaml
 assert:
-  max_steps: 80
-  step_tolerance: 0.2
-  max_tool_calls: 30
-  no_loops: true
-  no_new_tools: true
-  expect_status: ok
+  # Allowed growth vs baseline (0.5 = +50%).
+  step_tolerance: 0.5
+  tool_call_tolerance: 0.5
+  cost_tolerance: 0.5
+  duration_tolerance: 0.5
+
+  # Strict checks (uncomment to opt in):
+  # no_loops: true
+  # no_guardrails: true
+  # no_new_tools: true
+  # expect_status: ok
 ```
+
+This starter policy only applies numeric tolerance checks when a baseline is
+provided. Strict checks require uncommenting the relevant rule or passing the
+matching CLI flag.
 
 `maida assert` auto-detects `.maida/policy.yaml` in the current directory. To use a different path:
 
