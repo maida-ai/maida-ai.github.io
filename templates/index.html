@@ -244,7 +244,7 @@
             Block bad PRs<br /><span class="text-gradient">before merge.</span>
           </h2>
           <p class="text-text-secondary text-lg leading-relaxed mb-5">
-            Add <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">maida-ai/maida-assert@v2</code>
+            Add <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">maida-ai/maida-assert@V4</code>
             to pull requests. Your <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">agent-script</code>
             must use <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">@trace</code>
             or <code class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded border border-border">traced_run()</code>
@@ -272,7 +272,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: maida-ai/maida-assert@v2
+      - uses: maida-ai/maida-assert@V4
         with:
           agent-script: my_agent.py
           baseline: baselines/my_agent.json
@@ -440,7 +440,7 @@ jobs:
           "Add `@trace` to one agent entrypoint",
           "Capture a known-good baseline",
           "Add `.maida/policy.yaml`",
-          "Run `maida-ai/maida-assert@v2` on pull requests",
+          "Run `maida-ai/maida-assert@V4` on pull requests",
         ] %}
         {% for item in setup %}
           <div class="reveal rounded-lg border border-border bg-surface p-4 text-sm text-text-secondary">
@@ -491,7 +491,7 @@ jobs:
           },
           {
             "q": "Can I use Maida in GitHub Actions?",
-            "a": "Yes. Use maida-ai/maida-assert@v2 to run behavioral checks in CI.",
+            "a": "Yes. Use maida-ai/maida-assert@V4 to run behavioral checks in CI.",
           },
           {
             "q": "Is Maida an eval tool?",
