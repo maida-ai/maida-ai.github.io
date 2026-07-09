@@ -69,7 +69,7 @@
             <div class="w-16"></div>
           </div>
           <div class="p-6 font-mono text-sm leading-loose overflow-x-auto">
-            <pre class="whitespace-pre text-text-secondary"><span class="text-text-muted">$ maida assert &lt;RUN_ID&gt; --baseline baselines/main.json --policy .maida/policy.yaml --format markdown</span>
+            <pre class="whitespace-pre text-text-secondary"><span class="text-text-muted">$ maida assert --baseline baselines/main.json --policy .maida/policy.yaml --format markdown</span>
 
 <span class="text-danger">[FAIL]</span> step_count       <span class="text-text-muted">6 -&gt;</span> <span class="text-danger font-bold">22</span> <span class="text-text-muted">(+267%)</span>
 <span class="text-danger">[FAIL]</span> tool_calls       <span class="text-text-muted">4 -&gt;</span> <span class="text-danger font-bold">19</span> <span class="text-text-muted">(+375%)</span>
@@ -163,14 +163,14 @@
           {
             "step": "03",
             "title": "Capture a known-good baseline",
-            "body": "Run your agent once on main, find the trace-backed run ID, and check in the baseline JSON.",
-            "code": "python my_agent.py\nmaida list --json\nmaida baseline <RUN_ID> --out baselines/my_agent.json",
+            "body": "Run your agent once on main and check in the baseline JSON.",
+            "code": "python my_agent.py\nmaida baseline --out baselines/my_agent.json",
           },
           {
             "step": "04",
             "title": "Assert future runs",
-            "body": "Compare each new run against the baseline and fail when policy says behavior regressed.",
-            "code": "python my_agent.py\nmaida assert <RUN_ID> --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown\nmaida diff <RUN_ID> --baseline baselines/my_agent.json\nmaida view <RUN_ID>",
+            "body": "Compare each new run against the baseline; accept intentional changes with a reason after review.",
+            "code": "python my_agent.py\nmaida assert --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown\nmaida diff --baseline baselines/my_agent.json\nmaida view\nmaida accept --baseline baselines/my_agent.json --reason \"expected behavior change\"",
           },
         ] %}
         {% for item in steps %}

@@ -1,6 +1,6 @@
 # Regression testing
 
-Maida ships three CLI commands that turn traced runs into lightweight regression tests: **baseline**, **assert**, and **diff**. Together they let you capture a known-good run, check future runs against it, and drill into what changed when something breaks.
+Maida ships four CLI commands that turn traced runs into lightweight regression tests: **baseline**, **assert**, **diff**, and **accept**. Together they let you capture a known-good run, check future runs against it, drill into what changed when something breaks, and intentionally update the baseline after review.
 
 ---
 
@@ -18,9 +18,10 @@ Agent behavior is non-deterministic. A prompt tweak, model upgrade, or tool chan
 3. Run the agent again         python your_agent.py
 4. Assert against baseline     maida assert --baseline .maida/baselines/my_agent.json
 5. If it fails, diff           maida diff --baseline .maida/baselines/my_agent.json
+6. If expected, accept         maida accept --baseline .maida/baselines/my_agent.json --reason "..."
 ```
 
-`baseline`, `assert`, and `diff` default to the latest run when no run ID is given; pass an OTel trace ID or short prefix to target a specific run.
+`baseline`, `assert`, `diff`, and `accept` default to the latest run when no run ID is given; pass an OTel trace ID or short prefix to target a specific run.
 
 To see the whole workflow on canned data first, run `maida demo --regression`.
 
@@ -246,6 +247,19 @@ Event type distribution:
 ```
 
 The diff shows summary-level metric changes, new or removed tools, and shifts in the event type distribution.
+
+---
+
+## Step 5: Accept intentional changes
+
+If the diff and trace show an intentional behavior change, update the checked-in baseline explicitly:
+
+```bash
+maida accept --baseline .maida/baselines/my_agent.json --reason "expected retrieval tool split"
+git diff .maida/baselines/my_agent.json
+```
+
+`maida accept` rewrites the baseline from the selected run and records acceptance metadata in the JSON: reason, timestamp, Maida version, source run ID, previous baseline source run ID, and previous baseline SHA-256. If the selected run already matches the baseline structurally, it exits `0` and leaves the file untouched.
 
 ---
 
