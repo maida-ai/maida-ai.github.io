@@ -191,7 +191,7 @@ The output file is a JSON object containing `schema_version`, `source_run_id` (t
 
 ## `maida accept`
 
-Updates an existing baseline from a completed run when a behavior change is intentional. Use it after inspecting `maida diff` and `maida view`.
+Updates an existing baseline from a completed run when a behavior change is intentional. Use it after inspecting `maida diff` and `maida view`; do not accept a regression just to make CI pass.
 
 **Usage:**
 
@@ -273,7 +273,7 @@ maida assert --baseline baseline.json --format markdown
 
 **Exit codes:** `0` all checks passed; `1` one or more checks failed; `2` run or baseline not found; `10` internal error.
 
-When a baseline is provided, the markdown report leads with a pass/fail verdict, lists failed checks first with expected vs actual values, collapses passing checks, and embeds a **What changed vs baseline** section (metric deltas, new/removed tools, model changes) plus a local-repro snippet. The text report appends the structural diff on failure.
+When a baseline is provided, the markdown report leads with a pass/fail verdict, lists failed checks first with expected vs actual values, collapses passing checks, and embeds a **What changed vs baseline** section (metric deltas, new/removed tools, model changes) plus next steps that point to `maida diff`, `maida view`, and `maida accept --reason` when the change is intentional. The text report appends the structural diff on failure.
 
 ---
 
