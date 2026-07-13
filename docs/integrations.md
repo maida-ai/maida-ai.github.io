@@ -6,6 +6,19 @@ Maida is **framework-agnostic** at the core. The SDK is a thin layer: you call `
 
 **Adapters** are thin translation layers: they hook into a framework's callbacks and emit Maida events. They do not lock you into that framework for the rest of your app.
 
+Every supported adapter preserves the same core contract:
+
+- Framework packages are optional and loaded only when their adapter is imported.
+- Equivalent LLM and tool activity becomes the same `LLM_CALL` and `TOOL_CALL` structure, regardless of framework.
+- Framework-specific details stay in `meta`; adapters do not add framework-specific event types.
+- Payloads and metadata pass through Maida's redaction and truncation before they are stored.
+
+| Adapter | Install from PyPI | Activate |
+|---|---|---|
+| LangChain / LangGraph | `pip install "maida-ai[langchain]"` | Create `LangChainCallbackHandler` and pass it in `config["callbacks"]` |
+| OpenAI Agents SDK | `pip install "maida-ai[openai]"` | Import `maida.integrations.openai_agents` |
+| CrewAI | `pip install "maida-ai[crewai]"` | Import `maida.integrations.crewai` |
+
 ---
 
 ## Available
@@ -14,13 +27,13 @@ Maida is **framework-agnostic** at the core. The SDK is a thin layer: you call `
 
 **Status: available.** An optional callback handler lives at `maida.integrations.langchain`. It records LLM calls and tool calls to the active Maida run automatically.
 
-**Requirements:** `langchain-core` must be installed. Install the optional dependency group:
+**Requirements:** `langchain-core` must be installed. Install Maida with the LangChain extra:
 
 ```bash
-pip install -e ".[langchain]"
+pip install "maida-ai[langchain]"
 ```
 
-If `langchain-core` is not installed, importing the integration raises a clear `ImportError` with install instructions. The integration is optional; the core package does not depend on it.
+If `langchain-core` is missing, accessing `LangChainCallbackHandler` raises an `ImportError` that identifies the LangChain extra. Importing core `maida` remains safe.
 
 **Usage:**
 
@@ -43,10 +56,10 @@ The handler captures:
 - **LLM calls** (`on_llm_start` / `on_chat_model_start` -> `on_llm_end`): records model name, prompt, response, and token usage via `record_llm_call`.
 - **Tool calls** (`on_tool_start` -> `on_tool_end` / `on_tool_error`): records tool name, args, result, and error status via `record_tool_call`.
 
-See `examples/langchain/minimal.py` for a runnable example:
+The [offline LangChain example](assets/examples/langchain-minimal.py) uses `FakeListLLM` and a local tool, so it requires no API key or network call:
 
 ```bash
-uv run --extra langchain python examples/langchain/minimal.py
+python langchain-minimal.py
 maida view
 ```
 
@@ -56,6 +69,7 @@ All guardrails work with the callback handler. When a guardrail fires, the handl
 **Notes:**
 
 - The handler requires an active Maida run - wrap your entrypoint with `@trace` or set `MAIDA_IMPLICIT_RUN=1`.
+- Only callbacks delivered to this handler are recorded. Calls made without the handler in their callback config are invisible to Maida.
 - Tool errors are recorded as `TOOL_CALL` events with `status="error"` and include the error message.
 - LLM errors are recorded as `LLM_CALL` events with `status="error"` (not as separate `ERROR` events).
 
@@ -65,10 +79,10 @@ All guardrails work with the callback handler. When a guardrail fires, the handl
 
 **Status: available.** An optional adapter lives at `maida.integrations.openai_agents`. Importing it registers an OpenAI Agents tracing processor that forwards SDK generation, function, and handoff spans into the active Maida run.
 
-**Requirements:** `openai-agents` must be installed. Install the optional OpenAI dependency group (the `openai` group contains `openai-agents`):
+**Requirements:** `openai-agents` must be installed. Install Maida with the OpenAI extra:
 
 ```bash
-pip install -e ".[openai]"
+pip install "maida-ai[openai]"
 ```
 
 If `openai-agents` is not installed, importing the integration raises a clear `ImportError` with install instructions. The integration is optional; the core package does not depend on it.
@@ -92,10 +106,10 @@ The adapter captures:
 - **Tool calls** (`FunctionSpanData`): records tool name, args, result, and error status via `record_tool_call`.
 - **Handoffs** (`HandoffSpanData`): records a `TOOL_CALL` named `handoff`, with framework-specific details stored in `meta`.
 
-See `examples/openai_agents/minimal.py` for a runnable fake-data example:
+The [offline OpenAI Agents example](assets/examples/openai-agents-minimal.py) constructs SDK tracing spans with fake data and replaces the SDK processor list with Maida's processor. It requires no API key or model call:
 
 ```bash
-uv run --extra openai python examples/openai_agents/minimal.py
+python openai-agents-minimal.py
 maida view
 ```
 
@@ -116,6 +130,7 @@ As a defensive fallback, the exception is also stored on `PROCESSOR.abort_except
 **Notes:**
 
 - The adapter records events only while an explicit Maida run is active; wrap your entrypoint with `@trace` or `traced_run(...)`.
+- Importing the adapter registers a process-wide tracing processor. If your application later replaces the SDK processor list, include `openai_agents.PROCESSOR` in the replacement list.
 - Framework-specific span details stay in `meta.openai_agents.*`, not the event payload.
 - The example uses low-level SDK tracing spans with deterministic fake data, so it needs no API key and makes no model calls.
 
@@ -125,10 +140,10 @@ As a defensive fallback, the exception is also stored on `PROCESSOR.abort_except
 
 **Status: available.** An optional adapter lives at `maida.integrations.crewai`. Importing it registers CrewAI execution hooks that automatically record LLM and tool calls into the active Maida run.
 
-**Requirements:** `crewai[tools]` must be installed. Install the optional dependency group:
+**Requirements:** `crewai[tools]` must be installed. Install Maida with the CrewAI extra:
 
 ```bash
-pip install -e ".[crewai]"
+pip install "maida-ai[crewai]"
 ```
 
 If `crewai` is not installed, importing the integration raises a clear `ImportError` with install instructions.
@@ -152,11 +167,58 @@ The adapter captures:
 
 Framework-specific context (agent role, task description, executor ID) is stored in `meta.crewai.*`.
 
+The [offline CrewAI example](assets/examples/crewai-minimal.py) sends fake data through CrewAI's public hook contexts, so it exercises the adapter without starting a crew, LLM, or API call. The environment flag disables CrewAI's separate anonymous package telemetry for this deterministic run:
+
+```bash
+CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py
+maida view
+```
+
 **Notes:**
 
 - The adapter requires an active Maida run — wrap your entrypoint with `@trace` or `traced_run(...)`.
 - Hook ordering caveat: if another before-hook returns `False` and blocks execution, that specific call may not be captured.
-- No runnable example script yet.
+- CrewAI's current hooks do not expose token usage, so CrewAI `LLM_CALL` events record `usage` as unknown.
+- If a run ends before an after-hook arrives, the pending call is recorded with `status="error"` and `completion="missing_after_hook"` in its CrewAI metadata.
+- The fake-hook-only example unregisters CrewAI's event-bus exit callback to avoid a current one-shot interpreter-shutdown hang. That cleanup is specific to the example and should not be copied into a long-lived Crew or Flow application.
+
+---
+
+## Failure cases and data safety
+
+### Missing optional dependencies
+
+Core Maida does not import any framework. The optional dependency is checked only when its adapter is accessed:
+
+```bash
+python -c "from maida.integrations import LangChainCallbackHandler"
+python -c "from maida.integrations import openai_agents"
+python -c "from maida.integrations import crewai"
+```
+
+If the corresponding extra is absent, that command fails immediately with an `ImportError` naming the missing integration and an install command. Install only the extra you use:
+
+```bash
+pip install "maida-ai[langchain]"  # or [openai] / [crewai]
+```
+
+### No active Maida run
+
+Adapters intentionally do not create runs by themselves. If framework activity occurs outside `@trace` or `traced_run(...)`, it is ignored. This keeps library imports side-effect-free and prevents unrelated framework traffic from appearing in a Maida run.
+
+### Framework errors
+
+- LangChain error callbacks produce `LLM_CALL` or `TOOL_CALL` events with `status="error"`.
+- OpenAI Agents spans with an SDK error produce the corresponding error-status event.
+- CrewAI incomplete before/after hook pairs are flushed as error-status events when the Maida run exits.
+
+The original framework exception remains the application's error; the adapter does not replace it with a framework-specific Maida event type.
+
+### Redaction and truncation
+
+Adapters call Maida's existing `record_llm_call` and `record_tool_call` functions. Prompts, responses, tool arguments, results, errors, and `meta` therefore pass through the same recursive redaction and byte limits as direct SDK calls before anything is written to `spans.jsonl`.
+
+For example, an adapter payload containing `{"api_key": "secret"}` stores the value as `__REDACTED__` with the default configuration. Oversized values end with `__TRUNCATED__`. See [Configuration](reference/config.md#redaction) for the exact keys, precedence, and limits.
 
 ---
 
