@@ -46,8 +46,9 @@ When you're ready to wire up your own project, `maida init` scaffolds a starter 
 | Example | Path | How to run |
 |--------|------|------------|
 | **Minimal agent** (pure Python) | `examples/minimal/` | `python examples/minimal/simple_agent.py` |
-| **LangChain minimal** | `examples/langchain/minimal.py` | `uv run --extra langchain python examples/langchain/minimal.py` |
-| **OpenAI Agents minimal** | `examples/openai_agents/minimal.py` | `uv run --extra openai python examples/openai_agents/minimal.py` |
+| **LangChain minimal** | [offline script](assets/examples/langchain-minimal.py) | `python langchain-minimal.py` |
+| **OpenAI Agents minimal** | [offline script](assets/examples/openai-agents-minimal.py) | `python openai-agents-minimal.py` |
+| **CrewAI minimal** | [offline script](assets/examples/crewai-minimal.py) | `CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py` |
 | **LangChain customer support** (advanced) | `examples/langchain/` | Set API keys, then follow `_customer_support/README.md` |
 | **Demos** (short scripts) | `examples/demo/` | `python examples/demo/pure_python.py` or `python examples/demo/langchain.py` |
 
@@ -65,7 +66,7 @@ After any run, open the timeline with `maida view`.
 | [CLI](cli.md) | `demo`, `init`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
-| [Integrations](integrations.md) | LangChain handler, OpenAI Agents adapter, and planned adapters |
+| [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
 | [Architecture](architecture.md) | OTel span schema, storage layout, viewer API, loop detection |
 | **Reference** | |
 | [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |

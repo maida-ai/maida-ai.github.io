@@ -1,0 +1,62 @@
+"""Deterministic CrewAI adapter example using public fake hook contexts."""
+
+import atexit
+from types import SimpleNamespace
+
+from crewai.events.event_bus import crewai_event_bus
+from crewai.hooks import (
+    LLMCallHookContext,
+    ToolCallHookContext,
+    get_after_llm_call_hooks,
+    get_after_tool_call_hooks,
+    get_before_llm_call_hooks,
+    get_before_tool_call_hooks,
+)
+
+from maida import traced_run
+from maida.integrations import crewai as maida_crewai  # noqa: F401
+
+
+executor = SimpleNamespace(
+    messages=[{"role": "user", "content": "Summarize Maida."}],
+    agent=SimpleNamespace(role="Release reviewer"),
+    task=SimpleNamespace(description="Explain the release gate."),
+    crew=SimpleNamespace(),
+    llm=SimpleNamespace(model="offline"),
+    iterations=0,
+)
+
+
+def emit_fake_crewai_calls() -> None:
+    """Exercise CrewAI's public hook surface without starting an LLM."""
+    with traced_run(name="CrewAI minimal example"):
+        llm_context = LLMCallHookContext(executor)
+        for hook in get_before_llm_call_hooks():
+            hook(llm_context)
+        llm_context.response = "Maida blocks behavioral regressions before merge."
+        for hook in get_after_llm_call_hooks():
+            hook(llm_context)
+
+        tool_context = ToolCallHookContext(
+            tool_name="lookup_docs",
+            tool_input={"query": "Maida integrations"},
+            tool=SimpleNamespace(),
+            agent=executor.agent,
+            task=executor.task,
+            crew=executor.crew,
+            tool_result={"hits": 2},
+        )
+        for hook in get_before_tool_call_hooks():
+            hook(tool_context)
+        for hook in get_after_tool_call_hooks():
+            hook(tool_context)
+
+
+if __name__ == "__main__":
+    emit_fake_crewai_calls()
+    print("Run complete. View with: maida view")
+
+    # Current CrewAI releases can wait indefinitely in their event-bus atexit
+    # callback after a fake-hook-only run. This one-shot script has no queued
+    # events, so leave its daemon loop to interpreter shutdown instead.
+    atexit.unregister(crewai_event_bus.shutdown)
