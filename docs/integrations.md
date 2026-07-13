@@ -63,6 +63,29 @@ python langchain-minimal.py
 maida view
 ```
 
+The normal run has this structural signature:
+
+- event sequence: `RUN_START -> TOOL_CALL -> LLM_CALL -> RUN_END`
+- tool sequence: `lookup` (one call)
+- LLM calls: one `FakeListLLM` call
+- terminal status: `ok`
+
+Use its deterministic regression mode to see the pre-merge gate catch one extra tool call:
+
+```bash
+# Capture the known-good behavior.
+python langchain-minimal.py
+maida baseline --out langchain-baseline.json
+
+# Simulate a code change that repeats the local lookup.
+python langchain-minimal.py --regression
+maida assert --baseline langchain-baseline.json --tool-call-tolerance 0
+```
+
+The regression signature is `RUN_START -> TOOL_CALL -> TOOL_CALL -> LLM_CALL -> RUN_END`, with the tool sequence `lookup -> lookup`, one `FakeListLLM` call, and terminal status `ok`. The final command reports the tool-call increase from 1 to 2 and exits with code `1`, so the same check can block a pull request even though the agent itself completed successfully.
+
+For a multi-node graph, loop failure, and guardrail walkthrough, continue with the [full LangGraph tutorial](https://github.com/maida-ai/maida-tutorials/blob/main/LangChain/Mock%20LangGraph%20Agent.ipynb).
+
 **Guardrails (e.g. `stop_on_loop`) with LangChain / LangGraph:**
 All guardrails work with the callback handler. When a guardrail fires, the handler raises `_MaidaAbortSignal` (a `BaseException`) which bypasses both LangChain's callback error handling and LangGraph's graph executor — stopping the run immediately and preventing further token-wasting LLM calls. See [Guardrails](guardrails.md) for details. To reuse a handler across runs, call `handler.reset()` between runs.
 
