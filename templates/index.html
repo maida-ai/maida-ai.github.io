@@ -108,6 +108,79 @@
     </div>
   </section>
 
+  <section
+    id="broken-pr-preview"
+    aria-labelledby="broken-pr-preview-title"
+    class="py-24 bg-surface border-b border-border"
+  >
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-8 items-center">
+        <div class="reveal">
+          <div class="inline-block font-mono text-xs text-green border border-green/30 bg-green/5 px-3 py-1 rounded mb-4">
+            Locally reproduced PR-comment preview
+          </div>
+          <h2 id="broken-pr-preview-title" class="text-4xl sm:text-5xl font-black tracking-tight mb-5">
+            The answer stayed right.<br /><span class="text-danger">The gate still failed.</span>
+          </h2>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            This text preview was generated locally from the broken-PR demo's
+            intentional regression branch. It shows the Markdown Maida would
+            post to a pull request; it is not a live PR comment.
+          </p>
+          <a
+            href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/broken_pr"
+            class="inline-flex items-center gap-2 text-green font-semibold hover:text-green-dim transition-colors"
+          >
+            Reproduce the broken PR demo
+            <span aria-hidden="true">-&gt;</span>
+          </a>
+        </div>
+
+        <article
+          aria-label="Locally reproduced Maida PR-comment preview"
+          class="reveal rounded-xl border border-border bg-bg overflow-hidden shadow-green-lg"
+        >
+          <div class="px-5 py-4 border-b border-border bg-[#0d0d0d]">
+            <div class="font-mono text-danger font-bold mb-1">❌ Maida verdict: fail</div>
+            <div class="text-sm text-text-secondary"><strong class="text-text-primary">3 of 8 checks failed</strong></div>
+          </div>
+
+          <div class="p-5">
+            <h3 class="font-bold mb-3">Top behavior changes</h3>
+            <div class="overflow-x-auto mb-5">
+              <table class="w-full text-left text-sm">
+                <caption class="sr-only">Tool-call change from the locally reproduced report</caption>
+                <thead class="font-mono text-xs text-text-muted border-b border-border">
+                  <tr>
+                    <th scope="col" class="pb-2 pr-4 font-medium">Behavior</th>
+                    <th scope="col" class="pb-2 px-4 font-medium">Baseline</th>
+                    <th scope="col" class="pb-2 px-4 font-medium">Current</th>
+                    <th scope="col" class="pb-2 pl-4 font-medium">Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row" class="pt-3 pr-4 font-medium">Tool calls</th>
+                    <td class="pt-3 px-4 text-text-secondary">2</td>
+                    <td class="pt-3 px-4 text-danger font-bold">5</td>
+                    <td class="pt-3 pl-4 text-danger font-bold">+150%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="rounded-lg border border-border bg-surface p-4 text-sm">
+              <div class="font-bold mb-2">Tool changes:</div>
+              <div class="text-text-secondary">
+                🔁 <code class="font-mono text-green">lookup_order</code> — repeated 1 -&gt; 4 calls
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="py-24">
     <div class="max-w-6xl mx-auto px-6">
       <div class="max-w-3xl mx-auto text-center mb-16 reveal">
