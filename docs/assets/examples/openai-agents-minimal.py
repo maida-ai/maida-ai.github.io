@@ -1,5 +1,7 @@
 """Deterministic OpenAI Agents SDK adapter example (no network calls)."""
 
+import argparse
+
 from agents.tracing import (
     function_span,
     generation_span,
@@ -13,7 +15,7 @@ from maida.integrations import openai_agents
 
 
 @trace(name="OpenAI Agents minimal example")
-def run_agent() -> None:
+def run_agent(*, regression: bool = False) -> None:
     # Keep SDK tracing local: replace its processors with Maida's processor.
     set_trace_processors([openai_agents.PROCESSOR])
 
@@ -38,10 +40,30 @@ def run_agent() -> None:
         ):
             pass
 
+        if regression:
+            with function_span(
+                name="lookup_docs",
+                input={"query": "Maida regression check"},
+                output={"hits": 2},
+            ):
+                pass
+
         with handoff_span(from_agent="router", to_agent="docs"):
             pass
 
 
-if __name__ == "__main__":
-    run_agent()
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--regression",
+        action="store_true",
+        help="emit one extra lookup_docs tool call",
+    )
+    args = parser.parse_args()
+
+    run_agent(regression=args.regression)
     print("Run complete. View with: maida view")
+
+
+if __name__ == "__main__":
+    main()
