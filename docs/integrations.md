@@ -132,9 +132,36 @@ The adapter captures:
 The [offline OpenAI Agents example](assets/examples/openai-agents-minimal.py) constructs SDK tracing spans with fake data and replaces the SDK processor list with Maida's processor. It requires no API key or model call:
 
 ```bash
+pip install "maida-ai[openai]"
 python openai-agents-minimal.py
 maida view
 ```
+
+The normal run has this structural signature:
+
+- event sequence: `RUN_START -> LLM_CALL -> TOOL_CALL(lookup_docs) -> TOOL_CALL(handoff) -> RUN_END`
+- tool sequence: `lookup_docs -> handoff` (two calls)
+- LLM calls: one `fake-model` call
+- terminal status: `ok`
+
+Capture that known-good behavior and confirm it passes the gate:
+
+```bash
+python openai-agents-minimal.py
+maida baseline --out openai-agents-baseline.json
+maida assert --baseline openai-agents-baseline.json
+```
+
+Then use the deterministic regression mode to repeat the local documentation lookup and run a strict tool-call check:
+
+```bash
+python openai-agents-minimal.py --regression
+maida assert --baseline openai-agents-baseline.json --tool-call-tolerance 0
+```
+
+The regression signature is `RUN_START -> LLM_CALL -> TOOL_CALL(lookup_docs) -> TOOL_CALL(lookup_docs) -> TOOL_CALL(handoff) -> RUN_END`, with the tool sequence `lookup_docs -> lookup_docs -> handoff`, one `fake-model` call, and terminal status `ok`. The final command reports the tool-call increase from 2 to 3 and exits with code `1`, so the gate catches the structural regression even though the agent itself completed successfully.
+
+For an end-to-end agent workflow and guardrail walkthrough, continue with the [full OpenAI Agents tutorial](https://github.com/maida-ai/maida-tutorials/blob/main/OpenAI/Mock%20OpenAI%20Agent.ipynb).
 
 **Guardrails with OpenAI Agents SDK:**
 All guardrails work with the tracing processor. When a guardrail fires, the processor raises `_MaidaAbortSignal` (a `BaseException`) which bypasses the SDK's `except Exception` error handling — stopping the run immediately:
