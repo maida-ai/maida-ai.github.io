@@ -1,5 +1,6 @@
 """Deterministic CrewAI adapter example using public fake hook contexts."""
 
+import argparse
 import atexit
 from types import SimpleNamespace
 
@@ -27,7 +28,24 @@ executor = SimpleNamespace(
 )
 
 
-def emit_fake_crewai_calls() -> None:
+def emit_fake_tool_call() -> None:
+    """Send one deterministic lookup through CrewAI's public tool hooks."""
+    tool_context = ToolCallHookContext(
+        tool_name="lookup_docs",
+        tool_input={"query": "Maida integrations"},
+        tool=SimpleNamespace(),
+        agent=executor.agent,
+        task=executor.task,
+        crew=executor.crew,
+        tool_result={"hits": 2},
+    )
+    for hook in get_before_tool_call_hooks():
+        hook(tool_context)
+    for hook in get_after_tool_call_hooks():
+        hook(tool_context)
+
+
+def emit_fake_crewai_calls(*, regression: bool = False) -> None:
     """Exercise CrewAI's public hook surface without starting an LLM."""
     with traced_run(name="CrewAI minimal example"):
         llm_context = LLMCallHookContext(executor)
@@ -37,24 +55,26 @@ def emit_fake_crewai_calls() -> None:
         for hook in get_after_llm_call_hooks():
             hook(llm_context)
 
-        tool_context = ToolCallHookContext(
-            tool_name="lookup_docs",
-            tool_input={"query": "Maida integrations"},
-            tool=SimpleNamespace(),
-            agent=executor.agent,
-            task=executor.task,
-            crew=executor.crew,
-            tool_result={"hits": 2},
-        )
-        for hook in get_before_tool_call_hooks():
-            hook(tool_context)
-        for hook in get_after_tool_call_hooks():
-            hook(tool_context)
+        emit_fake_tool_call()
+        if regression:
+            emit_fake_tool_call()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--regression",
+        action="store_true",
+        help="emit one extra lookup_docs tool call",
+    )
+    args = parser.parse_args()
+
+    emit_fake_crewai_calls(regression=args.regression)
+    print("Run complete. View with: maida view")
 
 
 if __name__ == "__main__":
-    emit_fake_crewai_calls()
-    print("Run complete. View with: maida view")
+    main()
 
     # Current CrewAI releases can wait indefinitely in their event-bus atexit
     # callback after a fake-hook-only run. This one-shot script has no queued

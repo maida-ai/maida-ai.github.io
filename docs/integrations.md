@@ -224,6 +224,32 @@ CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py
 maida view
 ```
 
+The normal run has this structural signature:
+
+- event sequence: `RUN_START -> LLM_CALL -> TOOL_CALL(lookup_docs) -> RUN_END`
+- tool sequence: `lookup_docs` (one call)
+- LLM calls: one `offline` call
+- terminal status: `ok`
+
+Capture that known-good behavior and confirm it passes the gate:
+
+```bash
+CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py
+maida baseline --out crewai-baseline.json
+maida assert --baseline crewai-baseline.json
+```
+
+Then use the deterministic regression mode to repeat the local documentation lookup and run a strict tool-call check:
+
+```bash
+CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py --regression
+maida assert --baseline crewai-baseline.json --tool-call-tolerance 0
+```
+
+The regression signature is `RUN_START -> LLM_CALL -> TOOL_CALL(lookup_docs) -> TOOL_CALL(lookup_docs) -> RUN_END`, with the tool sequence `lookup_docs -> lookup_docs`, one `offline` call, and terminal status `ok`. The final command reports the tool-call increase from 1 to 2 and exits with code `1`, so the gate catches the structural regression even though the agent itself completed successfully.
+
+For a full multi-agent workflow, an incomplete-hook failure, and a guarded-loop walkthrough, continue with the [full CrewAI tutorial](https://github.com/maida-ai/maida-tutorials/blob/main/CrewAI/Mock%20CrewAI%20Agent.ipynb).
+
 **Notes:**
 
 - The adapter requires an active Maida run — wrap your entrypoint with `@trace` or `traced_run(...)`.
