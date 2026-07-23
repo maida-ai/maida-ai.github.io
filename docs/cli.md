@@ -1,6 +1,6 @@
 # CLI
 
-The `maida` CLI runs the bundled demo, scaffolds a project, lists trace-backed runs, starts the local viewer, exports runs to JSON, updates baselines intentionally, and gates runs against baselines. Storage is under `~/.maida/` by default (overridable with `MAIDA_DATA_DIR`). Current runs are identified by OTel trace IDs; the CLI keeps the user-facing argument name `RUN_ID` for compatibility and accepts short trace ID prefixes. For all configuration options and precedence, see the [configuration reference](reference/config.md).
+The `maida` CLI runs the bundled demo, executes repeatable statistical gates, scaffolds a project, lists trace-backed runs, starts the local viewer, exports runs to JSON, updates baselines intentionally, and gates runs against baselines. Storage is under `~/.maida/` by default (overridable with `MAIDA_DATA_DIR`). Current runs are identified by OTel trace IDs; the CLI keeps the user-facing argument name `RUN_ID` for compatibility and accepts short trace ID prefixes. For all configuration options and precedence, see the [configuration reference](reference/config.md).
 
 Commands that take a run ID (`assert`, `baseline`, `accept`, `export`, `diff`) default to the **latest run** when the ID is omitted. The selected run is announced on stderr so stdout stays machine-readable.
 
@@ -23,6 +23,73 @@ maida demo [--regression]
 | `--regression` | Full story: baseline a known-good run, run a "refactored" agent that loops, calls a new tool, and burns more tokens, then show the failing gate report and a PR-comment preview. Writes the baseline to `.maida/baselines/demo-support-agent.json`. |
 
 **Exit codes:** `0` success (including when the demo gate intentionally fails); `10` internal error.
+
+---
+
+## `maida run`
+
+Runs an agent script repeatedly in isolated workspaces and aggregates the
+configured behavioral checks into a statistical gate verdict. Use it when a
+single successful execution is not enough evidence for a non-deterministic
+agent.
+
+**Usage:**
+
+```bash
+maida run AGENT_SCRIPT [options]
+```
+
+**Arguments / options:**
+
+| Argument/Option | Default | Description |
+|---|---|---|
+| `AGENT_SCRIPT` | *(required)* | Python agent script to execute once per trial |
+| `--trials` | `3` | Number of independent trials |
+| `--confidence-level` | `0.95` | Confidence level for the two-sided Wilson interval |
+| `--pass-rate-threshold` | `0.90` | Minimum acceptable pass rate for each check |
+| `--baseline` | - | Baseline JSON file used by each trial's assertions |
+| `--policy` | `.maida/policy.yaml` (auto-detected) | Policy YAML file with gate settings and assertion thresholds |
+| `--max-steps` | - | Override the policy's maximum event count for this invocation |
+| `--format` | `text` | Report format: `text`, `json`, or `markdown` |
+| `--json-out` | - | Also write the complete JSON report to this path, independent of the display format |
+
+`--trials`, `--confidence-level`, `--pass-rate-threshold`, and assertion
+options such as `--max-steps` override values from the policy file.
+
+**Examples:**
+
+```bash
+# Use the policy defaults and print a text report
+maida run path/to/agent.py --baseline .maida/baselines/my_agent.json
+
+# Increase the evidence and keep both Markdown and machine-readable output
+maida run path/to/agent.py \
+  --trials 30 \
+  --confidence-level 0.95 \
+  --pass-rate-threshold 0.90 \
+  --baseline .maida/baselines/my_agent.json \
+  --format markdown \
+  --json-out maida-report.json
+```
+
+Every trial starts a fresh subprocess in a fresh temporary workspace copied
+from the caller's tracked files and non-ignored working-tree files. Git
+metadata and ignored files are excluded. Trial traces are isolated during
+execution, then completed traces are preserved in the caller's Maida store for
+`maida view` and `maida diff`.
+
+The verdict is `PASS`, `FAIL`, or `INCONCLUSIVE`. `FAIL` exits `1`; `PASS` and
+`INCONCLUSIVE` exit `0` so an uncertain estimate remains visible without being
+reported as a confirmed regression. Missing inputs exit `2`, and internal
+errors exit `10`.
+
+JSON output uses `report_version: "1"`. It includes the overall `verdict`, a
+tri-state `passed` compatibility field, run metadata, every trial and its
+baseline diff, and `aggregate_results` with the observed pass rate, confidence
+interval, threshold, decision rule, and trial outcomes for each check.
+
+See [Regression testing](regression-testing.md#repeat-the-agent-with-a-statistical-gate)
+for verdict semantics and the small-sample compatibility rules.
 
 ---
 
