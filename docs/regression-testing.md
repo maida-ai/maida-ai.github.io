@@ -1,24 +1,26 @@
 # Regression testing
 
-Maida ships four CLI commands that turn traced runs into lightweight regression tests: **baseline**, **assert**, **diff**, and **accept**. Together they let you capture a known-good run, check future runs against it, drill into what changed when something breaks, and intentionally update the baseline after review.
+Maida turns traced runs into behavioral regression tests. Use **run** to repeat
+a non-deterministic agent and aggregate the evidence, **baseline** and
+**assert** for the single-run workflow, **diff** to investigate changes, and
+**accept** to update a reviewed baseline intentionally.
 
 ---
 
 ## Why
 
-Agent behavior is non-deterministic. A prompt tweak, model upgrade, or tool change can silently increase token usage, add unexpected tool calls, or introduce loops. `maida assert` gives you a one-line check — locally or in CI — that catches these regressions before they reach production.
+Agent behavior is non-deterministic. A prompt tweak, model upgrade, or tool change can silently increase token usage, add unexpected tool calls, or introduce loops. `maida run` repeats the agent and measures how reliably its traces satisfy the same policy, while `maida assert` remains available for a completed single run.
 
 ---
 
 ## Workflow overview
 
 ```
-1. Run your agent              python your_agent.py
+1. Run your known-good agent   python your_agent.py
 2. Capture a baseline          maida baseline
-3. Run the agent again         python your_agent.py
-4. Assert against baseline     maida assert --baseline .maida/baselines/my_agent.json
-5. If it fails, diff           maida diff --baseline .maida/baselines/my_agent.json
-6. If expected, accept         maida accept --baseline .maida/baselines/my_agent.json --reason "..."
+3. Gate repeated trials        maida run path/to/agent.py --baseline .maida/baselines/my_agent.json
+4. Inspect a trial             maida view <TRACE_ID>
+5. If expected, accept         maida accept <TRACE_ID> --baseline .maida/baselines/my_agent.json --reason "..."
 ```
 
 `baseline`, `assert`, `diff`, and `accept` default to the latest run when no run ID is given; pass an OTel trace ID or short prefix to target a specific run.
@@ -92,12 +94,107 @@ See the [Policy YAML reference](reference/policy.md#how-thresholds-work) for the
 
 ---
 
+## Repeat the agent with a statistical gate
+
+For a non-deterministic agent, run the script several times instead of treating
+one execution as representative:
+
+```bash
+maida run path/to/agent.py \
+  --baseline .maida/baselines/my_agent.json \
+  --trials 3 \
+  --confidence-level 0.95 \
+  --pass-rate-threshold 0.90
+```
+
+Each trial runs in a fresh subprocess and a fresh temporary copy of the
+repository. The copy contains tracked files and non-ignored working-tree files,
+including uncommitted work you are testing, but excludes `.git` metadata and
+ignored build artifacts. Each trial also gets isolated Maida storage. Once a
+trial completes, its trace is preserved in your configured Maida store so you
+can inspect it with `maida view` or compare it with `maida diff`.
+
+The gate evaluates every configured check in every trial and reports one of
+three verdicts per check:
+
+- **PASS** — the evidence supports a pass rate at or above the configured
+  threshold.
+- **FAIL** — the evidence supports a pass rate below the threshold.
+- **INCONCLUSIVE** — the confidence interval crosses the threshold, so the
+  collected trials do not distinguish pass from fail.
+
+The overall verdict is `FAIL` if any check fails, otherwise `INCONCLUSIVE` if
+any check is inconclusive, otherwise `PASS`. Maida uses a two-sided Wilson
+confidence interval: a check passes when the interval's lower bound meets the
+threshold, fails when its upper bound is below the threshold, and is
+inconclusive when the interval crosses the threshold. Two compatibility rules
+apply to small samples:
+
+- At `N=1`, the lone trial is a binary pass or fail (`single_trial_binary`).
+- At the default `N=3`, unanimous outcomes are a pass or fail
+  (`small_n_unanimous`); mixed outcomes use the Wilson rule.
+
+The unanimous `N=3` rule is a temporary compatibility policy, not a claim that
+three runs provide the same statistical evidence as a larger sample. Increase
+`--trials` when the cost of a wrong decision justifies more evidence. Runtime
+and agent/API usage grow with the number of trials, so choose the sample count
+with CI latency and model/tool cost in mind.
+
+`FAIL` exits `1`. Both `PASS` and `INCONCLUSIVE` exit `0`; consumers should read
+the verdict rather than treating every zero exit as a statistical pass.
+
+### Machine-readable report
+
+Use JSON on stdout, or write a sidecar while rendering text or Markdown:
+
+```bash
+maida run path/to/agent.py \
+  --baseline .maida/baselines/my_agent.json \
+  --format markdown \
+  --json-out maida-report.json
+```
+
+The versioned JSON contract has `report_version: "1"` and these top-level
+fields:
+
+```json
+{
+  "report_version": "1",
+  "trials_requested": 3,
+  "verdict": "INCONCLUSIVE",
+  "passed": null,
+  "metadata": {
+    "trials_requested": 3,
+    "trials_completed": 3,
+    "confidence_level": 0.95,
+    "pass_rate_threshold": 0.9
+  },
+  "trials": [],
+  "aggregate_results": []
+}
+```
+
+Each `trials` entry identifies the trial, trace, run name, process exit code,
+single-trial result, check results, and baseline diff. Each
+`aggregate_results` entry contains `check_name`, `verdict`, `trials`,
+`successes`, `pass_rate`, `confidence_interval`, `confidence_level`,
+`pass_rate_threshold`, `decision_rule`, and `trial_outcomes`. The compatibility
+field `passed` is `true` for `PASS`, `false` for `FAIL`, and `null` for
+`INCONCLUSIVE`; use `verdict` in new integrations.
+
+---
+
 ## Step 3: Use a policy file
 
 Instead of passing many CLI flags, commit a `.maida/policy.yaml` file:
 
 ```yaml
 assert:
+  # Statistical gate defaults.
+  trials: 3
+  confidence_level: 0.95
+  pass_rate_threshold: 0.90
+
   # Allowed growth vs baseline (0.5 = +50%).
   step_tolerance: 0.5
   tool_call_tolerance: 0.5
@@ -115,10 +212,20 @@ This starter policy only applies numeric tolerance checks when a baseline is
 provided. Strict checks require uncommenting the relevant rule or passing the
 matching CLI flag.
 
-`maida assert` auto-detects `.maida/policy.yaml` in the current directory. To use a different path:
+`maida run` and `maida assert` auto-detect `.maida/policy.yaml` in the current directory. To use a different path:
 
 ```bash
 maida assert <RUN_ID> --baseline baseline.json --policy ci-policy.yaml
+```
+
+For a repeated gate, the statistical settings can also be overridden directly:
+
+```bash
+maida run path/to/agent.py \
+  --policy ci-policy.yaml \
+  --trials 30 \
+  --confidence-level 0.99 \
+  --pass-rate-threshold 0.95
 ```
 
 **Precedence:** CLI flags > policy file > defaults. See the [full policy reference](reference/policy.md) for all fields, threshold semantics, and override rules.
@@ -274,22 +381,19 @@ Always inspect the trace and Git diff before committing the updated baseline. Ac
 
 ## GitHub Actions example
 
-The easiest path is the packaged action, [maida-ai/maida-assert](https://github.com/maida-ai/maida-assert) — scaffold it with `maida init --github`. It runs your traced agent, asserts the run, and posts the regression report as a sticky PR comment.
+The easiest path is the packaged action, [maida-ai/maida-assert](https://github.com/maida-ai/maida-assert) — scaffold it with `maida init --github`. It runs repeated trials, evaluates the configured gate, and publishes the regression report in the pull request.
 
-To wire it up by hand instead, run your agent in CI, then assert against the checked-in baseline (`maida assert` picks up the latest run automatically):
+To wire it up by hand instead, run the statistical gate against the checked-in baseline:
 
 ```yaml
-- name: Run agent
-  run: python my_agent.py
-
-- name: Assert agent behavior
+- name: Gate agent behavior
   run: |
-    maida assert \
+    maida run path/to/agent.py \
       --baseline .maida/baselines/my_agent.json \
       --format markdown >> "$GITHUB_STEP_SUMMARY"
 ```
 
-If the assertion fails, the step exits with code 1 and the markdown report appears in the GitHub Actions step summary.
+If the gate fails, the step exits with code 1 and the Markdown report appears in the GitHub Actions step summary. An inconclusive result is visible in the report but exits with code 0.
 
 ---
 
