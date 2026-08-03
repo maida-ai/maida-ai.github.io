@@ -13,15 +13,38 @@ Every supported adapter preserves the same core contract:
 - Framework-specific details stay in `meta`; adapters do not add framework-specific event types.
 - Payloads and metadata pass through Maida's redaction and truncation before they are stored.
 
-| Adapter | Install from PyPI | Activate |
+| Adapter | Install | Activate |
 |---|---|---|
 | LangChain / LangGraph | `pip install "maida-ai[langchain]"` | Create `LangChainCallbackHandler` and pass it in `config["callbacks"]` |
 | OpenAI Agents SDK | `pip install "maida-ai[openai]"` | Import `maida.integrations.openai_agents` |
 | CrewAI | `pip install "maida-ai[crewai]"` | Import `maida.integrations.crewai` |
+| Langfuse trace import | Current Maida `main` ([guide](langfuse.md)) | Run `maida import langfuse --trace-id TRACE_ID` |
 
 ---
 
 ## Available
+
+### Langfuse trace import
+
+**Status: available.** If traces already exist in Langfuse, Maida can fetch
+them through the read-only v2 observations API and convert them into validated
+local runs. This is an importer rather than an in-process framework adapter:
+no optional package or second instrumentation path is required.
+
+```bash
+export LANGFUSE_PUBLIC_KEY=pk-lf-...
+export LANGFUSE_SECRET_KEY=sk-lf-...
+maida import langfuse --trace-id 7f0d4a2c...
+maida view
+```
+
+Generations become normalized `LLM_CALL` activity, tools become `TOOL_CALL`
+activity, and all other observation types remain structural spans. Redaction,
+truncation, hierarchy, errors, stable idempotence, and local-only storage are
+preserved. See the [Langfuse import guide](langfuse.md) for credentials,
+selection, mapping, the offline tutorial, and `trace-command` CI setup.
+
+---
 
 ### LangChain / LangGraph callback handler
 

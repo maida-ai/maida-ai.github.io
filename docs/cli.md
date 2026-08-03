@@ -119,6 +119,40 @@ maida init [--github] [--force]
 
 ---
 
+## `maida import langfuse`
+
+Imports complete traces through Langfuse's authenticated, read-only v2
+observations API and installs them in local Maida storage.
+
+**Usage:**
+
+```bash
+maida import langfuse --trace-id TRACE_ID [--base-url URL] [--json]
+maida import langfuse --from TIME --to TIME [FILTERS] [--json]
+```
+
+| Option | Description |
+|---|---|
+| `--trace-id` | Import one complete Langfuse source trace |
+| `--from`, `--to` | Inclusive start and exclusive end for bounded, timezone-aware discovery |
+| `--trace-name` | Restrict range discovery to a recurring trace name |
+| `--session-id` | Restrict range discovery to a Langfuse session |
+| `--environment` | Restrict discovery to an environment; repeatable |
+| `--base-url` | Override `LANGFUSE_BASE_URL` for Cloud region or self-hosted origin |
+| `--json` | Print a machine-readable import summary |
+
+Set `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` in the environment. A
+single trace ID cannot be combined with range filters. Re-importing identical
+source data is idempotent.
+
+**Exit codes:** `0` imported or already present; `2` invalid selection, no
+matches, or only incomplete traces; `10` API, normalization, or storage failure.
+
+See [Importing Langfuse traces](langfuse.md) for the mapping, pagination,
+privacy, offline demo, and CI integration.
+
+---
+
 ## `maida list`
 
 Lists recent runs (by `started_at` descending).

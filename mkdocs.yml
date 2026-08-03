@@ -28,6 +28,7 @@ nav:
   - Viewer: viewer.md
   - SDK: sdk.md
   - Integrations: integrations.md
+  - Import Langfuse traces: langfuse.md
   - Architecture: architecture.md
   - Reference:
       - Configuration: reference/config.md

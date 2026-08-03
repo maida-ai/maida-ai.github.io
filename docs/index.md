@@ -49,6 +49,7 @@ When you're ready to wire up your own project, `maida init` scaffolds a starter 
 | **LangChain minimal** | [offline script](assets/examples/langchain-minimal.py) | `python langchain-minimal.py` |
 | **OpenAI Agents minimal** | [offline script](assets/examples/openai-agents-minimal.py) | `python openai-agents-minimal.py` |
 | **CrewAI minimal** | [offline script](assets/examples/crewai-minimal.py) | `CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py` |
+| **Langfuse import** | [offline tutorial](https://github.com/maida-ai/maida-tutorials/tree/main/demos/langfuse_import) | Import synthetic traces, baseline a good run, and prove a regression fails |
 | **LangChain customer support** (advanced) | `examples/langchain/` | Set API keys, then follow `_customer_support/README.md` |
 | **Demos** (short scripts) | `examples/demo/` | `python examples/demo/pure_python.py` or `python examples/demo/langchain.py` |
 
@@ -63,10 +64,11 @@ After any run, open the timeline with `maida view`.
 | [Getting started](getting-started.md) | Installation (uv/pip), quickstart, data dir, redaction |
 | [Guardrails](guardrails.md) | Stop runaway runs with loop, count, and duration limits |
 | [Regression testing](regression-testing.md) | Baseline, assert, and diff workflow for catching agent regressions |
-| [CLI](cli.md) | `demo`, `init`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
+| [CLI](cli.md) | `demo`, `init`, `import`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
+| [Import Langfuse traces](langfuse.md) | Read-only API import, mapping, local gating, privacy, and CI setup |
 | [Architecture](architecture.md) | OTel span schema, storage layout, viewer API, loop detection |
 | **Reference** | |
 | [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |
