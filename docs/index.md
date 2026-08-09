@@ -64,7 +64,7 @@ After any run, open the timeline with `maida view`.
 | [Getting started](getting-started.md) | Installation (uv/pip), quickstart, data dir, redaction |
 | [Guardrails](guardrails.md) | Stop runaway runs with loop, count, and duration limits |
 | [Regression testing](regression-testing.md) | Baseline, assert, and diff workflow for catching agent regressions |
-| [CLI](cli.md) | `demo`, `init`, `import`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
+| [CLI](cli.md) | `demo`, `init`, `validate-trace`, `import`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
@@ -72,5 +72,6 @@ After any run, open the timeline with `maida view`.
 | [Architecture](architecture.md) | OTel span schema, storage layout, viewer API, loop detection |
 | **Reference** | |
 | [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |
+| [External emitter guide](reference/trace-emitter.md) | Produce and validate native Maida traces without an SDK |
 | [Configuration](reference/config.md) | Env vars, YAML precedence, redaction, truncation, loop detection, guardrails |
 | [Policy YAML](reference/policy.md) | Assertion policy file format, fields, threshold semantics, CLI mapping |

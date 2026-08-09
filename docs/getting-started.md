@@ -125,7 +125,7 @@ See [Guardrails](guardrails.md) for examples and [Configuration reference](refer
 ## Where data is stored
 
 - **Default:** `~/.maida/runs/<trace_id>/`
-  - `meta.json` - run metadata (trace ID, status, counts, started_at, ended_at)
+  - `meta.json` - run metadata (`spec_version`, trace ID, status, counts, started_at, ended_at)
   - `spans.jsonl` - one OTel span record per line (append-only)
 
 The CLI still uses the user-facing name `RUN_ID` in command arguments and JSON fields in a few places. Current runs are backed by OTel trace IDs, and short prefixes are resolved to the full trace ID.
