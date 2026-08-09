@@ -34,3 +34,4 @@ nav:
       - Configuration: reference/config.md
       - Policy YAML: reference/policy.md
       - Trace format: reference/trace-format.md
+      - External emitter guide: reference/trace-emitter.md
