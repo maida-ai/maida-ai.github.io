@@ -125,8 +125,13 @@ All integrations are optional dependencies; the core package does not depend on 
 ## Loop detection
 
 - **Input:** A sliding window of the last N projected events (default N=12; `MAIDA_LOOP_WINDOW`).
-- **Signature:** Each event is reduced to a string: for `LLM_CALL` -> `"LLM_CALL:"+model`, for `TOOL_CALL` -> `"TOOL_CALL:"+tool_name`, else `event_type`.
+- **Signature:** Each event is reduced to a string: for `LLM_CALL` ->
+  `"LLM_CALL:"+model`; for `TOOL_CALL` -> `"TOOL_CALL:"+tool_name` plus a
+  bounded, shape-only argument signature when args are present; otherwise
+  `event_type`. Scalar argument values never enter the signature.
 - **Rule:** Look for a contiguous block of signatures that repeats K times (default K=3; `MAIDA_LOOP_REPETITIONS`) at the end of the window. If found, emit one `LOOP_WARNING` per distinct pattern per run (deduplicated by pattern + repetitions).
-- **Payload:** `pattern` (e.g. "LLM_CALL:gpt-4 -> TOOL_CALL:search"), `repetitions`, `window_size`, `evidence_event_ids`.
+- **Payload:** `pattern` (e.g. "LLM_CALL:gpt-4 -> TOOL_CALL:search"),
+  `pattern_type`, `pattern_length`, `repetitions`, `window_size`, and
+  `evidence_event_ids`.
 
 No ML; purely pattern-based on event type and name to give quick feedback on repetitive agent behavior.

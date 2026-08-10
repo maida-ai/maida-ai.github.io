@@ -486,6 +486,7 @@
     <span style="color: rgba(0,255,136,0.7)">runs-on</span><span class="text-[#555555]">:</span> ubuntu-latest
     <span style="color: rgba(0,255,136,0.7)">permissions</span><span class="text-[#555555]">:</span>
       <span style="color: rgba(0,255,136,0.7)">contents</span><span class="text-[#555555]">:</span> read
+      <span style="color: rgba(0,255,136,0.7)">checks</span><span class="text-[#555555]">:</span> write
       <span style="color: rgba(0,255,136,0.7)">pull-requests</span><span class="text-[#555555]">:</span> write
     <span style="color: rgba(0,255,136,0.7)">steps</span><span class="text-[#555555]">:</span>
       <span class="text-[#555555]">-</span> <span style="color: rgba(0,255,136,0.7)">uses</span><span class="text-[#555555]">:</span> actions/checkout@v7
@@ -520,7 +521,7 @@
             <div class="w-16"></div>
           </div>
           <pre
-            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ maida assert --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown</span>
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ maida run my_agent.py --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown</span>
 
 <span style="color: rgba(255,68,68,0.9)">✗</span>  step_count       <span class="text-[#555555]">6 →</span> <span style="color: rgba(255,68,68,0.9)">22</span>   <span class="text-[#555555]">(+267%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
 <span style="color: rgba(255,68,68,0.9)">✗</span>  tool_calls       <span class="text-[#555555]">4 →</span> <span style="color: rgba(255,68,68,0.9)">19</span>   <span class="text-[#555555]">(+375%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>

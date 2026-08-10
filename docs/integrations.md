@@ -15,9 +15,9 @@ Every supported adapter preserves the same core contract:
 
 | Adapter | Install | Activate |
 |---|---|---|
-| LangChain / LangGraph | `pip install "maida-ai[langchain]"` | Create `LangChainCallbackHandler` and pass it in `config["callbacks"]` |
-| OpenAI Agents SDK | `pip install "maida-ai[openai]"` | Import `maida.integrations.openai_agents` |
-| CrewAI | `pip install "maida-ai[crewai]"` | Import `maida.integrations.crewai` |
+| LangChain / LangGraph | `uv add "maida-ai[langchain] @ git+https://github.com/maida-ai/maida.git@main"` | Create `LangChainCallbackHandler` and pass it in `config["callbacks"]` |
+| OpenAI Agents SDK | `uv add "maida-ai[openai] @ git+https://github.com/maida-ai/maida.git@main"` | Import `maida.integrations.openai_agents` |
+| CrewAI | `uv add "maida-ai[crewai] @ git+https://github.com/maida-ai/maida.git@main"` | Import `maida.integrations.crewai` |
 | Langfuse trace import | Current Maida `main` ([guide](langfuse.md)) | Run `maida import langfuse --trace-id TRACE_ID` |
 
 ---
@@ -53,7 +53,7 @@ selection, mapping, the offline tutorial, and `trace-command` CI setup.
 **Requirements:** `langchain-core` must be installed. Install Maida with the LangChain extra:
 
 ```bash
-pip install "maida-ai[langchain]"
+uv add "maida-ai[langchain] @ git+https://github.com/maida-ai/maida.git@main"
 ```
 
 If `langchain-core` is missing, accessing `LangChainCallbackHandler` raises an `ImportError` that identifies the LangChain extra. Importing core `maida` remains safe.
@@ -93,7 +93,12 @@ The normal run has this structural signature:
 - LLM calls: one `FakeListLLM` call
 - terminal status: `ok`
 
-Use its deterministic regression mode to see the pre-merge gate catch one extra tool call:
+The deterministic examples below retain the legacy single-run interface only
+as a migration aid for comparing already-completed adapter traces. New
+multi-trial gates should execute the agent with `maida run` and policy v2.
+
+Use the LangChain regression mode to see the compatibility check catch one
+extra tool call:
 
 ```bash
 # Capture the known-good behavior.
@@ -128,7 +133,7 @@ All guardrails work with the callback handler. When a guardrail fires, the handl
 **Requirements:** `openai-agents` must be installed. Install Maida with the OpenAI extra:
 
 ```bash
-pip install "maida-ai[openai]"
+uv add "maida-ai[openai] @ git+https://github.com/maida-ai/maida.git@main"
 ```
 
 If `openai-agents` is not installed, importing the integration raises a clear `ImportError` with install instructions. The integration is optional; the core package does not depend on it.
@@ -155,7 +160,7 @@ The adapter captures:
 The [offline OpenAI Agents example](assets/examples/openai-agents-minimal.py) constructs SDK tracing spans with fake data and replaces the SDK processor list with Maida's processor. It requires no API key or model call:
 
 ```bash
-pip install "maida-ai[openai]"
+uv add "maida-ai[openai] @ git+https://github.com/maida-ai/maida.git@main"
 python openai-agents-minimal.py
 maida view
 ```
@@ -216,7 +221,7 @@ As a defensive fallback, the exception is also stored on `PROCESSOR.abort_except
 **Requirements:** `crewai[tools]` must be installed. Install Maida with the CrewAI extra:
 
 ```bash
-pip install "maida-ai[crewai]"
+uv add "maida-ai[crewai] @ git+https://github.com/maida-ai/maida.git@main"
 ```
 
 If `crewai` is not installed, importing the integration raises a clear `ImportError` with install instructions.
@@ -298,7 +303,7 @@ python -c "from maida.integrations import crewai"
 If the corresponding extra is absent, that command fails immediately with an `ImportError` naming the missing integration and an install command. Install only the extra you use:
 
 ```bash
-pip install "maida-ai[langchain]"  # or [openai] / [crewai]
+uv add "maida-ai[langchain] @ git+https://github.com/maida-ai/maida.git@main"  # or [openai] / [crewai]
 ```
 
 ### No active Maida run
