@@ -72,7 +72,7 @@ After any run, open the timeline with `maida view`.
 | [Regression testing](regression-testing.md) | Policy-v2 baseline sampling and candidate gate workflow |
 | [Scheduled checks](scheduled-checks.md) | Read-only drift verdicts over completed native trace windows |
 | [Gate draft extraction](extraction.md) | Derive inactive policy and baseline drafts for human review |
-| [CLI](cli.md) | Current capture, import, scenario, run, extract, drift, trace, and compatibility commands |
+| [CLI](cli.md) | `demo`, `init`, `validate-trace`, `capture`, `import`, `scenario`, `run`, `extract`, `drift`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
