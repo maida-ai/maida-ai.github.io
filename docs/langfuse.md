@@ -96,9 +96,11 @@ details pass through Maida's active redaction and truncation before
 persistence. Completed source errors remain errors; incomplete non-event
 observations are skipped rather than given a fabricated completion.
 
-## Baseline and gate imported behavior
+## Legacy local single-trace compatibility
 
-After importing a known-good trace, use the normal local-first workflow:
+The current CI path is the Action `trace-command` workflow below. For local
+migration workflows that already import one completed trace at a time, the
+legacy single-run interface remains available:
 
 ```bash
 maida view
@@ -111,7 +113,7 @@ maida assert \
   --policy .maida/policy.yaml
 ```
 
-The same policy engine catches changed tool paths, new tools, repeated work,
+The compatibility path uses the same structural evaluator for changed tool paths, new tools, repeated work,
 loops, status changes, and configured latency or token envelopes.
 
 ## Run the importer in GitHub Actions

@@ -10,11 +10,14 @@
 
 ## In 60 seconds
 
-**1. Install:**
+**1. Install the current `main` contract:**
 
 ```bash
-pip install maida-ai
+uv tool install "maida-ai @ git+https://github.com/maida-ai/maida.git@main"
 ```
+
+These docs track unreleased `main` until the synchronized `0.5.x` contract is
+tagged.
 
 **2. Run the bundled demo agent** (simulated; no repo clone, no API keys):
 
@@ -22,11 +25,10 @@ pip install maida-ai
 maida demo
 ```
 
-**3. Open the timeline viewer or capture a baseline:**
+**3. Open the timeline viewer:**
 
 ```bash
 maida view
-maida baseline --out baselines/my_agent.json
 ```
 
 A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id>/` as OTel-compatible spans plus metadata.
@@ -37,7 +39,10 @@ To watch the gate catch a regression end-to-end on canned data — baseline a go
 maida demo --regression
 ```
 
-When you're ready to wire up your own project, `maida init` scaffolds a starter `.maida/policy.yaml` (add `--github` for a ready-to-edit CI workflow).
+When you're ready to wire up your own project, `maida init` scaffolds a policy-v2
+`.maida/policy.yaml` (add `--github` for a ready-to-edit CI workflow). Use
+[`maida run`](regression-testing.md) to capture a reviewed baseline sample and
+gate candidate trials.
 
 ---
 
@@ -63,8 +68,11 @@ After any run, open the timeline with `maida view`.
 |------|-------------|
 | [Getting started](getting-started.md) | Installation (uv/pip), quickstart, data dir, redaction |
 | [Guardrails](guardrails.md) | Stop runaway runs with loop, count, and duration limits |
-| [Regression testing](regression-testing.md) | Baseline, assert, and diff workflow for catching agent regressions |
-| [CLI](cli.md) | `demo`, `init`, `validate-trace`, `import`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
+| [Capture Claude Code](claude-code.md) | Capture, import, and gate Claude Code sessions and isolated scenarios |
+| [Regression testing](regression-testing.md) | Policy-v2 baseline sampling and candidate gate workflow |
+| [Scheduled checks](scheduled-checks.md) | Read-only drift verdicts over completed native trace windows |
+| [Gate draft extraction](extraction.md) | Derive inactive policy and baseline drafts for human review |
+| [CLI](cli.md) | Current capture, import, scenario, run, extract, drift, trace, and compatibility commands |
 | [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
 | [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
 | [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
@@ -74,4 +82,4 @@ After any run, open the timeline with `maida view`.
 | [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |
 | [External emitter guide](reference/trace-emitter.md) | Produce and validate native Maida traces without an SDK |
 | [Configuration](reference/config.md) | Env vars, YAML precedence, redaction, truncation, loop detection, guardrails |
-| [Policy YAML](reference/policy.md) | Assertion policy file format, fields, threshold semantics, CLI mapping |
+| [Policy v2](reference/policy.md) | Metric kinds, sufficiency, directions, composition, and v1 migration |

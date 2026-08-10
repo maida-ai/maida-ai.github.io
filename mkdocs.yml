@@ -22,8 +22,11 @@ extra_css:
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - Capture Claude Code: claude-code.md
   - Guardrails: guardrails.md
   - Regression testing: regression-testing.md
+  - Scheduled checks: scheduled-checks.md
+  - Gate draft extraction: extraction.md
   - CLI: cli.md
   - Viewer: viewer.md
   - SDK: sdk.md
@@ -32,6 +35,6 @@ nav:
   - Architecture: architecture.md
   - Reference:
       - Configuration: reference/config.md
-      - Policy YAML: reference/policy.md
+      - Policy v2: reference/policy.md
       - Trace format: reference/trace-format.md
       - External emitter guide: reference/trace-emitter.md

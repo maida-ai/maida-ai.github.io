@@ -21,8 +21,8 @@ maida validate-trace emitted-run/meta.json
 ```
 
 Validation is read-only. It does not copy or install the trace. To make an
-already validated trace available to `maida baseline`, `maida assert`, or
-`maida diff`, emit it into the configured native location
+already validated trace available to `maida baseline`, `maida diff`, or the
+legacy single-run `maida assert` compatibility interface, emit it into the configured native location
 `<data_dir>/runs/<trace_id>/`.
 
 ## Minimal completed trace

@@ -75,7 +75,7 @@
             <div class="w-16"></div>
           </div>
           <div class="p-6 font-mono text-sm leading-loose overflow-x-auto">
-            <pre class="whitespace-pre text-text-secondary"><span class="text-text-muted">$ maida assert --baseline baselines/main.json --policy .maida/policy.yaml --format markdown</span>
+            <pre class="whitespace-pre text-text-secondary"><span class="text-text-muted">$ maida run my_agent.py --baseline baselines/main.json --policy .maida/policy.yaml --format markdown</span>
 
 <span class="text-danger">[FAIL]</span> step_count       <span class="text-text-muted">6 -&gt;</span> <span class="text-danger font-bold">22</span> <span class="text-text-muted">(+267%)</span>
 <span class="text-danger">[FAIL]</span> tool_calls       <span class="text-text-muted">4 -&gt;</span> <span class="text-danger font-bold">19</span> <span class="text-text-muted">(+375%)</span>
@@ -230,8 +230,8 @@
           {
             "step": "01",
             "title": "Install Maida",
-            "body": "Install the `maida-ai` package from PyPI. It provides the `maida` CLI and the `maida` Python module.",
-            "code": "pip install maida-ai",
+            "body": "Until the synchronized 0.5.x release is tagged, install the current engine directly from GitHub main.",
+            "code": "uv tool install \"maida-ai @ git+https://github.com/maida-ai/maida.git@main\"",
           },
           {
             "step": "02",
@@ -241,15 +241,15 @@
           },
           {
             "step": "03",
-            "title": "Capture a known-good baseline",
-            "body": "Run your agent once on main and check in the baseline JSON.",
-            "code": "python my_agent.py\nmaida baseline --out baselines/my_agent.json",
+            "title": "Capture a reviewed baseline sample",
+            "body": "Run the full trial budget on known-good code and check in the immutable baseline JSON.",
+            "code": "maida run my_agent.py --trials 25 --no-fail-fast --json-out baseline-report.json\nmaida baseline --from-report baseline-report.json --out baselines/my_agent.json",
           },
           {
             "step": "04",
-            "title": "Assert future runs",
-            "body": "Compare each new run against the baseline; accept intentional changes with a reason after review.",
-            "code": "python my_agent.py\nmaida assert --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown\nmaida diff --baseline baselines/my_agent.json\nmaida view\nmaida accept --baseline baselines/my_agent.json --reason \"expected behavior change\"",
+            "title": "Gate candidate trials",
+            "body": "Run policy v2 against isolated candidate trials and inspect the preserved traces when behavior changes.",
+            "code": "maida run my_agent.py --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown --json-out maida-report.json\nmaida view",
           },
         ] %}
         {% for item in steps %}
@@ -348,6 +348,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      checks: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v7
@@ -515,7 +516,7 @@ jobs:
 
       <div class="grid md:grid-cols-5 gap-3 mb-10">
         {% set setup = [
-          "Install `maida-ai`",
+          "Install `maida-ai` from `maida@main`",
           "Add `@trace` to one agent entrypoint",
           "Capture a known-good baseline",
           "Add `.maida/policy.yaml`",

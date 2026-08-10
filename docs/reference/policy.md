@@ -1,253 +1,208 @@
-# Policy YAML reference
+# Policy v2 and gate decisions
 
-A **policy file** (`.maida/policy.yaml`) lets teams check assertion thresholds into version control so that `maida run` and `maida assert` apply consistent checks without long CLI flags.
-
----
-
-## Resolution order
-
-`maida run` and `maida assert` resolve the policy in this order:
-
-1. **`--policy PATH`** flag on the CLI (explicit path)
-2. **`.maida/policy.yaml`** in the current working directory (auto-detected)
-3. **Empty policy** (all checks disabled)
-
-CLI flags (`--max-steps`, `--no-loops`, etc.) are then merged on top. CLI values always win over the file — see [Override rules](#override-rules) below.
-
----
-
-## File structure
-
-The file is standard YAML. The policy loader reads a single top-level `assert:` mapping; all other top-level keys are ignored. Unknown keys inside `assert:` are also ignored.
+Maida policy v2 makes the source of every acceptance criterion explicit. The
+gate is a pure function of the candidate code, policy, immutable baseline,
+and environment. It never accumulates baseline observations across CI runs.
 
 ```yaml
-# .maida/policy.yaml
-assert:
-  # ... assertion fields go here ...
+version: 2
+trials: 3
+fail_fast: true
+metrics:
+  stop_condition_reached: {kind: invariant, require: true}
+  forbidden_tools: {kind: invariant, none_of: [admin_delete]}
+  step_count:
+    kind: measured
+    direction: upper
+    tolerance: {relative: 0.5}
+  cost_tokens:
+    kind: measured
+    direction: upper
+    tolerance: {relative: 0.25}
+  task_pass_rate:
+    kind: statistical
+    direction: lower
+    threshold: 0.90
+    confidence: 0.95
+    success_predicate: all_invariants_passed
+    mode: report_only
 ```
 
-Requires **PyYAML** (`pip install pyyaml` or included in `maida[yaml]`). If PyYAML is not installed, `maida assert --policy ...` raises a clear `RuntimeError`.
+Policy is hand-authored input and fails closed. Unknown fields are errors.
+The version uses `major[.minor]`: `version: 2` normalizes to `(2, 0)`;
+`version: 2.1` is valid when supported; `version: 2.0.0` is not.
 
----
+## Metric kinds
 
-## Assertion fields
+| Kind | Acceptance criterion | Sufficiency |
+| --- | --- | --- |
+| `invariant` | Author-declared semantic contract | No sample requirement |
+| `measured` | Author-declared numeric tolerance or limit | Valid at N=1 |
+| `distributional` | One-sided prediction bound inferred from a baseline sample | Checked when the baseline is bound |
+| `statistical` | Policy threshold θ and candidate Bernoulli outcomes | Checked when policy loads |
 
-All fields are optional. A check is **disabled** unless at least one relevant value is set (via baseline, policy file, or CLI flag).
+The band is either declared or purchased. A measured tolerance is cheap and
+works with one candidate observation. A distributional bound requires enough
+baseline trials to earn its requested coverage.
 
-### Statistical gate settings
+### Invariant
 
-These fields control repeated execution by `maida run`. They live in the same
-`assert:` mapping as the checks they aggregate.
+An invariant is exact. Any observed violation fails, including at N=1. Across
+multiple trials, trials are a counterexample search rather than a rate sample:
+one violation is enough. Reports show `violated in 1/25 trials` so intermittent
+contracts are visible. Reclassify an intermittent property instead of weakening
+the invariant rule.
 
-| YAML key | Type | Default | CLI flag | Description |
-|---|---|---|---|---|
-| `trials` | `int` | `3` | `--trials` | Number of isolated agent executions |
-| `confidence_level` | `float` | `0.95` | `--confidence-level` | Confidence level for the two-sided Wilson interval |
-| `pass_rate_threshold` | `float` | `0.90` | `--pass-rate-threshold` | Minimum acceptable pass rate for each check |
+Supported invariants are `stop_condition_reached`, `forbidden_tools`,
+`required_tools`, `no_loops`, and `no_guardrails`.
 
-The defaults intentionally keep the first gate quick. At `N=1`, Maida uses the
-single trial as a binary decision. At `N=3`, unanimous outcomes decide the
-verdict while mixed outcomes use the Wilson interval. This small-sample rule is
-a temporary compatibility policy; use more trials when stronger evidence is
-worth the added execution cost and CI latency.
+### Measured
 
-### Numeric thresholds
+A measured metric compares the candidate aggregate with a user tolerance or
+hard limit. The default aggregate is `median`. Every report includes
+min/median/max. `aggregate: max` and `aggregate: p90` are explicit upper-tail
+opt-ins.
 
-| YAML key | Type | Default | CLI flag | Description |
-|---|---|---|---|---|
-| `max_steps` | `int` or `null` | `null` | `--max-steps` | Hard cap on total event count |
-| `step_tolerance` | `float` | `0.5` | `--step-tolerance` | Fractional tolerance for step count when comparing against a baseline |
-| `max_tool_calls` | `int` or `null` | `null` | `--max-tool-calls` | Hard cap on tool call count |
-| `tool_call_tolerance` | `float` | `0.5` | `--tool-call-tolerance` | Fractional tolerance for tool calls |
-| `max_cost_tokens` | `int` or `null` | `null` | `--max-cost-tokens` | Hard cap on total token count |
-| `cost_tolerance` | `float` | `0.5` | `--cost-tolerance` | Fractional tolerance for token cost |
-| `max_duration_ms` | `int` or `null` | `null` | `--max-duration-ms` | Hard cap on run duration in milliseconds |
-| `duration_tolerance` | `float` | `0.5` | `--duration-tolerance` | Fractional tolerance for duration |
+A one-in-25 tail event is not a measured question. Express “the rate of
+`step_count > X` increased” as a Bernoulli statistical metric.
 
-### Boolean checks
+Relative and absolute tolerances are additive around the baseline aggregate.
+When a hard limit is also present, the stricter boundary applies.
 
-| YAML key | Type | Default | CLI flag | Description |
-|---|---|---|---|---|
-| `no_new_tools` | `bool` | `false` | `--no-new-tools` | Fail if the run uses tools not present in the baseline |
-| `no_loops` | `bool` | `false` | `--no-loops` | Fail if any `LOOP_WARNING` event was emitted |
-| `no_guardrails` | `bool` | `false` | `--no-guardrails` | Fail if any guardrail event was triggered |
+### Distributional
 
-### Status check
+A distributional metric infers a one-sided order-statistic prediction bound
+from the immutable baseline trial vector. For exchangeable observations, a new
+draw exceeds the maximum of `n` baseline observations with probability
+`1/(n+1)`. Therefore:
 
-| YAML key | Type | Default | CLI flag | Description |
-|---|---|---|---|---|
-| `expect_status` | `string` or `null` | `null` | `--expect-status` | Expected run status: `"ok"` or `"error"` |
+```text
+n_min = ceil(1 / (1 - coverage)) - 1
+```
 
----
+This is 19 baseline trials for 95% coverage and 9 for 90%. Ties are
+conservative. `direction: both` is rejected; declare a measured two-sided
+tolerance if both sides are harmful.
 
-## How thresholds work
+At candidate N=1 the gate applies the prediction bound directly. At N>1 it
+counts harmful exceedances and applies a one-sided Wilson bound to the
+exceedance rate. Applying any-trial failure here would produce
+`1 - coverage^N` false failures (72% at 95% coverage and N=25), so it is
+intentionally not used.
 
-Tolerances are **fractional**, not percentage: `0.5` means 50%, `0.2` means 20%.
+If the baseline sample is too small, omitted `mode` resolves to
+`report_only`. Explicit `mode: gating` is rejected when the baseline is bound,
+with the required recapture size.
 
-For each numeric metric (steps, tool calls, tokens, duration), the check depends on what is available:
+### Statistical
 
-| Baseline provided? | `max_*` set? | Effective limit | Meaning |
-|---|---|---|---|
-| Yes | Yes | `min(baseline * (1 + tolerance), max_*)` | Baseline-relative with a hard cap |
-| Yes | No | `baseline * (1 + tolerance)` | Baseline-relative only |
-| No | Yes | `max_*` | Hard cap only |
-| No | No | *(check disabled)* | Nothing to compare against |
+A statistical metric evaluates candidate Bernoulli outcomes against policy θ.
+The baseline does not contribute. `task_pass_rate` defaults to the explicit
+named predicate `all_invariants_passed`: one trial succeeds when every
+invariant-tier metric and the agent process succeeded on that trial.
 
-The check **passes** when `actual <= limit`.
+`confidence` is the **one-sided coverage** of the Wilson bound. At 0.95,
+`z = 1.645`; it is not the coverage of a two-sided interval. Direction chooses
+the harmful side:
 
-When a baseline value is zero and a matching `max_*` cap is set, Maida uses
-the cap as the effective limit. Without a cap, a zero baseline allows no growth
-for that metric.
+- `lower`: pass rate and stop-condition-reached rate
+- `upper`: error, retry, or harmful-event rates
+- `both`: only when explicitly declared
 
-**Example:** A baseline recorded 40 tool calls. With `tool_call_tolerance: 0.25` and `max_tool_calls: 60`:
+PASS and FAIL are both earned from the relevant one-sided bound. Otherwise the
+metric is INCONCLUSIVE. For unanimous lower-direction outcomes:
 
-- Baseline limit: `40 * 1.25 = 50`
-- Hard cap: `60`
-- Effective limit: `min(50, 60) = 50`
-- A run with 48 tool calls passes; a run with 52 fails.
+```text
+Wilson lower = n / (n + z²)
+n_min = ceil(θ z² / (1 - θ))
+```
 
----
+At 95% confidence:
 
-## Override rules
+| θ | Minimum candidate trials |
+| ---: | ---: |
+| 0.70 | 7 |
+| 0.80 | 11 |
+| 0.90 | 25 |
 
-When `maida run` or `maida assert` loads a policy file and also receives CLI flags, the policy merge applies these rules:
+An explicit gating metric below `n_min` is rejected while loading policy. The
+error includes θ, confidence, computed `n_min`, configured trials, and both
+remedies: raise trials or set `mode: report_only`. If `mode` is omitted, the
+metric is report-only below the boundary and promotes to gating at the
+boundary.
 
-- A CLI value of `None` (flag not provided) keeps the file value.
-- A CLI boolean value of `False` (flag not provided) keeps the file value. Only an explicit `--no-loops` (which sends `True`) overrides.
-- Any other non-`None` CLI value replaces the file value.
+## Direction and reporting
 
-This means you can set baseline thresholds in the committed policy file and tighten or loosen individual checks on a per-invocation basis:
+`direction` is required on measured, distributional, and statistical metrics.
+`upper` means only an increase can block; `lower` means only a decrease can
+block; `both` must be explicit and is never inferred by v2.
+
+Direction controls blocking, not reporting. A step count falling from 12 to 5
+passes an upper-direction gate but the `-7` delta remains in the PR comment.
+Large improvements can reveal skipped work and deserve review without a red
+check.
+
+## Composition and stopping
+
+FAIL dominates. PASS requires every blocking tier to pass and no gating metric
+to be inconclusive. A gating INCONCLUSIVE produces the overall neutral
+INCONCLUSIVE result. `report_only` metrics never block and have no verdict.
+
+`fail_fast: true` is the default. The fixed budget stops when a blocking
+failure is irreversible, especially an invariant violation, and reports
+`trials_used`, `trials_budgeted`, `stopping_rule`, and `abort_reason`.
+Use `--no-fail-fast` for baseline capture and calibration.
+
+Exit codes are stable across report versions:
+
+| Exit | Meaning |
+| ---: | --- |
+| 0 | PASS or INCONCLUSIVE |
+| 1 | Gate FAIL |
+| 2 | Input, policy, baseline, or run not found/invalid |
+| 10 | Internal execution error |
+
+## Immutable baseline capture
+
+Run the full candidate budget and bind it explicitly:
 
 ```bash
-# File sets no_loops: true, step_tolerance: 0.3
-# CLI overrides max_steps for this specific run
-maida assert abc123 --max-steps 100
+maida run agent.py --trials 25 --no-fail-fast --json-out report.json
+maida baseline --from-report report.json --out .maida/baselines/agent.json
 ```
 
-`maida run` also accepts direct overrides for all three statistical fields:
+The checked-in baseline stores each per-trial numeric and invariant outcome
+vector, structural signatures deduplicated by hash with counts, and an
+environment fingerprint. It is never mutated or accumulated by gate runs.
+Recapture explicitly when more evidence is desired.
 
-```bash
-maida run path/to/agent.py \
-  --trials 30 \
-  --confidence-level 0.99 \
-  --pass-rate-threshold 0.95
-```
+## Version streams
 
----
+The four formats are intentionally not harmonized:
 
-## Full examples
+| Stream | Current | Form | Compatibility |
+| --- | --- | --- | --- |
+| Policy | `2` | `major[.minor]` | Hand-authored; unknown keys and unsupported minor versions reject |
+| Trace | `0.2.0` | full semver | Generated; legacy `0.2` loads and patch drift within 0.2 is accepted |
+| Baseline | `0.3.0` | full semver | Generated; legacy `0.2` loads |
+| Report | `2.0.0` | full semver | Generated external contract; consumers must ignore unknown fields within a major |
 
-### Starter policy
+Report fields are never removed or repurposed within a major. Report consumers
+must ignore unknown fields. Policy loaders do the opposite because silently
+ignoring a requested policy key would make the gate claim enforcement it did
+not perform.
 
-```yaml
-# .maida/policy.yaml - generated by `maida init`
-assert:
-  # Statistical gate defaults.
-  trials: 3
-  confidence_level: 0.95
-  pass_rate_threshold: 0.90
+## v1 migration
 
-  # Allowed growth vs baseline (0.5 = +50%).
-  step_tolerance: 0.5
-  tool_call_tolerance: 0.5
-  cost_tolerance: 0.5
-  duration_tolerance: 0.5
+An unversioned or `version: 1` policy loads through a visible deprecation
+warning. Known legacy metric names infer their established directions:
+step/tool/cost/latency are upper; pass rate is lower. Unknown v1 keys are named
+in the warning.
 
-  # Strict checks (uncomment to opt in):
-  # no_loops: true
-  # no_guardrails: true
-  # no_new_tools: true
-  # expect_status: ok
-```
+N=1 users retain binary pass/fail through invariant and measured tiers. Default
+N=3 users retain their verdict unless the old gate passed solely because a
+statistical metric used the removed 3/3 unanimous compatibility rule. That is
+the only branch-protection-visible migration change.
 
-The starter policy is forgiving on purpose. It only applies numeric tolerance
-checks when a baseline is provided. Without a baseline, those checks have
-nothing to compare against. Strict behavior, such as failing on any loop warning
-or any new tool, requires uncommenting the relevant rule or passing the matching
-CLI flag.
-
-### Lenient local policy
-
-Use this archetype while iterating locally. It keeps the baseline-relative
-tolerances from the starter policy and avoids strict checks until you opt in.
-
-```yaml
-# .maida/policy.yaml - for local iteration
-assert:
-  trials: 3
-  confidence_level: 0.95
-  pass_rate_threshold: 0.90
-
-  step_tolerance: 0.5
-  tool_call_tolerance: 0.5
-  cost_tolerance: 0.5
-  duration_tolerance: 0.5
-
-  # Optional local sanity checks:
-  # no_loops: true
-  # expect_status: ok
-```
-
-### Strict CI policy
-
-```yaml
-# .maida/policy.yaml - checked into the repo
-assert:
-  trials: 30
-  confidence_level: 0.95
-  pass_rate_threshold: 0.90
-  max_steps: 80
-  step_tolerance: 0.2
-  max_tool_calls: 30
-  tool_call_tolerance: 0.2
-  max_cost_tokens: 10000
-  cost_tolerance: 0.1
-  max_duration_ms: 30000
-  duration_tolerance: 0.2
-  no_new_tools: true
-  no_loops: true
-  no_guardrails: true
-  expect_status: ok
-```
-
-### Passing example
-
-Baseline summary:
-
-```json
-{ "total_events": 100, "tool_calls": 20, "total_tokens": 1000, "duration_ms": 10000 }
-```
-
-Current run summary:
-
-```json
-{ "total_events": 140, "tool_calls": 25, "total_tokens": 1200, "duration_ms": 11000 }
-```
-
-With the starter policy, this passes: each numeric value is within the 50%
-baseline tolerance, and no strict checks are enabled.
-
-### Failing example
-
-Baseline tools:
-
-```json
-["search", "summarize"]
-```
-
-Current run tools:
-
-```json
-["search", "summarize", "refund_customer"]
-```
-
-With `no_new_tools: true` uncommented, this fails because `refund_customer` was
-not present in the baseline.
-
----
-
-## Related docs
-
-- [Regression testing](../regression-testing.md) — end-to-end workflow
-- [CLI: `maida assert`](../cli.md#maida-assert) — command reference
-- [Configuration](config.md) — env vars, YAML config, guardrails
+The former `single_trial_binary` and `small_n_unanimous` decision rules no
+longer exist.

@@ -4,10 +4,10 @@
 
 Requires Python 3.10+.
 
-**From PyPI (recommended):**
+**Current synchronized contract (until the next `0.5.x` release):**
 
 ```bash
-pip install maida-ai
+uv tool install "maida-ai @ git+https://github.com/maida-ai/maida.git@main"
 ```
 
 **From source with uv:**
@@ -34,7 +34,7 @@ pip install -e .
 No repo clone, no config, no API keys:
 
 ```bash
-pip install maida-ai
+uv tool install "maida-ai @ git+https://github.com/maida-ai/maida.git@main"
 maida demo        # trace a bundled simulated agent
 maida view        # inspect the timeline in your browser
 ```
@@ -51,6 +51,9 @@ When you're ready to wire up your own project:
 maida init            # starter .maida/policy.yaml
 maida init --github   # + GitHub Actions workflow
 ```
+
+The generated workflow tracks `maida-ai/maida-assert@main`, uses policy v2,
+and grants the `checks: write` permission needed for the gate check.
 
 ---
 

@@ -200,6 +200,8 @@ Error payloads use a consistent shape (same for standalone ERROR events and nest
 ```json
 {
   "pattern": "string",
+  "pattern_type": "repeated_call | cycle",
+  "pattern_length": 1,
   "repetitions": 3,
   "window_size": 6,
   "evidence_event_ids": ["event_uuid_1", "event_uuid_2"]
@@ -207,6 +209,12 @@ Error payloads use a consistent shape (same for standalone ERROR events and nest
 ```
 
 - Emitted at most once per run per distinct pattern (deduplicated).
+- Tool-call patterns include a bounded structural signature of `args` when
+  present. Keys and value types contribute to the signature; raw scalar values
+  do not.
+- `pattern_type` is `repeated_call` for a one-call pattern and `cycle` for a
+  multi-call pattern. `pattern_length` is the number of signatures in the
+  repeated block.
 - If `stop_on_loop` guardrails are enabled, `LOOP_WARNING` is still written first and is then followed by `ERROR` and `RUN_END(status="error")`.
 
 ---
@@ -303,7 +311,12 @@ For current-format traces, readers should fail closed on malformed required file
 - [`maida view`](../cli.md#maida-view) reads run metadata and span data through the local viewer API.
 - [`maida export`](../cli.md#maida-export) reads `meta.json` plus `spans.jsonl` and writes a portable JSON envelope with `spec_version`, run metadata, and projected events.
 - [`maida validate-trace`](../cli.md#maida-validate-trace) validates an external native trace without installing or modifying it.
-- [`maida baseline`](../cli.md#maida-baseline), [`maida assert`](../cli.md#maida-assert), and [`maida diff`](../cli.md#maida-diff) read trace IDs, span data, and projected events for regression checks.
+- [`maida run`](../cli.md#maida-run) executes isolated candidate trials and
+  evaluates the current policy-v2 gate.
+- [`maida baseline`](../cli.md#maida-baseline) and [`maida diff`](../cli.md#maida-diff)
+  read trace IDs, span data, and projected events.
+- [`maida assert`](../cli.md#maida-assert) remains the legacy single-run reader
+  for migration and direct completed-trace inspection.
 
 ### Changes from v0.1
 
