@@ -10,14 +10,11 @@
 
 ## In 60 seconds
 
-**1. Install the current `main` contract:**
+**1. Install Maida:**
 
 ```bash
-uv tool install "maida-ai @ git+https://github.com/maida-ai/maida.git@main"
+uv tool install "maida-ai>=0.5"
 ```
-
-These docs track unreleased `main` until the synchronized `0.5.x` contract is
-tagged.
 
 **2. Run the bundled demo agent** (simulated; no repo clone, no API keys):
 

@@ -16,11 +16,11 @@ class LangfuseDocsTests(unittest.TestCase):
             "LANGFUSE_SECRET_KEY",
             "read-only",
             "local Maida storage",
-            'uv tool install "maida-ai @ git+https://github.com/maida-ai/maida.git@main"',
+            'uv tool install "maida-ai>=0.5"',
             "GENERATION",
             "TOOL",
             "trace-command:",
-            "maida-ai/maida-assert@main",
+            "maida-ai/maida-assert@v5",
             "fixed one-trial gate",
             "maida-tutorials/tree/main/demos/langfuse_import",
         ):
@@ -49,7 +49,7 @@ class LangfuseDocsTests(unittest.TestCase):
             if path.suffix in {".md", ".html", ".yml", ".yaml"}
         )
 
-        self.assertIn("maida-ai/maida-assert@main", public_text)
+        self.assertIn("maida-ai/maida-assert@v5", public_text)
         self.assertNotIn("maida-ai/maida-assert@V4", public_text)
         self.assertNotIn("maida-ai/maida-assert@V5", public_text)
 
