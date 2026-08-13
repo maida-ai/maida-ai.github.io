@@ -25,14 +25,17 @@ class StatisticalGateDocsTests(unittest.TestCase):
         self.assertNotIn('"report_version": "1"', guide)
 
     def test_cli_reference_documents_current_commands_and_versions(self) -> None:
-        cli = (REPO_ROOT / "docs" / "cli.md").read_text()
+        cli = "\n".join(
+            path.read_text()
+            for path in sorted((REPO_ROOT / "docs" / "cli").glob("*.md"))
+        )
 
         for expected in (
-            "## `maida capture claude-code`",
-            "## `maida scenario run`",
-            "## `maida run`",
-            "## `maida extract`",
-            "## `maida drift`",
+            "# `maida capture claude-code`",
+            "# `maida scenario run`",
+            "# `maida run`",
+            "# `maida extract`",
+            "# `maida drift`",
             "`--trials`",
             "`--fail-fast` / `--no-fail-fast`",
             "`--json-out`",
@@ -57,7 +60,11 @@ class StatisticalGateDocsTests(unittest.TestCase):
         )
         index = (REPO_ROOT / "docs" / "index.md").read_text()
         getting_started = (REPO_ROOT / "docs" / "getting-started.md").read_text()
-        homepage = (REPO_ROOT / "templates" / "index.html").read_text()
+        homepage_paths = [
+            REPO_ROOT / "templates" / "index.html",
+            *(REPO_ROOT / "templates" / "sections" / "home").glob("*.html"),
+        ]
+        homepage = "\n".join(path.read_text() for path in homepage_paths)
         regression = (REPO_ROOT / "docs" / "regression-testing.md").read_text()
         policy = (REPO_ROOT / "docs" / "reference" / "policy.md").read_text()
         trace = (REPO_ROOT / "docs" / "reference" / "trace-format.md").read_text()
@@ -76,12 +83,18 @@ class StatisticalGateDocsTests(unittest.TestCase):
         self.assertNotIn("maida assert --baseline", homepage)
 
     def test_navigation_exposes_current_workflows(self) -> None:
-        nav = (REPO_ROOT / "mkdocs.yml").read_text()
+        nav = "\n".join(
+            (
+                (REPO_ROOT / "docs" / "index.md").read_text(),
+                (REPO_ROOT / "docs" / "guides" / "index.md").read_text(),
+                (REPO_ROOT / "docs" / "reference" / "index.md").read_text(),
+            )
+        )
         for expected in (
-            "Capture Claude Code: claude-code.md",
-            "Scheduled checks: scheduled-checks.md",
-            "Gate draft extraction: extraction.md",
-            "Policy v2: reference/policy.md",
+            "Capture Claude Code </claude-code>",
+            "Scheduled checks </scheduled-checks>",
+            "Gate draft extraction </extraction>",
+            "Policy v2 </reference/policy>",
         ):
             self.assertIn(expected, nav)
 

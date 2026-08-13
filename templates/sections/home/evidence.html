@@ -1,0 +1,101 @@
+<section
+  id="evidence"
+  class="home-chapter evidence-chapter"
+  data-nav-section="evidence"
+  aria-labelledby="broken-pr-preview-title"
+>
+  <div class="chapter-shell">
+    <header class="evidence-heading reveal" data-reveal>
+      <p class="chapter-index"><span>05</span> Real evidence</p>
+      <h2 id="broken-pr-preview-title">A verdict your reviewer<br />can act on.</h2>
+      <div>
+        <p>
+          Maida turns structural trace differences into a focused PR report:
+          what changed, why the policy failed, and where to inspect the run.
+        </p>
+        <a href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/broken_pr" class="text-link">
+          See the broken PR demo <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </header>
+
+    <article
+      id="broken-pr-preview"
+      class="pr-evidence reveal"
+      data-reveal
+      aria-label="Locally reproduced Maida PR-comment preview"
+    >
+      <header class="pr-evidence__topbar">
+        <div class="pr-evidence__repo">
+          <span aria-hidden="true">M</span>
+          <div><strong>agent-checkout</strong><small>Pull request #184</small></div>
+        </div>
+        <span class="pr-evidence__check">Maida / behavioral-regression</span>
+      </header>
+
+      <div class="pr-evidence__body">
+        <aside class="pr-evidence__summary">
+          <p class="evidence-label">Locally reproduced PR-comment preview</p>
+          <div class="evidence-verdict-mark" aria-hidden="true">!</div>
+          <p class="evidence-verdict">❌ Maida verdict: fail</p>
+          <p><strong>3 of 8 checks failed</strong></p>
+          <dl>
+            <div><dt>Baseline</dt><dd>main</dd></div>
+            <div><dt>Candidate</dt><dd>PR #184</dd></div>
+            <div><dt>Policy</dt><dd>.maida/policy.yaml</dd></div>
+          </dl>
+        </aside>
+
+        <div class="pr-evidence__report">
+          <div class="report-heading">
+            <div>
+              <span>Behavior report</span>
+              <h3>Top behavior changes</h3>
+            </div>
+            <span class="report-heading__status">PR BLOCKED</span>
+          </div>
+
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <caption class="sr-only">Tool-call change from the locally reproduced report</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Behavior</th>
+                  <th scope="col">Baseline</th>
+                  <th scope="col">Current</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Tool calls</th>
+                  <td>2</td>
+                  <td><strong>5</strong></td>
+                  <td><strong>+150%</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="report-change">
+            <span class="report-change__icon" aria-hidden="true">↻</span>
+            <div>
+              <strong>Repeated tool call</strong>
+              <p><code>lookup_order</code> repeated 1 -&gt; 4 calls</p>
+            </div>
+            <span class="change-label change-label--fail">policy failed</span>
+          </div>
+
+          <div class="report-trace" aria-label="Changed candidate trace">
+            <span>agent</span><i></i><span>lookup_order ×4</span><i></i><span class="is-new">crm_update</span>
+          </div>
+
+          <footer class="pr-evidence__footer">
+            <code>maida demo --regression</code>
+            <span>Reproduce locally. No API key.</span>
+          </footer>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

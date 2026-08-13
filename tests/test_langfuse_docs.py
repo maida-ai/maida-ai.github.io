@@ -27,19 +27,21 @@ class LangfuseDocsTests(unittest.TestCase):
             self.assertIn(expected, guide)
 
     def test_navigation_index_integrations_and_cli_link_the_importer(self) -> None:
-        nav = (REPO_ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+        nav = (REPO_ROOT / "docs" / "index.md").read_text(encoding="utf-8")
         index = (REPO_ROOT / "docs" / "index.md").read_text(encoding="utf-8")
         integrations = (REPO_ROOT / "docs" / "integrations.md").read_text(
             encoding="utf-8"
         )
-        cli = (REPO_ROOT / "docs" / "cli.md").read_text(encoding="utf-8")
+        cli = (REPO_ROOT / "docs" / "cli" / "import-langfuse.md").read_text(
+            encoding="utf-8"
+        )
 
-        self.assertIn("Import Langfuse traces: langfuse.md", nav)
-        self.assertIn("[Import Langfuse traces](langfuse.md)", index)
-        self.assertIn("Langfuse trace import", integrations)
+        self.assertIn("integrations", nav)
+        self.assertIn('href="integrations/"', index)
+        self.assertIn("Langfuse", integrations)
         self.assertIn("[Langfuse import guide](langfuse.md)", integrations)
-        self.assertIn("## `maida import langfuse`", cli)
-        self.assertIn("[Importing Langfuse traces](langfuse.md)", cli)
+        self.assertIn("# `maida import langfuse`", cli)
+        self.assertIn("[Importing Langfuse traces](../langfuse.md)", cli)
 
     def test_public_examples_reference_current_unreleased_action(self) -> None:
         public_text = "\n".join(

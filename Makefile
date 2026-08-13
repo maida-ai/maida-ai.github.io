@@ -10,7 +10,8 @@ css:
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
 docs:
-	uv run python -m mkdocs build
+	uv run sphinx-build -M clean docs site
+	uv run sphinx-build -W --keep-going -E -b dirhtml -d .sphinx-doctrees docs site
 
 build: css docs
 	rm -rf dist
@@ -19,4 +20,4 @@ build: css docs
 	cp CNAME dist/CNAME
 
 clean:
-	rm -rf dist site static/styles.css __pycache__
+	rm -rf dist site .sphinx-doctrees static/styles.css __pycache__

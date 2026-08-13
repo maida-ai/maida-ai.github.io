@@ -1,0 +1,103 @@
+<section
+  id="behavior"
+  class="home-chapter behavior-chapter"
+  data-nav-section="behavior"
+  aria-labelledby="behavior-title"
+>
+  <div class="chapter-shell">
+    <header class="chapter-heading chapter-heading--split reveal" data-reveal>
+      <div>
+        <p class="chapter-index"><span>04</span> Behavioral signal</p>
+        <h2 id="behavior-title">Maida sees the shape<br />of agent execution.</h2>
+      </div>
+      <p class="chapter-heading__aside">
+        Sequence, repetition, branching, timing, and cost become one behavior
+        fingerprint—then Maida compares that shape across the code change.
+      </p>
+    </header>
+
+    <figure class="behavior-fingerprint reveal" data-reveal>
+      <figcaption>
+        <div>
+          <span>Illustrative comparison</span>
+          <strong>Baseline / candidate fingerprint</strong>
+        </div>
+        <div class="fingerprint-legend" aria-label="Comparison legend">
+          <span class="status-key status-key--pass">Baseline</span>
+          <span class="status-key status-key--fail">Candidate</span>
+        </div>
+      </figcaption>
+
+      <div class="fingerprint-paths" aria-hidden="true">
+        <svg viewBox="0 0 1000 190" preserveAspectRatio="none">
+          <path class="fingerprint-gridline" d="M0 38H1000M0 95H1000M0 152H1000" />
+          <path class="fingerprint-path fingerprint-path--baseline" d="M0 95C70 95 70 48 145 48S220 118 295 118 375 74 455 74 535 122 615 122 695 58 775 58 850 95 1000 95" />
+          <path class="fingerprint-path fingerprint-path--candidate" d="M0 95C70 95 70 48 145 48S220 154 295 154 375 22 455 22 535 168 615 168 695 31 775 31 850 146 1000 146" />
+          <g class="fingerprint-dots fingerprint-dots--baseline">
+            <circle cx="145" cy="48" r="5" /><circle cx="295" cy="118" r="5" />
+            <circle cx="455" cy="74" r="5" /><circle cx="615" cy="122" r="5" />
+            <circle cx="775" cy="58" r="5" />
+          </g>
+          <g class="fingerprint-dots fingerprint-dots--candidate">
+            <circle cx="145" cy="48" r="5" /><circle cx="295" cy="154" r="5" />
+            <circle cx="455" cy="22" r="5" /><circle cx="615" cy="168" r="5" />
+            <circle cx="775" cy="31" r="5" /><circle cx="920" cy="142" r="5" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="fingerprint-table-wrap">
+        <table class="fingerprint-table">
+          <caption class="sr-only">
+            Illustrative baseline and candidate agent behavior metrics
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Signal</th>
+              <th scope="col">Baseline</th>
+              <th scope="col">Candidate</th>
+              <th scope="col">Shape change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Tool sequence</th>
+              <td><code>lookup → answer</code></td>
+              <td><code>lookup ×4 → <em>CRM</em> → answer</code></td>
+              <td><span class="change-label change-label--fail">new path</span></td>
+            </tr>
+            <tr style="--baseline: 29%; --candidate: 71%;">
+              <th scope="row">Tool calls</th><td>2</td><td>5</td>
+              <td><span class="metric-shift"><i></i><b></b></span><span class="change-label">+150%</span></td>
+            </tr>
+            <tr style="--baseline: 34%; --candidate: 68%;">
+              <th scope="row">Steps</th><td>4</td><td>8</td>
+              <td><span class="metric-shift"><i></i><b></b></span><span class="change-label">2×</span></td>
+            </tr>
+            <tr style="--baseline: 4%; --candidate: 55%;">
+              <th scope="row">Retries</th><td>0</td><td>2</td>
+              <td><span class="metric-shift"><i></i><b></b></span><span class="change-label change-label--fail">appeared</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Loop risk</th><td>none</td><td>detected</td>
+              <td><span class="change-label change-label--fail">blocked</span></td>
+            </tr>
+            <tr style="--baseline: 24%; --candidate: 76%;">
+              <th scope="row">Latency</th><td>1.2 s</td><td>3.8 s</td>
+              <td><span class="metric-shift"><i></i><b></b></span><span class="change-label">+217%</span></td>
+            </tr>
+            <tr style="--baseline: 21%; --candidate: 67%;">
+              <th scope="row">Cost</th><td>$0.006</td><td>$0.019</td>
+              <td><span class="metric-shift"><i></i><b></b></span><span class="change-label">+217%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </figure>
+
+    <p class="behavior-chapter__note reveal" data-reveal>
+      Policy decides which differences are acceptable. A changed fingerprint
+      is evidence—not a vague score.
+    </p>
+  </div>
+</section>

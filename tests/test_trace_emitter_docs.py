@@ -28,13 +28,17 @@ class TraceEmitterDocsTests(unittest.TestCase):
             self.assertIn(expected, guide)
 
     def test_navigation_index_and_cli_expose_trace_validation(self) -> None:
-        nav = (REPO_ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+        nav = (REPO_ROOT / "docs" / "reference" / "index.md").read_text(
+            encoding="utf-8"
+        )
         index = (REPO_ROOT / "docs" / "index.md").read_text(encoding="utf-8")
-        cli = (REPO_ROOT / "docs" / "cli.md").read_text(encoding="utf-8")
+        cli = (REPO_ROOT / "docs" / "cli" / "validate-trace.md").read_text(
+            encoding="utf-8"
+        )
 
-        self.assertIn("External emitter guide: reference/trace-emitter.md", nav)
-        self.assertIn("[External emitter guide](reference/trace-emitter.md)", index)
-        self.assertIn("## `maida validate-trace`", cli)
+        self.assertIn("External emitter guide </reference/trace-emitter>", nav)
+        self.assertIn("External emitter guide", index)
+        self.assertIn("# `maida validate-trace`", cli)
         self.assertIn("maida validate-trace PATH [--json]", cli)
         self.assertIn("invalid trace content", cli)
         self.assertNotIn('"spec_version": "0.2",', cli)

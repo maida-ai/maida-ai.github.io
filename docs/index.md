@@ -1,82 +1,116 @@
-# Maida
-
-**Maida** is the pre-merge behavioral regression gate for AI agents. It records agent runs, compares current behavior against a known-good baseline, and fails CI when structural behavior regresses: more steps, unexpected tool calls, loops, latency spikes, or cost blowups.
-
-**What it is:** A local-first, CI-first developer tool for recording runs, capturing baselines, and blocking bad PRs before merge.
-
-**What it is not:** It is not a hosted telemetry product, a generic output eval platform, or a framework lock-in layer. The local viewer helps inspect evidence, but the core product is behavioral regression gating.
-
+---
+title: Maida documentation
+description: Install Maida, inspect agent trajectories, capture behavioral baselines, and block regressions before merge.
+html_theme.sidebar_secondary.remove: true
 ---
 
-## In 60 seconds
+```{toctree}
+:hidden:
+:maxdepth: 2
 
-**1. Install Maida:**
-
-```bash
-uv tool install "maida-ai>=0.5"
+getting-started
+guides/index
+integrations
+reference/index
 ```
 
-**2. Run the bundled demo agent** (simulated; no repo clone, no API keys):
+<div class="docs-hero__eyebrow">Maida documentation</div>
 
-```bash
+# Catch agent changes before merge.
+
+<div class="docs-hero">
+  <div class="docs-hero__copy">
+    <p class="docs-hero__intro">Record how an agent runs, compare it with a reviewed baseline, and block structural regressions inside CI.</p>
+  </div>
+  <div class="docs-quickstart" aria-label="Maida sixty-second quickstart and behavioral trajectory">
+    <div class="docs-quickstart__bar">
+      <span>60 second quickstart</span>
+      <span class="docs-quickstart__status">local · no keys</span>
+    </div>
+    <pre><code>uv tool install "maida-ai>=0.5"
 maida demo
-```
-
-**3. Open the timeline viewer:**
-
-```bash
 maida view
-```
+maida demo --regression</code></pre>
+    <svg class="docs-trajectory" viewBox="0 0 560 142" role="img" aria-label="A healthy baseline path and a pull request path that diverges through repeated search calls and a new CRM tool">
+      <path class="docs-trajectory__path docs-trajectory__path--pass" d="M20 36H138L208 36H318L388 36H538" />
+      <path class="docs-trajectory__path" d="M20 106H138L208 106" />
+      <path class="docs-trajectory__path docs-trajectory__path--change" d="M208 106H270C298 106 298 72 326 72H388C416 72 416 106 444 106H538" />
+      <circle class="docs-trajectory__node" cx="138" cy="36" r="7" />
+      <circle class="docs-trajectory__node" cx="318" cy="36" r="7" />
+      <circle class="docs-trajectory__node" cx="138" cy="106" r="7" />
+      <circle class="docs-trajectory__node docs-trajectory__node--change" cx="326" cy="72" r="7" />
+      <circle class="docs-trajectory__node docs-trajectory__node--change" cx="444" cy="106" r="7" />
+      <text x="18" y="22">MAIN</text>
+      <text x="18" y="92">PR</text>
+      <text x="116" y="59">agent</text>
+      <text x="286" y="59">lookup</text>
+      <text x="298" y="94">search ×3</text>
+      <text x="416" y="130">CRM new</text>
+      <text x="505" y="22">answer</text>
+      <text x="505" y="92">answer</text>
+    </svg>
+  </div>
+</div>
 
-A browser tab opens showing the run timeline - tool calls, LLM calls, timing, warnings, and errors. Data is stored locally under `~/.maida/runs/<trace_id>/` as OTel-compatible spans plus metadata.
+<div class="docs-section-label">Start with a task</div>
+<div class="docs-task-list">
+  <a class="docs-task" href="getting-started/">
+    <span class="docs-task__label">First run</span>
+    <span class="docs-task__title">Try Maida in 60 seconds</span>
+    <span class="docs-task__description">Run a deterministic agent and inspect its execution timeline.</span>
+    <span class="docs-task__arrow" aria-hidden="true">→</span>
+  </a>
+  <a class="docs-task" href="regression-testing/">
+    <span class="docs-task__label">CI gate</span>
+    <span class="docs-task__title">Gate a pull request</span>
+    <span class="docs-task__description">Capture a reviewed baseline and fail CI when behavior regresses.</span>
+    <span class="docs-task__arrow" aria-hidden="true">→</span>
+  </a>
+  <a class="docs-task" href="getting-started/#quickstart">
+    <span class="docs-task__label">Instrument</span>
+    <span class="docs-task__title">Trace your agent</span>
+    <span class="docs-task__description">Add Maida to a Python entrypoint with a small, framework-neutral SDK.</span>
+    <span class="docs-task__arrow" aria-hidden="true">→</span>
+  </a>
+  <a class="docs-task" href="integrations/">
+    <span class="docs-task__label">Adapters</span>
+    <span class="docs-task__title">Connect your framework</span>
+    <span class="docs-task__description">Capture LangChain, LangGraph, OpenAI Agents, CrewAI, or Langfuse activity.</span>
+    <span class="docs-task__arrow" aria-hidden="true">→</span>
+  </a>
+  <a class="docs-task" href="viewer/">
+    <span class="docs-task__label">Evidence</span>
+    <span class="docs-task__title">Inspect a run</span>
+    <span class="docs-task__description">Follow the tool path, timing, loops, warnings, and errors locally.</span>
+    <span class="docs-task__arrow" aria-hidden="true">→</span>
+  </a>
+</div>
 
-To watch the gate catch a regression end-to-end on canned data — baseline a good run, run a "refactored" agent that loops and calls a new tool, see the failing report with a PR-comment preview:
+## Find the exact interface
 
-```bash
-maida demo --regression
-```
-
-When you're ready to wire up your own project, `maida init` scaffolds a policy-v2
-`.maida/policy.yaml` (add `--github` for a ready-to-edit CI workflow). Use
-[`maida run`](regression-testing.md) to capture a reviewed baseline sample and
-gate candidate trials.
-
----
-
-## Demos and examples
-
-| Example | Path | How to run |
-|--------|------|------------|
-| **Minimal agent** (pure Python) | `examples/minimal/` | `python examples/minimal/simple_agent.py` |
-| **LangChain minimal** | [offline script](assets/examples/langchain-minimal.py) | `python langchain-minimal.py` |
-| **OpenAI Agents minimal** | [offline script](assets/examples/openai-agents-minimal.py) | `python openai-agents-minimal.py` |
-| **CrewAI minimal** | [offline script](assets/examples/crewai-minimal.py) | `CREWAI_DISABLE_TELEMETRY=true python crewai-minimal.py` |
-| **Langfuse import** | [offline tutorial](https://github.com/maida-ai/maida-tutorials/tree/main/demos/langfuse_import) | Import synthetic traces, baseline a good run, and prove a regression fails |
-| **LangChain customer support** (advanced) | `examples/langchain/` | Set API keys, then follow `_customer_support/README.md` |
-| **Demos** (short scripts) | `examples/demo/` | `python examples/demo/pure_python.py` or `python examples/demo/langchain.py` |
-
-After any run, open the timeline with `maida view`.
-
----
-
-## Documentation
-
-| Page | Description |
-|------|-------------|
-| [Getting started](getting-started.md) | Installation (uv/pip), quickstart, data dir, redaction |
-| [Guardrails](guardrails.md) | Stop runaway runs with loop, count, and duration limits |
-| [Capture Claude Code](claude-code.md) | Capture, import, and gate Claude Code sessions and isolated scenarios |
-| [Regression testing](regression-testing.md) | Policy-v2 baseline sampling and candidate gate workflow |
-| [Scheduled checks](scheduled-checks.md) | Read-only drift verdicts over completed native trace windows |
-| [Gate draft extraction](extraction.md) | Derive inactive policy and baseline drafts for human review |
-| [CLI](cli.md) | `demo`, `init`, `validate-trace`, `capture`, `import`, `scenario`, `run`, `extract`, `drift`, `list`, `view`, `export`, `baseline`, `accept`, `assert`, `diff` with options and exit codes |
-| [Viewer](viewer.md) | Timeline UI usage, URL params, live refresh, and development |
-| [SDK](sdk.md) | `@trace`, `traced_run`, `has_active_run`, `record_llm_call`, `record_tool_call`, `record_state` |
-| [Integrations](integrations.md) | LangChain, OpenAI Agents, and CrewAI adapters, including failure behavior and limitations |
-| [Import Langfuse traces](langfuse.md) | Read-only API import, mapping, local gating, privacy, and CI setup |
-| [Architecture](architecture.md) | OTel span schema, storage layout, viewer API, loop detection |
-| **Reference** | |
-| [Trace format](reference/trace-format.md) | OTel span envelope, derived event types, payload schemas, meta.json (public contract) |
-| [External emitter guide](reference/trace-emitter.md) | Produce and validate native Maida traces without an SDK |
-| [Configuration](reference/config.md) | Env vars, YAML precedence, redaction, truncation, loop detection, guardrails |
-| [Policy v2](reference/policy.md) | Metric kinds, sufficiency, directions, composition, and v1 migration |
+<div class="docs-reference-columns">
+  <div class="docs-reference-group">
+    <h3><a href="cli/">CLI reference</a></h3>
+    <p>Every command, option, output shape, and exit code.</p>
+  </div>
+  <div class="docs-reference-group">
+    <h3><a href="sdk/">SDK reference</a></h3>
+    <p>Tracing contexts and event recorders for Python agents.</p>
+  </div>
+  <div class="docs-reference-group">
+    <h3><a href="reference/policy/">Policy v2</a></h3>
+    <p>Define acceptable structural behavior as code.</p>
+  </div>
+  <div class="docs-reference-group">
+    <h3><a href="reference/trace-format/">Trace format</a></h3>
+    <p>The versioned OTel-compatible data contract.</p>
+  </div>
+  <div class="docs-reference-group">
+    <h3><a href="reference/trace-emitter/">External emitter guide</a></h3>
+    <p>Produce native Maida traces without the Python SDK.</p>
+  </div>
+  <div class="docs-reference-group">
+    <h3><a href="reference/config/">Configuration</a></h3>
+    <p>Environment variables, YAML precedence, and safe local storage.</p>
+  </div>
+</div>

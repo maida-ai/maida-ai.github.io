@@ -41,7 +41,7 @@ def blog_post(slug):
 @app.route("/docs/")
 @app.route("/docs/<path:path>")
 def docs(path=""):
-    """Serve MkDocs build output from site/ during local dev."""
+    """Serve the generated documentation from site/ during local development."""
     if not os.path.isdir(DOCS_BUILD_DIR):
         abort(404)
     if not path or os.path.isdir(os.path.join(DOCS_BUILD_DIR, path)):
