@@ -1,0 +1,75 @@
+<section
+  id="gate"
+  class="home-chapter gate-chapter"
+  data-nav-section="gate"
+  aria-labelledby="gate-title"
+>
+  <div class="chapter-shell">
+    <header class="chapter-heading reveal" data-reveal>
+      <p class="chapter-index"><span>03</span> The gate</p>
+      <h2 id="gate-title">A behavioral gate<br />between code and merge.</h2>
+      <p class="chapter-heading__lede">
+        Maida runs before merge, inside CI—while a behavioral regression can
+        still be stopped.
+      </p>
+    </header>
+
+    <figure
+      class="gate-system reveal"
+      data-reveal
+      role="img"
+      aria-labelledby="gate-figure-title gate-figure-description"
+    >
+      <figcaption id="gate-figure-title">The Maida pre-merge CI workflow</figcaption>
+      <p id="gate-figure-description" class="sr-only">
+        A pull request runs the agent, compares its trace with the checked-in
+        baseline, and applies policy. Passing behavior can merge; a regression
+        blocks the pull request.
+      </p>
+
+      <div class="gate-system__flow">
+        <div class="gate-step gate-step--pr">
+          <span>01</span><strong>Pull request</strong><small>code changed</small>
+        </div>
+        <i class="gate-connector" aria-hidden="true"></i>
+        <div class="gate-step">
+          <span>02</span><strong>Run agent</strong><small>capture trace</small>
+        </div>
+        <i class="gate-connector" aria-hidden="true"></i>
+        <div class="gate-step gate-step--compare">
+          <span>03</span><strong>Compare</strong><small>baseline ↔ candidate</small>
+        </div>
+        <i class="gate-connector" aria-hidden="true"></i>
+        <div class="gate-step">
+          <span>04</span><strong>Apply policy</strong><small>.maida/policy.yaml</small>
+        </div>
+        <i class="gate-connector gate-connector--split" aria-hidden="true"></i>
+        <div class="gate-outcomes">
+          <div class="gate-outcome gate-outcome--pass">
+            <span>PASS</span><strong>Merge allowed</strong>
+          </div>
+          <div class="gate-outcome gate-outcome--fail">
+            <span>FAIL</span><strong>PR blocked</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-system__boundary">
+        <span>your CI runner</span>
+        <span>before merge</span>
+      </div>
+
+      <div class="gate-contract" aria-label="Maida gate implementation contract">
+        <p><span>CLI</span><code>maida run my_agent.py</code></p>
+        <p><span>Action</span><code>maida-ai/maida-assert@v5</code></p>
+        <p><span>Permission</span><code>checks: write</code></p>
+      </div>
+    </figure>
+
+    <div class="gate-context reveal" data-reveal>
+      <p><span>Output evals</span> Was the answer good?</p>
+      <p><span>Production tools</span> What happened after deploy?</p>
+      <p class="gate-context__maida"><span>Maida</span> Did this PR change agent behavior?</p>
+    </div>
+  </div>
+</section>

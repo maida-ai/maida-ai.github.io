@@ -1,0 +1,44 @@
+<section
+  id="how-it-works"
+  class="home-chapter workflow-chapter"
+  data-nav-section="how-it-works"
+  aria-labelledby="workflow-title"
+>
+  <div class="chapter-shell">
+    <header class="chapter-heading reveal" data-reveal>
+      <p class="chapter-index"><span>06</span> How it works</p>
+      <h2 id="workflow-title">From one agent run<br />to a merge gate.</h2>
+    </header>
+
+    <ol class="workflow-sequence reveal" data-reveal>
+      <li>
+        <span>01</span>
+        <div><strong>Instrument</strong><p>Wrap one agent entrypoint.</p></div>
+      </li>
+      <li>
+        <span>02</span>
+        <div><strong>Record baseline</strong><p>Check in known-good behavior.</p></div>
+      </li>
+      <li>
+        <span>03</span>
+        <div><strong>Run candidate</strong><p>Capture the PR execution.</p></div>
+      </li>
+      <li>
+        <span>04</span>
+        <div><strong>Gate PR</strong><p>Apply policy inside CI.</p></div>
+      </li>
+    </ol>
+
+    <div class="demo-strip reveal" data-reveal>
+      <div class="demo-strip__copy">
+        <span>Try the complete story first</span>
+        <h3>No clone. No API keys.</h3>
+        <p>A deterministic demo goes from healthy trace to blocked regression.</p>
+      </div>
+      <pre aria-label="Maida demo commands"><code><span>$</span> pip install "maida-ai>=0.5"
+<span>$</span> maida demo
+<span>$</span> maida demo --regression</code></pre>
+      <a class="button button--dark" href="/docs/getting-started/">Open quickstart <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>

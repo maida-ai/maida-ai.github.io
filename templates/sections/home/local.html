@@ -1,0 +1,86 @@
+<section
+  id="local-first"
+  class="home-chapter local-chapter"
+  data-nav-section="local-first"
+  aria-labelledby="local-title"
+>
+  <div class="chapter-shell">
+    <header class="local-heading reveal" data-reveal>
+      <div>
+        <p class="chapter-index"><span>07</span> Local-first</p>
+        <h2 id="local-title">Your agent behavior<br />stays in your environment.</h2>
+      </div>
+      <p>
+        No Maida cloud required. The core workflow runs on your machine or CI
+        runner, with no account and no telemetry by default.
+      </p>
+    </header>
+
+    <figure
+      class="local-boundary reveal"
+      data-reveal
+      role="img"
+      aria-labelledby="local-figure-title local-figure-description"
+    >
+      <figcaption id="local-figure-title">Maida runs inside your repository and CI runner</figcaption>
+      <p id="local-figure-description" class="sr-only">
+        Agent code produces local OTel-compatible traces. Checked-in baselines
+        and policy are compared in the same repository or CI runner. No Maida
+        cloud is required for the core workflow.
+      </p>
+
+      <div class="local-boundary__inside">
+        <div class="boundary-label">
+          <span>YOUR ENVIRONMENT</span>
+          <small>repository / CI runner</small>
+        </div>
+
+        <div class="local-flow">
+          <div class="local-object local-object--source">
+            <span>agent.py</span>
+            <strong>Agent code</strong>
+            <code>@trace</code>
+          </div>
+          <i aria-hidden="true"></i>
+          <div class="local-object local-object--trace">
+            <span>LOCAL RUN</span>
+            <strong>OTel-compatible</strong>
+            <code>~/.maida/runs/</code>
+          </div>
+          <i aria-hidden="true"></i>
+          <div class="local-object local-object--repo">
+            <span>CHECKED IN</span>
+            <strong>Baseline + policy</strong>
+            <code>baseline.json</code>
+            <code>.maida/policy.yaml</code>
+          </div>
+          <i aria-hidden="true"></i>
+          <div class="local-object local-object--verdict">
+            <span>CI VERDICT</span>
+            <strong>Pass / block</strong>
+            <code>before merge</code>
+          </div>
+        </div>
+
+        <div class="local-boundary__facts">
+          <span>No account</span><span>No upload by default</span><span>Redaction on by default</span>
+        </div>
+      </div>
+
+      <div class="local-cloud" aria-hidden="true">
+        <svg viewBox="0 0 90 56">
+          <path d="M22 45h48c10 0 16-6 16-14S80 18 72 18C69 9 62 5 52 5c-12 0-20 7-23 17-2-1-4-1-7-1-10 0-17 5-17 12s7 12 17 12z" />
+          <path d="M12 50L80 2" />
+        </svg>
+        <span>Maida cloud</span>
+        <strong>not required</strong>
+      </div>
+    </figure>
+
+    <div class="local-details reveal" data-reveal>
+      <p><strong>Inspect it.</strong> Open the local execution timeline.</p>
+      <p><strong>Archive it.</strong> Keep traces with your own CI artifacts.</p>
+      <p><strong>Control it.</strong> Export only when you explicitly choose to.</p>
+    </div>
+  </div>
+</section>

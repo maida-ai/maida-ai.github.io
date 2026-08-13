@@ -57,7 +57,11 @@ class StatisticalGateDocsTests(unittest.TestCase):
         )
         index = (REPO_ROOT / "docs" / "index.md").read_text()
         getting_started = (REPO_ROOT / "docs" / "getting-started.md").read_text()
-        homepage = (REPO_ROOT / "templates" / "index.html").read_text()
+        homepage_paths = [
+            REPO_ROOT / "templates" / "index.html",
+            *(REPO_ROOT / "templates" / "sections" / "home").glob("*.html"),
+        ]
+        homepage = "\n".join(path.read_text() for path in homepage_paths)
         regression = (REPO_ROOT / "docs" / "regression-testing.md").read_text()
         policy = (REPO_ROOT / "docs" / "reference" / "policy.md").read_text()
         trace = (REPO_ROOT / "docs" / "reference" / "trace-format.md").read_text()

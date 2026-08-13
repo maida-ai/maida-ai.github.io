@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +9,7 @@
     <!-- Primary Meta -->
     <title>{% block title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}</title>
     <meta name="description" content="{% block description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="{% block theme_color %}#0f1110{% endblock %}" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -24,6 +24,8 @@
     <meta name="twitter:description" content="{% block tw_description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}" />
     <meta name="twitter:image" content="{% block tw_image %}/og.png{% endblock %}" />
 
+    <script>document.documentElement.classList.replace('no-js', 'js');</script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,23 +37,10 @@
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
-  <body class="bg-bg text-text-primary font-sans antialiased">
+  <body class="bg-bg text-text-primary font-sans antialiased {% block body_class %}{% endblock %}">
     {% block content %}{% endblock %}
 
-    <script>
-      // Intersection observer for scroll reveals
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-      );
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    </script>
+    <script src="/static/site.js" defer></script>
     {% block scripts %}{% endblock %}
   </body>
 </html>
