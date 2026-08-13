@@ -163,6 +163,17 @@ class HomepageTests(unittest.TestCase):
         self.assertIn(".trace-draw", css)
         self.assertIn("querySelectorAll('.reveal')", script)
 
+    def test_responsive_styles_protect_narrow_layouts_and_navigation(self) -> None:
+        css = (PROJECT_ROOT / "tailwind" / "input.css").read_text()
+        script = (PROJECT_ROOT / "static" / "site.js").read_text()
+
+        self.assertIn("max-height: calc(100svh - 4.25rem)", css)
+        self.assertIn(".pr-evidence__report", css)
+        self.assertIn("grid-template-columns: minmax(0, 1fr)", css)
+        self.assertIn(".report-table {\n    min-width: 0", css)
+        self.assertIn("@media (min-width: 1041px)", css)
+        self.assertIn("window.matchMedia('(min-width: 1041px)')", script)
+
     def test_public_routes_still_render(self) -> None:
         for path in ("/", "/about/", "/blog/"):
             with self.subTest(path=path):
@@ -194,6 +205,7 @@ class HomepageTests(unittest.TestCase):
         self.assertIn("Tool calls", text)
         self.assertIn("+150%", text)
         self.assertIn("lookup_order", text)
+        self.assertIn("lookup_order ×4", text)
         self.assertIn("repeated 1 -> 4 calls", text)
         self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
 

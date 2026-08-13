@@ -30,12 +30,14 @@
   const siteNavigation = document.querySelector('[data-site-navigation]');
   const menuButton = document.querySelector('[data-menu-toggle]');
   const mobileNavigation = document.querySelector('[data-mobile-navigation]');
+  const desktopNavigation = window.matchMedia('(min-width: 1041px)');
 
   const setMenuOpen = (isOpen) => {
     if (!menuButton || !mobileNavigation) return;
     menuButton.setAttribute('aria-expanded', String(isOpen));
     menuButton.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
     mobileNavigation.hidden = !isOpen;
+    document.documentElement.classList.toggle('menu-open', isOpen);
   };
 
   menuButton?.addEventListener('click', () => {
@@ -50,6 +52,10 @@
     if (event.key !== 'Escape') return;
     setMenuOpen(false);
     menuButton?.focus();
+  });
+
+  desktopNavigation.addEventListener('change', (event) => {
+    if (event.matches) setMenuOpen(false);
   });
 
   const updateNavigationSurface = () => {

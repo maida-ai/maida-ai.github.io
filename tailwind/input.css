@@ -179,6 +179,7 @@ table tbody tr:last-child td:last-child {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  min-height: 2.75rem;
   color: inherit;
   font-size: 1rem;
   font-weight: 700;
@@ -231,6 +232,10 @@ table tbody tr:last-child td:last-child {
 
 .site-nav__github {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
   color: #aeb3ad;
   transition: color 150ms ease;
 }
@@ -242,7 +247,7 @@ table tbody tr:last-child td:last-child {
 .site-nav__cta {
   display: inline-flex;
   align-items: center;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   padding: 0.45rem 0.85rem;
   color: #102017;
   font-size: 0.78rem;
@@ -265,8 +270,8 @@ table tbody tr:last-child td:last-child {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.75rem;
+  height: 2.75rem;
   padding: 0;
   color: inherit;
   background: transparent;
@@ -299,6 +304,9 @@ table tbody tr:last-child td:last-child {
 }
 
 .mobile-navigation {
+  max-height: calc(100svh - 4.25rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border-top: 1px solid rgba(255, 255, 255, 0.09);
 }
 
@@ -428,6 +436,13 @@ table tbody tr:last-child td:last-child {
   font-size: 0.82rem;
   text-decoration: none;
   transition: color 150ms ease;
+}
+
+.site-footer__links a,
+.site-footer__meta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
 }
 
 .site-footer__groups a:hover,
@@ -626,6 +641,7 @@ table tbody tr:last-child td:last-child {
   display: inline-flex;
   gap: 0.7rem;
   align-items: center;
+  min-height: 2.75rem;
   padding: 0.4rem 0;
   color: inherit;
   font-size: 0.85rem;
@@ -2014,7 +2030,17 @@ table tbody tr:last-child td:last-child {
   margin-top: 2.2rem;
 }
 
+@media (min-width: 1041px) {
+  .mobile-navigation {
+    display: none;
+  }
+}
+
 @media (max-width: 1040px) {
+  html.menu-open {
+    overflow: hidden;
+  }
+
   .site-nav__toc {
     display: none;
   }
@@ -2211,8 +2237,10 @@ table tbody tr:last-child td:last-child {
   }
 
   .divergence-verdict__operator {
+    width: max-content;
+    margin-left: 0.25rem;
     transform: rotate(90deg);
-    transform-origin: left center;
+    transform-origin: center;
   }
 
   .gate-system__flow {
@@ -2344,7 +2372,12 @@ table tbody tr:last-child td:last-child {
   }
 
   .pr-evidence__body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pr-evidence__summary,
+  .pr-evidence__report {
+    min-width: 0;
   }
 
   .pr-evidence__summary {
@@ -2457,14 +2490,27 @@ table tbody tr:last-child td:last-child {
     width: calc(100% - 2.25rem);
   }
 
+  .home-chapter {
+    padding: 5.75rem 0;
+  }
+
+  .hero-chapter {
+    padding-top: 7.25rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .chapter-index {
+    margin-bottom: 1.4rem;
+  }
+
   .chapter-heading h2,
   .evidence-heading h2,
   .local-heading h2 {
-    font-size: clamp(2.7rem, 13vw, 4rem);
+    font-size: clamp(2.7rem, 11vw, 3.2rem);
   }
 
   .hero-copy h1 {
-    font-size: clamp(3rem, 13.5vw, 4.4rem);
+    font-size: clamp(2.9rem, 11.5vw, 4rem);
   }
 
   .hero-copy__lede {
@@ -2528,11 +2574,28 @@ table tbody tr:last-child td:last-child {
   }
 
   .report-table-wrap {
-    overflow-x: auto;
+    max-width: 100%;
+    overflow-x: visible;
   }
 
   .report-table {
-    min-width: 430px;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .report-table th,
+  .report-table td {
+    padding-right: 0.2rem;
+    padding-left: 0.2rem;
+  }
+
+  .report-table thead th:first-child {
+    width: 34%;
+  }
+
+  .report-table tbody th,
+  .report-table tbody td {
+    font-size: 0.7rem;
   }
 
   .report-change {
@@ -2541,6 +2604,10 @@ table tbody tr:last-child td:last-child {
 
   .report-change .change-label {
     grid-column: 2;
+  }
+
+  .report-change code {
+    overflow-wrap: anywhere;
   }
 
   .pr-evidence__footer {
@@ -2564,7 +2631,7 @@ table tbody tr:last-child td:last-child {
   }
 
   .cta-chapter h2 {
-    font-size: clamp(3.6rem, 17vw, 5.5rem);
+    font-size: clamp(3.25rem, 13vw, 4rem);
   }
 
   .site-footer__inner,
@@ -2587,6 +2654,39 @@ table tbody tr:last-child td:last-child {
     gap: 0.8rem;
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .site-footer__links a,
+  .site-footer__meta a {
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .trajectory-mobile__row {
+    gap: 0.25rem;
+    font-size: 0.56rem;
+  }
+
+  .trajectory-mobile__row > :nth-child(2),
+  .trajectory-mobile__row > :nth-child(3) {
+    display: none;
+  }
+
+  .trajectory-mobile__row > span:not(.trajectory-mobile__label) {
+    padding: 0.45rem;
+  }
+
+  .trajectory-mobile__row i {
+    flex-basis: 0.5rem;
+  }
+
+  .trajectory-mobile__label {
+    flex-basis: 2.25rem;
+  }
+
+  .trajectory-mobile .is-new b {
+    display: none;
   }
 }
 
