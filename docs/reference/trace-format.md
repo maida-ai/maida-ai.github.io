@@ -306,16 +306,16 @@ For current-format traces, readers should fail closed on malformed required file
 
 ### CLI commands that read and write runs
 
-- [`maida demo`](../cli.md#maida-demo) and instrumented SDK runs write local traces.
-- [`maida list`](../cli.md#maida-list) reads `meta.json` to discover recent runs.
-- [`maida view`](../cli.md#maida-view) reads run metadata and span data through the local viewer API.
-- [`maida export`](../cli.md#maida-export) reads `meta.json` plus `spans.jsonl` and writes a portable JSON envelope with `spec_version`, run metadata, and projected events.
-- [`maida validate-trace`](../cli.md#maida-validate-trace) validates an external native trace without installing or modifying it.
-- [`maida run`](../cli.md#maida-run) executes isolated candidate trials and
+- [`maida demo`](../cli/demo.md) and instrumented SDK runs write local traces.
+- [`maida list`](../cli/list.md) reads `meta.json` to discover recent runs.
+- [`maida view`](../cli/view.md) reads run metadata and span data through the local viewer API.
+- [`maida export`](../cli/export.md) reads `meta.json` plus `spans.jsonl` and writes a portable JSON envelope with `spec_version`, run metadata, and projected events.
+- [`maida validate-trace`](../cli/validate-trace.md) validates an external native trace without installing or modifying it.
+- [`maida run`](../cli/run.md) executes isolated candidate trials and
   evaluates the current policy-v2 gate.
-- [`maida baseline`](../cli.md#maida-baseline) and [`maida diff`](../cli.md#maida-diff)
+- [`maida baseline`](../cli/baseline.md) and [`maida diff`](../cli/diff.md)
   read trace IDs, span data, and projected events.
-- [`maida assert`](../cli.md#maida-assert) remains the legacy single-run reader
+- [`maida assert`](../cli/assert.md) remains the legacy single-run reader
   for migration and direct completed-trace inspection.
 
 ### Changes from v0.1

@@ -1,0 +1,15 @@
+{% extends "!layout.html" %}
+
+{% block body_tag %}
+  {% if pagename == "index" %}
+    <body data-default-mode="{{ default_mode }}" class="maida-docs-home">
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% endblock %}

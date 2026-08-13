@@ -12,6 +12,7 @@ __pycache__/
 # Build output
 dist/
 site/
+.sphinx-doctrees/
 static/styles.css
 
 # Tailwind standalone binary

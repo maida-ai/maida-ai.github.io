@@ -35,7 +35,7 @@ jobs:
         run: ./bin/tailwindcss -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
       - name: Build docs
-        run: uv run mkdocs build
+        run: make docs
 
       - name: Freeze site
         run: |
