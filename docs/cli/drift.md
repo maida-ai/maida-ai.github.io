@@ -14,7 +14,7 @@ maida drift --window RUNS_DIR --baseline BASELINE [options]
 | `--policy` | `.maida/policy.yaml` | Tier-aware gate policy |
 | `--agent` | baseline `source_run_name` | Explicit agent selector for legacy baselines |
 | `--format`, `-f` | `text` | `text`, `json`, or verdict-first `markdown` |
-| `--json-out` | - | Atomically write report schema `2.0.0` to a sidecar |
+| `--json-out` | - | Atomically write report schema `2.0.1` to a sidecar |
 
 ```bash
 maida drift --window /srv/agents/orders/runs \
@@ -29,4 +29,3 @@ the command once per baseline. Exit `0` means PASS or neutral INCONCLUSIVE,
 
 See [Scheduled behavioral regression checks](../scheduled-checks.md) for sample
 validation, scheduler guidance, canary promotion, and planned input adapters.
-

@@ -16,8 +16,8 @@ class StatisticalGateDocsTests(unittest.TestCase):
             "PASS",
             "FAIL",
             "INCONCLUSIVE",
-            "Baseline schema `0.3.0`",
-            "Report schema `2.0.0`",
+            "Baseline schema `0.3.1`",
+            "Report schema `2.0.1`",
             "one-sided Wilson",
             "v2 policy",
         ):
@@ -39,7 +39,7 @@ class StatisticalGateDocsTests(unittest.TestCase):
             "`--trials`",
             "`--fail-fast` / `--no-fail-fast`",
             "`--json-out`",
-            "report schema `2.0.0`",
+            "report schema `2.0.1`",
         ):
             self.assertIn(expected, cli)
 
@@ -47,7 +47,9 @@ class StatisticalGateDocsTests(unittest.TestCase):
         policy = (REPO_ROOT / "docs" / "reference" / "policy.md").read_text()
 
         self.assertIn("# Policy v2 and gate decisions", policy)
-        self.assertIn("version: 2", policy)
+        self.assertIn("version: 2.1", policy)
+        self.assertIn("plan_depth", policy)
+        self.assertIn("| Plan | `0.1.0`", policy)
         self.assertIn("Unknown fields are errors", policy)
         self.assertIn("one-sided coverage", policy)
         self.assertIn("## v1 migration", policy)
@@ -68,6 +70,11 @@ class StatisticalGateDocsTests(unittest.TestCase):
         regression = (REPO_ROOT / "docs" / "regression-testing.md").read_text()
         policy = (REPO_ROOT / "docs" / "reference" / "policy.md").read_text()
         trace = (REPO_ROOT / "docs" / "reference" / "trace-format.md").read_text()
+        cli = "\n".join(
+            path.read_text()
+            for path in sorted((REPO_ROOT / "docs" / "cli").glob("*.md"))
+        )
+        scheduled = (REPO_ROOT / "docs" / "scheduled-checks.md").read_text()
 
         for text in (index, getting_started, homepage):
             self.assertIn(contract["install_requirement"], text)
@@ -79,6 +86,12 @@ class StatisticalGateDocsTests(unittest.TestCase):
         self.assertIn(f'Baseline schema `{contract["schemas"]["baseline"]}`', regression)
         self.assertIn(f'Report schema `{contract["schemas"]["report"]}`', regression)
         self.assertIn(f'version: {contract["schemas"]["policy"]}', policy)
+        self.assertIn(f'| Plan | `{contract["schemas"]["plan"]}`', policy)
+        self.assertIn(f'report schema `{contract["schemas"]["report"]}`', cli)
+        self.assertIn(
+            f'report schema `{contract["schemas"]["report"]}`',
+            scheduled.replace("\n", " "),
+        )
         self.assertIn(f'spec_version: "{contract["schemas"]["trace"]}"', trace)
         self.assertNotIn("maida assert --baseline", homepage)
 
