@@ -53,6 +53,16 @@ SITE_OWNED = {
     "assets",
 }
 
+# The runnable example scripts offered as downloads from the integration pages.
+# These are the real files from the engine repo, not copies: the site used to
+# carry its own forks, which drifted until the published pages described tools
+# and call counts the actual examples never produced.
+EXAMPLE_SOURCES = {
+    "examples/langchain/minimal.py": "assets/examples/langchain-minimal.py",
+    "examples/openai_agents/minimal.py": "assets/examples/openai-agents-minimal.py",
+    "examples/crewai/minimal.py": "assets/examples/crewai-minimal.py",
+}
+
 # Present in the engine repo but deliberately not published: working notes and
 # design drafts that would read as shipped behavior on maida.ai.
 ENGINE_ONLY = {
@@ -70,12 +80,12 @@ def engine_ref() -> str:
 
 
 def fetch_engine_docs(destination: Path) -> tuple[Path, str]:
-    """Return the engine's docs directory and a human-readable source label."""
+    """Return the engine checkout root and a human-readable source label."""
     if local := os.environ.get("MAIDA_DOCS_PATH"):
-        source = Path(local).expanduser().resolve() / "docs"
-        if not source.is_dir():
-            sys.exit(f"error: MAIDA_DOCS_PATH has no docs directory: {source}")
-        return source, f"local checkout {source}"
+        root = Path(local).expanduser().resolve()
+        if not (root / "docs").is_dir():
+            sys.exit(f"error: MAIDA_DOCS_PATH has no docs directory: {root / 'docs'}")
+        return root, f"local checkout {root}"
 
     ref = engine_ref()
     subprocess.run(
@@ -92,7 +102,7 @@ def fetch_engine_docs(destination: Path) -> tuple[Path, str]:
         ],
         check=True,
     )
-    return destination / "docs", f"{ENGINE_REPO}@{ref}"
+    return destination, f"{ENGINE_REPO}@{ref}"
 
 
 def synced_files(source: Path) -> list[Path]:
@@ -110,7 +120,25 @@ def synced_files(source: Path) -> list[Path]:
     return results
 
 
-def sync(source: Path, check_only: bool) -> int:
+def sync_examples(engine_root: Path, check_only: bool) -> list[str]:
+    """Copy the downloadable example scripts, or report which are stale."""
+    stale: list[str] = []
+    for relative_source, relative_target in EXAMPLE_SOURCES.items():
+        origin = engine_root / relative_source
+        target = DOCS_ROOT / relative_target
+        if not origin.is_file():
+            sys.exit(f"error: engine example missing: {relative_source}")
+        if check_only:
+            if not target.exists() or not filecmp.cmp(origin, target, shallow=False):
+                stale.append(relative_target)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(origin, target)
+    return stale
+
+
+def sync(engine_root: Path, check_only: bool) -> int:
+    source = engine_root / "docs"
     files = synced_files(source)
     if not files:
         sys.exit(f"error: no documentation pages found under {source}")
@@ -144,6 +172,8 @@ def sync(source: Path, check_only: bool) -> int:
                 path.unlink()
                 print(f"  removed {relative}")
 
+    stale.extend(sync_examples(engine_root, check_only))
+
     if check_only:
         if stale:
             print("docs/ is out of sync with the engine documentation:")
@@ -151,10 +181,13 @@ def sync(source: Path, check_only: bool) -> int:
                 print(f"  {item}")
             print("\nRun: python3 bin/sync_docs.py")
             return 1
-        print(f"docs/ is in sync ({len(files)} pages)")
+        print(
+            f"docs/ is in sync ({len(files)} pages, "
+            f"{len(EXAMPLE_SOURCES)} example scripts)"
+        )
         return 0
 
-    print(f"synced {copied} pages")
+    print(f"synced {copied} pages and {len(EXAMPLE_SOURCES)} example scripts")
     return 0
 
 
@@ -168,9 +201,9 @@ def main() -> int:
     args = parser.parse_args()
 
     with tempfile.TemporaryDirectory() as tmp:
-        source, label = fetch_engine_docs(Path(tmp) / "maida")
+        engine_root, label = fetch_engine_docs(Path(tmp) / "maida")
         print(f"documentation source: {label}")
-        return sync(source, args.check)
+        return sync(engine_root, args.check)
 
 
 if __name__ == "__main__":

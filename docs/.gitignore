@@ -13,3 +13,7 @@ north-star*.md
 !/_static/
 !/_templates/
 !/assets/
+
+# The downloadable example scripts are the engine's real files, synced by
+# bin/sync_docs.py. They used to be forks here, and they drifted.
+/assets/examples/*.py
