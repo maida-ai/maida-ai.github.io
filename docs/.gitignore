@@ -1,1 +1,15 @@
 north-star*.md
+
+# Documentation content is synced from the maida repository at build time by
+# bin/sync_docs.py, at the engine_ref pinned in tests/contracts/current-main.json.
+# Edit those pages in maida/docs, not here.
+#
+# This repository tracks only the presentation layer: the Sphinx config, the
+# theme overrides, the static assets, and the docs landing page.
+/*
+!/.gitignore
+!/index.md
+!/conf.py
+!/_static/
+!/_templates/
+!/assets/
