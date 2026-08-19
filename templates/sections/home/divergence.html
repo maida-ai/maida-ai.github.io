@@ -13,7 +13,7 @@
       <div class="chapter-heading__aside">
         <p>
           Output-only checks see a pass. Maida compares the path that produced
-          it—and catches the regression hiding underneath.
+          it--and catches the regression hiding underneath.
         </p>
         <p class="mono-note">Compare execution, not just completion.</p>
       </div>
@@ -53,15 +53,15 @@
           <circle cx="793" cy="210" r="13" /><text x="819" y="216">agent</text>
           <circle cx="793" cy="286" r="8" /><text x="819" y="292">lookup_order</text>
           <circle cx="793" cy="352" r="8" /><text x="819" y="358">lookup_order</text>
-          <circle cx="793" cy="418" r="8" /><text x="819" y="424">lookup_order ×2</text>
+          <circle cx="793" cy="418" r="8" /><text x="819" y="424">lookup_order x2</text>
           <circle cx="793" cy="484" r="15" class="comparison-node__new" />
           <text x="819" y="490">crm_update</text>
           <text x="767" y="489" text-anchor="end" class="trace-alert">NEW</text>
           <circle cx="793" cy="557" r="12" /><text x="819" y="563">answer</text>
         </g>
 
-        <text x="88" y="619" class="comparison-result">ORDER #4821 · SHIPPED</text>
-        <text x="617" y="619" class="comparison-result">ORDER #4821 · SHIPPED</text>
+        <text x="88" y="619" class="comparison-result">ORDER #4821 | SHIPPED</text>
+        <text x="617" y="619" class="comparison-result">ORDER #4821 | SHIPPED</text>
       </svg>
 
       <div class="comparison-mobile" aria-hidden="true">
@@ -74,13 +74,13 @@
         <div class="comparison-mobile__changed">
           <p>PR #184</p>
           <ol>
-            <li>user request</li><li>agent</li><li>lookup_order ×4</li><li><strong>new</strong> crm_update</li><li>answer</li>
+            <li>user request</li><li>agent</li><li>lookup_order x4</li><li><strong>new</strong> crm_update</li><li>answer</li>
           </ol>
         </div>
       </div>
 
       <figcaption>
-        Both runs return <code>ORDER #4821 · SHIPPED</code>. The final answer is identical.
+        Both runs return <code>ORDER #4821 | SHIPPED</code>. The final answer is identical.
       </figcaption>
     </figure>
 
@@ -89,7 +89,7 @@
         <span>Output</span>
         <strong>Identical</strong>
       </div>
-      <span class="divergence-verdict__operator" aria-hidden="true">≠</span>
+      <span class="divergence-verdict__operator" aria-hidden="true">!=</span>
       <div class="divergence-verdict__failure">
         <span>Behavior</span>
         <strong>Regression</strong>

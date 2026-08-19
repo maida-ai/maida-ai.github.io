@@ -205,7 +205,7 @@ class HomepageTests(unittest.TestCase):
         self.assertIn("Tool calls", text)
         self.assertIn("+150%", text)
         self.assertIn("lookup_order", text)
-        self.assertIn("lookup_order ×4", text)
+        self.assertIn("lookup_order x4", text)
         self.assertIn("repeated 1 -> 4 calls", text)
         self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
 
