@@ -25,7 +25,7 @@ reference/index
   <div class="docs-quickstart" aria-label="Maida sixty-second quickstart and behavioral trajectory">
     <div class="docs-quickstart__bar">
       <span>60 second quickstart</span>
-      <span class="docs-quickstart__status">local · no keys</span>
+      <span class="docs-quickstart__status">local | no keys</span>
     </div>
     <pre><code>uv tool install "maida-ai>=0.5"
 maida demo
@@ -44,7 +44,7 @@ maida demo --regression</code></pre>
       <text x="18" y="92">PR</text>
       <text x="116" y="59">agent</text>
       <text x="286" y="59">lookup</text>
-      <text x="298" y="94">search ×3</text>
+      <text x="298" y="94">search x3</text>
       <text x="416" y="130">CRM new</text>
       <text x="505" y="22">answer</text>
       <text x="505" y="92">answer</text>
@@ -58,31 +58,31 @@ maida demo --regression</code></pre>
     <span class="docs-task__label">First run</span>
     <span class="docs-task__title">Try Maida in 60 seconds</span>
     <span class="docs-task__description">Run a deterministic agent and inspect its execution timeline.</span>
-    <span class="docs-task__arrow" aria-hidden="true">→</span>
+    <span class="docs-task__arrow" aria-hidden="true">-></span>
   </a>
   <a class="docs-task" href="regression-testing/">
     <span class="docs-task__label">CI gate</span>
     <span class="docs-task__title">Gate a pull request</span>
     <span class="docs-task__description">Capture a reviewed baseline and fail CI when behavior regresses.</span>
-    <span class="docs-task__arrow" aria-hidden="true">→</span>
+    <span class="docs-task__arrow" aria-hidden="true">-></span>
   </a>
   <a class="docs-task" href="getting-started/#quickstart">
     <span class="docs-task__label">Instrument</span>
     <span class="docs-task__title">Trace your agent</span>
     <span class="docs-task__description">Add Maida to a Python entrypoint with a small, framework-neutral SDK.</span>
-    <span class="docs-task__arrow" aria-hidden="true">→</span>
+    <span class="docs-task__arrow" aria-hidden="true">-></span>
   </a>
   <a class="docs-task" href="integrations/">
     <span class="docs-task__label">Adapters</span>
     <span class="docs-task__title">Connect your framework</span>
     <span class="docs-task__description">Capture LangChain, LangGraph, OpenAI Agents, CrewAI, or Langfuse activity.</span>
-    <span class="docs-task__arrow" aria-hidden="true">→</span>
+    <span class="docs-task__arrow" aria-hidden="true">-></span>
   </a>
   <a class="docs-task" href="viewer/">
     <span class="docs-task__label">Evidence</span>
     <span class="docs-task__title">Inspect a run</span>
     <span class="docs-task__description">Follow the tool path, timing, loops, warnings, and errors locally.</span>
-    <span class="docs-task__arrow" aria-hidden="true">→</span>
+    <span class="docs-task__arrow" aria-hidden="true">-></span>
   </a>
 </div>
 
