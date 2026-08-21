@@ -7,22 +7,28 @@
     <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}" />
 
     <!-- Primary Meta -->
-    <title>{% block title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}</title>
-    <meta name="description" content="{% block description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}" />
+    <title>{% block title %}Maida — Pre-merge behavioral regression gate for AI agents{% endblock %}</title>
+    <meta name="description" content="{% block description %}Your agent still returns the right answer — but now it calls 3× the tools. Maida is the pre-merge behavioral regression gate for AI agents. Local-first, no cloud.{% endblock %}" />
     <meta name="theme-color" content="{% block theme_color %}#0f1110{% endblock %}" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Maida" />
     <meta property="og:url" content="{{ SITE_URL }}{{ request.path }}" />
-    <meta property="og:title" content="{% block og_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}" />
-    <meta property="og:description" content="{% block og_description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}" />
-    <meta property="og:image" content="{% block og_image %}/og.png{% endblock %}" />
+    <meta property="og:title" content="{% block og_title %}Don't let broken agent changes merge{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}Your agent still returns the right answer — but now it calls 3× the tools. Maida compares agent traces against a checked-in baseline and blocks the PR.{% endblock %}" />
+    <!-- Absolute URL: relative og:image paths are not resolved by every scraper. -->
+    <meta property="og:image" content="{% block og_image %}{{ SITE_URL }}/static/og.png{% endblock %}" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="640" />
+    <meta property="og:image:alt" content="{% block og_image_alt %}A baseline agent run and a pull request run side by side. The pull request repeats a search three times and adds a new CRM tool call, and the Maida gate fails.{% endblock %}" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{% block tw_title %}Maida.AI -- The PR Gate for AI Agents{% endblock %}" />
-    <meta name="twitter:description" content="{% block tw_description %}Maida catches behavioral regressions in AI agents before merge with local OTel-compatible traces, baselines, policy-as-code, and CI gates.{% endblock %}" />
-    <meta name="twitter:image" content="{% block tw_image %}/og.png{% endblock %}" />
+    <meta name="twitter:title" content="{% block tw_title %}Don't let broken agent changes merge{% endblock %}" />
+    <meta name="twitter:description" content="{% block tw_description %}Your agent still returns the right answer — but now it calls 3× the tools. Maida compares agent traces against a checked-in baseline and blocks the PR.{% endblock %}" />
+    <meta name="twitter:image" content="{% block tw_image %}{{ SITE_URL }}/static/og.png{% endblock %}" />
+    <meta name="twitter:image:alt" content="{% block tw_image_alt %}A baseline agent run and a pull request run side by side. The pull request repeats a search three times and adds a new CRM tool call, and the Maida gate fails.{% endblock %}" />
 
     <script>document.documentElement.classList.replace('no-js', 'js');</script>
 
