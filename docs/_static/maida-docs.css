@@ -1,7 +1,7 @@
 :root {
   --maida-font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --maida-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-  --maida-green: #286c4a;
+  --maida-green: #21764a;
   --maida-warning: #9a551f;
   --maida-danger: #b44932;
   --maida-info: #446b96;
@@ -10,19 +10,19 @@
 }
 
 html[data-theme="light"] {
-  --maida-bg: #f7f6f0;
-  --maida-surface: #fffef9;
-  --maida-surface-muted: #f0efe8;
+  --maida-bg: #f2f1eb;
+  --maida-surface: #f8f7f2;
+  --maida-surface-muted: #eae9e2;
   --maida-surface-raised: #ffffff;
-  --maida-border: #d9dbd4;
+  --maida-border: #ced0c8;
   --maida-border-strong: #bfc3bc;
-  --maida-text: #20231f;
-  --maida-text-secondary: #555b55;
+  --maida-text: #171a17;
+  --maida-text-secondary: #62675f;
   --maida-text-muted: #737a73;
   --maida-code: #183c2a;
-  --maida-green-soft: #e3f2e8;
+  --maida-green-soft: #d9eadf;
   --maida-warning-soft: #f9eadc;
-  --maida-danger-soft: #f8e4de;
+  --maida-danger-soft: #fae9e3;
   --pst-color-primary: var(--maida-green);
   --pst-color-secondary: #4e6357;
   --pst-color-link: var(--maida-green);

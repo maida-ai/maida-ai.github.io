@@ -1,25 +1,25 @@
 {% extends "_base.html" %}
 
-{% block title %}Why your agent needs a regression gate, not just output evals — Maida.AI Blog{% endblock %}
+{% block title %}Why your agent needs a regression gate, not just output evals -- Maida.AI Blog{% endblock %}
 
-{% block description %}Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions — and what a CI gate does differently.{% endblock %}
+{% block description %}Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions -- and what a CI gate does differently.{% endblock %}
 
 {% block content %}
 {% set title = "Why your agent needs a regression gate, not just output evals" %}
-{% set description = "Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions — and what a CI gate does differently." %}
+{% set description = "Evals pass. PR merges. Two days later, your agent is taking 22 steps instead of 6. Here's why output evaluation can't catch behavioral regressions -- and what a CI gate does differently." %}
 {% set date = "April 11, 2026" %}
 {% set author = "Maida.AI Team" %}
 {% set tags = ["CI", "Behavioral testing", "Regression gates"] %}
 {% set reading_time = "8 min read" %}
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        NAV
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   {% include "_nav.html" %}
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        POST HEADER
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <div class="pt-28 pb-12 relative overflow-hidden">
     <div
       class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"
@@ -58,24 +58,24 @@
 
         <div class="flex items-center gap-4 text-sm text-text-muted font-mono">
           <span>{{ author }}</span>
-          <span class="text-border">·</span>
+          <span class="text-border">|</span>
           <span>{{ date }}</span>
-          <span class="text-border">·</span>
+          <span class="text-border">|</span>
           <span>{{ reading_time }}</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        ARTICLE BODY
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <article class="max-w-3xl mx-auto px-6 pb-24">
     <!-- Opening hook -->
     <div class="reveal prose-block mb-14">
       <p class="text-lg text-text-secondary leading-relaxed mb-5">
         It's a Tuesday afternoon. An engineer on your team ships a prompt update
-        — nothing dramatic, just tightening the system prompt wording and
+       -- nothing dramatic, just tightening the system prompt wording and
         swapping the retrieval model for one with a larger context window. The
         PR description says "minor quality improvements." The eval suite runs.
         Output quality: pass. Correctness on the golden dataset: pass. CI is
@@ -83,7 +83,7 @@
       </p>
       <p class="text-lg text-text-secondary leading-relaxed mb-5">
         Two days later, a user files a support ticket. "The agent seems really
-        slow." You dig in. Nothing looks obviously broken — responses are
+        slow." You dig in. Nothing looks obviously broken -- responses are
         accurate. Then you pull the trace. Your agent is now taking <strong
           class="text-text-primary">22 steps</strong
         > to complete tasks that previously took 6. Token cost has tripled. Latency
@@ -145,7 +145,7 @@
         <p>
           But there's a precision problem: they answer the question <em
             >"Is my agent correct?"</em
-          > — not <em>"Did my agent's execution behavior change?"</em> These are different
+          > -- not <em>"Did my agent's execution behavior change?"</em> These are different
           questions. And the second question is the one that catches the failure mode
           described above.
         </p>
@@ -161,7 +161,7 @@
                 >They require ground truth.</strong
               > Eval platforms need golden datasets, rubrics, or LLM-as-judge to score
               outputs. Building and maintaining this is significant overhead. Worse,
-              for many agent tasks, correct output is not uniquely defined — multiple
+              for many agent tasks, correct output is not uniquely defined -- multiple
               different execution paths can produce correct final answers.</span
             >
           </li>
@@ -172,7 +172,7 @@
                 >LLM-as-judge adds latency and cost.</strong
               > Using a model to evaluate another model's output adds at minimum one
               LLM call to every CI run. For teams running hundreds of test cases across
-              every PR, this adds up fast — both in time and in API spend.</span
+              every PR, this adds up fast -- both in time and in API spend.</span
             >
           </li>
           <li class="flex items-start gap-3">
@@ -182,7 +182,7 @@
                 >They're blind to structural change.</strong
               > An eval platform has no concept of "this agent used to take 6 steps
               and now takes 22." It sees the final output. If the final output is
-              still correct by the rubric, the eval passes — even if the path to get
+              still correct by the rubric, the eval passes -- even if the path to get
               there is completely different and three times more expensive.</span
             >
           </li>
@@ -212,7 +212,7 @@
           <div
             class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
           >
-            Scenario 1 — Model swap
+            Scenario 1 -- Model swap
           </div>
           <p class="text-text-primary font-medium mb-2">
             Step count triples after upgrading the base model. Output is
@@ -233,7 +233,7 @@
           <div
             class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
           >
-            Scenario 2 — Integration side effect
+            Scenario 2 -- Integration side effect
           </div>
           <p class="text-text-primary font-medium mb-2">
             Adding Salesforce integration causes the agent to call it on every
@@ -244,7 +244,7 @@
             describe it. The intent is for the tool to be used only when the
             user explicitly asks about CRM data. But a subtle wording choice
             makes the agent treat it as a default enrichment step. The final
-            answer to every query is still correct — the CRM data is just
+            answer to every query is still correct -- the CRM data is just
             appended silently and ignored. Tool call count doubles. Cost per run
             is now 40% higher. Your eval rubric doesn't check tool usage
             patterns. The PR merges.
@@ -256,7 +256,7 @@
           <div
             class="text-xs font-mono text-green mb-2 uppercase tracking-widest"
           >
-            Scenario 3 — Latency cliff
+            Scenario 3 -- Latency cliff
           </div>
           <p class="text-text-primary font-medium mb-2">
             Latency goes from 3s to 14s after a prompt change. Evals pass.
@@ -274,7 +274,7 @@
         <p>
           In all three cases: output quality evaluation passes. The regression
           is real. The regression is in production. And no eval platform was
-          designed to catch it — because the thing that changed wasn't
+          designed to catch it -- because the thing that changed wasn't
           correctness, it was <em>execution structure</em>.
         </p>
       </div>
@@ -298,15 +298,15 @@
         <p>
           Think about how PageSpeed Insights works. It doesn't care whether your
           content is good. It doesn't evaluate the quality of your writing or
-          the correctness of your data. It checks a set of structural metrics —
-          First Contentful Paint, Cumulative Layout Shift, Total Blocking Time —
+          the correctness of your data. It checks a set of structural metrics --
+          First Contentful Paint, Cumulative Layout Shift, Total Blocking Time --
           and fails you if they cross a threshold. The invariant is: <em
             >"These metrics must stay within acceptable bounds across changes."</em
           >
         </p>
         <p>
           That's exactly the right mental model for agent behavior. The question
-          isn't "is the output correct?" — your eval suite handles that. The
+          isn't "is the output correct?" -- your eval suite handles that. The
           question is: <em
             >"Did the execution profile change in a way that violates our
             invariants?"</em
@@ -314,7 +314,7 @@
         </p>
         <p>
           If your agent ran in 6 steps on main, and now it runs in 22 steps on
-          this branch — that's a signal worth gating on, regardless of whether
+          this branch -- that's a signal worth gating on, regardless of whether
           the output looks good. If a new tool appears in the execution path
           that was never there before, that needs human review before it ships.
           If cost per run jumped 3x, the PR should be blocked until someone
@@ -323,7 +323,7 @@
         <p>
           These aren't quality metrics. They're <strong
             class="text-text-primary">structural invariants</strong
-          >. And CI is the right place to enforce them — automatically, on every
+          >. And CI is the right place to enforce them -- automatically, on every
           PR, before anything merges.
         </p>
       </div>
@@ -339,7 +339,7 @@
       </div>
       <p class="text-text-secondary leading-relaxed mb-6">
         Maida.AI runs 8 behavioral check categories on every PR. Each one is
-        deterministic — no LLM calls, no probabilistic scoring, no ground truth
+        deterministic -- no LLM calls, no probabilistic scoring, no ground truth
         required.
       </p>
 
@@ -359,7 +359,7 @@
           },
           {
             "name": "loop_risk",
-            "description": "Detects repeated identical tool calls within a single run — a strong signal that the agent is stuck in a loop. Without a gate, looping agents can run for minutes and cost dollars per request."
+            "description": "Detects repeated identical tool calls within a single run -- a strong signal that the agent is stuck in a loop. Without a gate, looping agents can run for minutes and cost dollars per request."
           },
           {
             "name": "guardrail_events",
@@ -408,7 +408,7 @@
         <!-- Step 1 -->
         <div>
           <p class="text-text-primary font-semibold mb-3">
-            Step 1 — Instrument with <code class="inline-code">@trace</code>
+            Step 1 -- Instrument with <code class="inline-code">@trace</code>
           </p>
           <div
             class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
@@ -427,7 +427,7 @@
 
 <span style="color: rgba(0,255,136,0.5)">@trace</span>
 <span class="text-[#555555]">def</span> <span style="color: rgba(0,255,136,0.9)">run_agent</span>(user_input: str) <span class="text-[#555555]">-></span> str:
-    <span class="text-[#555555]"># your existing agent code — no other changes needed</span>
+    <span class="text-[#555555]"># your existing agent code -- no other changes needed</span>
     result = agent.invoke(&#123;"input": user_input&#125;)
     <span class="text-[#555555]">return</span> result[<span style="color: rgba(0,255,136,0.6)">"output"</span>]</code></pre>
           </div>
@@ -436,7 +436,7 @@
         <!-- Step 2 -->
         <div>
           <p class="text-text-primary font-semibold mb-3">
-            Step 2 — Capture a baseline from main
+            Step 2 -- Capture a baseline from main
           </p>
           <div
             class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
@@ -462,7 +462,7 @@
       <!-- Step 3 -->
       <div>
         <p class="text-text-primary font-semibold mb-3">
-          Step 3 — Add the GitHub Action
+          Step 3 -- Add the GitHub Action
         </p>
         <div
           class="terminal-window rounded-lg overflow-hidden border border-[#1e1e1e]"
@@ -516,17 +516,17 @@
               <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
             </div>
             <span class="text-xs text-[#555555] font-mono"
-              >Maida.AI CI · PR #847 · feat/new-retrieval-model</span
+              >Maida.AI CI | PR #847 | feat/new-retrieval-model</span
             >
             <div class="w-16"></div>
           </div>
           <pre
             class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#555555]">$ maida run my_agent.py --baseline baselines/my_agent.json --policy .maida/policy.yaml --format markdown</span>
 
-<span style="color: rgba(255,68,68,0.9)">✗</span>  step_count       <span class="text-[#555555]">6 →</span> <span style="color: rgba(255,68,68,0.9)">22</span>   <span class="text-[#555555]">(+267%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
-<span style="color: rgba(255,68,68,0.9)">✗</span>  tool_calls       <span class="text-[#555555]">4 →</span> <span style="color: rgba(255,68,68,0.9)">19</span>   <span class="text-[#555555]">(+375%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  step_count       <span class="text-[#555555]">6 -></span> <span style="color: rgba(255,68,68,0.9)">22</span>   <span class="text-[#555555]">(+267%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  tool_calls       <span class="text-[#555555]">4 -></span> <span style="color: rgba(255,68,68,0.9)">19</span>   <span class="text-[#555555]">(+375%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
 <span style="color: rgba(255,68,68,0.9)">✗</span>  unexpected_tool  <span style="color: rgba(255,170,0,0.9)">salesforce_api</span> <span class="text-[#555555]">(never seen before)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
-<span style="color: rgba(255,68,68,0.9)">✗</span>  cost_estimate    <span class="text-[#555555]">$0.012 →</span> <span style="color: rgba(255,68,68,0.9)">$0.041</span>  <span class="text-[#555555]">(+242%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
+<span style="color: rgba(255,68,68,0.9)">✗</span>  cost_estimate    <span class="text-[#555555]">$0.012 -></span> <span style="color: rgba(255,68,68,0.9)">$0.041</span>  <span class="text-[#555555]">(+242%)</span>  <span style="color: rgba(255,68,68,0.9)">FAIL</span>
 <span style="color: rgba(0,255,136,0.7)">✓</span>  loop_risk        <span class="text-[#555555]">none detected</span>          <span style="color: rgba(0,255,136,0.9)">PASS</span>
 <span style="color: rgba(0,255,136,0.7)">✓</span>  stop_condition   <span class="text-[#555555]">reached in all cases</span>   <span style="color: rgba(0,255,136,0.9)">PASS</span>
 
@@ -539,7 +539,7 @@
         The PR is blocked. The engineer sees exactly which checks failed and by
         how much. The trace diff link shows a step-by-step comparison between
         the baseline run and the PR run. They can investigate, fix, and re-push
-        — with the gate enforcing the bar on every iteration.
+       -- with the gate enforcing the bar on every iteration.
       </p>
     </div>
     <!-- Closing -->
@@ -558,7 +558,7 @@
           The point is that there's a third layer that most teams are missing:
           something that sits in CI, runs on every PR, and checks whether the <em
             >behavioral structure</em
-          > of your agent has changed in a way that violates your invariants — before
+          > of your agent has changed in a way that violates your invariants -- before
           it ships.
         </p>
         <p>
@@ -587,7 +587,7 @@
           <p class="text-text-secondary text-sm leading-relaxed mb-5">
             Free to start. No LLM calls in your critical path. 5-minute setup
             via GitHub Action. Catches step count explosions, unexpected tool
-            calls, loop risk, cost spikes, and latency regressions — before they
+            calls, loop risk, cost spikes, and latency regressions -- before they
             merge.
           </p>
           <div class="flex flex-wrap gap-3">
@@ -686,9 +686,9 @@
     </div>
   </article>
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        FOOTER
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <footer class="border-t border-border py-16">
     <div class="max-w-6xl mx-auto px-6">
       <div class="grid md:grid-cols-4 gap-10 mb-12">

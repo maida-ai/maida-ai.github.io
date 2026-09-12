@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% block title %}Blog — Maida.AI{% endblock %}
+{% block title %}Blog -- Maida.AI{% endblock %}
 {% block description %}Practical writing on CI gates, behavioral testing, and shipping reliable AI agents. From the Maida.AI team.{% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
     "date": "April 11, 2026",
     "readingTime": "8 min read",
     "tags": ["CI", "Behavioral testing", "Regression gates"],
-    "excerpt": "A developer ships a \"minor\" prompt update. Evals pass. PR merges. Two days later: the agent now takes 22 steps instead of 6. Token cost tripled. Everything looked correct on the surface. Here's why output evals can't catch this — and what a behavioral regression gate does differently."
+    "excerpt": "A developer ships a \"minor\" prompt update. Evals pass. PR merges. Two days later: the agent now takes 22 steps instead of 6. Token cost tripled. Everything looked correct on the surface. Here's why output evals can't catch this -- and what a behavioral regression gate does differently."
   } %}
 
   {% set stubs = [
@@ -26,22 +26,22 @@
       "date": "Coming soon",
       "readingTime": "6 min read",
       "tags": ["CI", "Best practices"],
-      "excerpt": "Step count, tool calls, loop risk, latency, cost — a deep dive into each check, what it catches, and how to tune thresholds for your agent."
+      "excerpt": "Step count, tool calls, loop risk, latency, cost -- a deep dive into each check, what it catches, and how to tune thresholds for your agent."
     },
     {
       "title": "Model swaps are the silent killer of agent reliability",
       "date": "Coming soon",
       "readingTime": "7 min read",
       "tags": ["Model updates", "Behavioral testing"],
-      "excerpt": "Upgrading from gpt-4o to a new model version seems safe — but behavioral profiles can shift dramatically. How to gate model upgrades the right way."
+      "excerpt": "Upgrading from gpt-4o to a new model version seems safe -- but behavioral profiles can shift dramatically. How to gate model upgrades the right way."
     }
   ] %}
 
   {% include "_nav.html" %}
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        HERO
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <section class="relative pt-32 pb-16 overflow-hidden">
     <div
       class="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none"
@@ -63,16 +63,16 @@
           <span class="text-gradient">engineering.</span>
         </h1>
         <p class="text-text-secondary text-lg max-w-2xl leading-relaxed">
-          From the Maida.AI team — practical writing on CI gates, behavioral
+          From the Maida.AI team -- practical writing on CI gates, behavioral
           testing, and shipping reliable AI agents.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        FEATURED POST
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <section class="py-12">
     <div class="max-w-6xl mx-auto px-6">
       <div
@@ -109,7 +109,7 @@
               class="flex items-center gap-3 text-xs text-text-muted font-mono"
             >
               <span>{{ featured.date }}</span>
-              <span class="text-border">·</span>
+              <span class="text-border">|</span>
               <span>{{ featured.readingTime }}</span>
             </div>
             <span
@@ -133,9 +133,9 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        POST GRID
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <section class="py-12 pb-24">
     <div class="max-w-6xl mx-auto px-6">
       <div
@@ -172,7 +172,7 @@
                 </span>
                 <span>{{ post.readingTime }}</span>
               </div>
-              <span class="text-xs text-text-muted font-mono">→</span>
+              <span class="text-xs text-text-muted font-mono">-></span>
             </div>
           </div>
         {% endfor %}
@@ -180,9 +180,9 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════
+  <!-- ===========================================================
        FOOTER
-  ═══════════════════════════════════════════════════════════════ -->
+  =============================================================== -->
   <footer class="border-t border-border py-16">
     <div class="max-w-6xl mx-auto px-6">
       <div class="grid md:grid-cols-4 gap-10 mb-12">
