@@ -43,7 +43,7 @@ class StatisticalGateDocsTests(unittest.TestCase):
         ):
             self.assertIn(expected, cli)
 
-    def test_policy_reference_is_v2_and_keeps_v1_in_migration_only(self) -> None:
+    def test_policy_reference_documents_versioned_metric_format(self) -> None:
         policy = (REPO_ROOT / "docs" / "reference" / "policy.md").read_text()
 
         self.assertIn("# Policy v2 and gate decisions", policy)
@@ -52,9 +52,7 @@ class StatisticalGateDocsTests(unittest.TestCase):
         self.assertIn("| Plan | `0.1.0`", policy)
         self.assertIn("Unknown fields are errors", policy)
         self.assertIn("one-sided coverage", policy)
-        self.assertIn("## v1 migration", policy)
-        primary = policy.split("## v1 migration", 1)[0]
-        self.assertNotIn("\nassert:\n", primary)
+        self.assertNotIn("\nassert:\n", policy)
 
     def test_public_surfaces_match_python_owned_current_main_snapshot(self) -> None:
         contract = json.loads(
