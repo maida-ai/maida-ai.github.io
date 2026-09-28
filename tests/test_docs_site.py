@@ -101,6 +101,7 @@ class DocumentationSiteTests(unittest.TestCase):
         self.assertTrue(
             "/docs/assets/examples/" in integrations
             or "github.com/maida-ai/maida-tutorials/" in integrations
+            or "raw.githubusercontent.com/maida-ai/maida-tutorials/" in integrations
         )
 
     def test_theme_uses_maida_light_and_dark_tokens_without_grid_or_glow(self) -> None:
