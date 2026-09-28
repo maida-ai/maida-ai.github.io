@@ -98,7 +98,10 @@ class DocumentationSiteTests(unittest.TestCase):
         self.assertNotIn("<img", brand)
         self.assertIn('destination = Path(app.outdir) / "assets" / "examples"', config)
         self.assertIn('app.connect("build-finished", _copy_download_assets)', config)
-        self.assertIn("/docs/assets/examples/", integrations)
+        self.assertTrue(
+            "/docs/assets/examples/" in integrations
+            or "github.com/maida-ai/maida-tutorials/" in integrations
+        )
 
     def test_theme_uses_maida_light_and_dark_tokens_without_grid_or_glow(self) -> None:
         stylesheet = (

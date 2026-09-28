@@ -123,11 +123,20 @@ def synced_files(source: Path) -> list[Path]:
 def sync_examples(engine_root: Path, check_only: bool) -> list[str]:
     """Copy the downloadable example scripts, or report which are stale."""
     stale: list[str] = []
+    source_docs = "\n".join(
+        page.read_text(encoding="utf-8")
+        for page in (engine_root / "docs").rglob("*.md")
+    )
     for relative_source, relative_target in EXAMPLE_SOURCES.items():
         origin = engine_root / relative_source
         target = DOCS_ROOT / relative_target
         if not origin.is_file():
-            sys.exit(f"error: engine example missing: {relative_source}")
+            # New engine docs link to the tutorials repository. Keep building
+            # older released docs and their downloads, without requiring an
+            # independently drifting copy in the new engine tree.
+            if relative_target in source_docs:
+                sys.exit(f"error: referenced engine example missing: {relative_source}")
+            continue
         if check_only:
             if not target.exists() or not filecmp.cmp(origin, target, shallow=False):
                 stale.append(relative_target)
