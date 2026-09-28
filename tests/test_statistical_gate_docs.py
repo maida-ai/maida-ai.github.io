@@ -1,7 +1,10 @@
 import json
+import re
 import unittest
 from pathlib import Path
 
+from packaging.requirements import Requirement
+from packaging.version import Version
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -75,7 +78,12 @@ class StatisticalGateDocsTests(unittest.TestCase):
         scheduled = (REPO_ROOT / "docs" / "scheduled-checks.md").read_text()
 
         for text in (index, getting_started, homepage):
-            self.assertIn(contract["install_requirement"], text)
+            installs = re.findall(r"maida-ai(?:==|>=)[0-9][0-9.a-z]*", text)
+            self.assertTrue(installs, "No install requirement shown")
+            release = Version(contract["engine_ref"].removeprefix("v"))
+            self.assertIn(release, Requirement(contract["install_requirement"]).specifier)
+            for install in installs:
+                self.assertIn(release, Requirement(install).specifier)
         self.assertIn(contract["action_ref"], homepage)
         self.assertIn("checks: write", homepage)
         self.assertIn(

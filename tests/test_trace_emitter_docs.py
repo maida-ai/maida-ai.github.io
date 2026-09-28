@@ -74,7 +74,13 @@ class TraceEmitterDocsTests(unittest.TestCase):
         )
 
         self.assertIn("**meta.json** - Run metadata: `spec_version`", architecture)
-        self.assertIn("`meta.json` - run metadata (`spec_version`", getting_started)
+        if "`meta.json` - run metadata" in getting_started:
+            self.assertIn("`meta.json` - run metadata (`spec_version`", getting_started)
+        else:
+            # Progressive onboarding routes storage detail to its owner.
+            self.assertIn("reference/trace-format.md", getting_started)
+            trace = (REPO_ROOT / "docs/reference/trace-format.md").read_text()
+            self.assertIn("`spec_version` in `meta.json`", trace)
 
 
 if __name__ == "__main__":

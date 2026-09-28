@@ -13,19 +13,19 @@
     <ol class="workflow-sequence reveal" data-reveal>
       <li>
         <span>01</span>
-        <div><strong>Instrument</strong><p>Wrap one agent entrypoint.</p></div>
+        <div><strong>Capture one task</strong><p>Use your coding agent in your repository.</p></div>
       </li>
       <li>
         <span>02</span>
-        <div><strong>Record baseline</strong><p>Check in known-good behavior.</p></div>
+        <div><strong>Review a few checks</strong><p>Choose the observed behavior you want to protect.</p></div>
       </li>
       <li>
         <span>03</span>
-        <div><strong>Run candidate</strong><p>Capture the PR execution.</p></div>
+        <div><strong>Try a change</strong><p>See a pass, a deliberate failure, and repair.</p></div>
       </li>
       <li>
         <span>04</span>
-        <div><strong>Gate PR</strong><p>Apply policy inside CI.</p></div>
+        <div><strong>Add CI when ready</strong><p>Verify the repository boundary on a real PR.</p></div>
       </li>
     </ol>
 
@@ -35,8 +35,7 @@
         <h3>No clone. No API keys.</h3>
         <p>A deterministic demo goes from healthy trace to blocked regression.</p>
       </div>
-      <pre aria-label="Maida demo commands"><code><span>$</span> pip install "maida-ai>=0.5"
-<span>$</span> maida demo
+      <pre aria-label="Maida demo commands"><code><span>$</span> uv tool install "maida-ai==0.5.3"
 <span>$</span> maida demo --regression</code></pre>
       <a class="button button--dark" href="/docs/getting-started/">Open quickstart <span aria-hidden="true">-></span></a>
     </div>
