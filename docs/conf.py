@@ -94,6 +94,8 @@ def _copy_download_assets(app, exception) -> None:
 
     source = Path(app.srcdir) / "assets" / "examples"
     destination = Path(app.outdir) / "assets" / "examples"
+    if not source.is_dir():
+        return  # Current content links to tutorials; older releases have assets.
     copytree(
         source,
         destination,
