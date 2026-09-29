@@ -1,8 +1,10 @@
 import unittest
+import json
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+CONTRACT = json.loads((REPO_ROOT / "tests/contracts/current-main.json").read_text())
 
 
 class LangfuseDocsTests(unittest.TestCase):
@@ -16,11 +18,11 @@ class LangfuseDocsTests(unittest.TestCase):
             "LANGFUSE_SECRET_KEY",
             "read-only",
             "local Maida storage",
-            'uv tool install "maida-ai>=0.5"',
+            f'uv tool install "maida-ai=={CONTRACT["engine_ref"].removeprefix("v")}"',
             "GENERATION",
             "TOOL",
             "trace-command:",
-            "maida-ai/maida-assert@v5",
+            CONTRACT["action_ref"],
             "fixed one-trial gate",
             "maida-tutorials/tree/main/demos/langfuse_import",
         ):
@@ -43,7 +45,7 @@ class LangfuseDocsTests(unittest.TestCase):
         self.assertIn("# `maida import langfuse`", cli)
         self.assertIn("[Importing Langfuse traces](../langfuse.md)", cli)
 
-    def test_public_examples_reference_current_unreleased_action(self) -> None:
+    def test_public_examples_reference_current_action(self) -> None:
         public_text = "\n".join(
             path.read_text(encoding="utf-8")
             for root in (REPO_ROOT / "docs", REPO_ROOT / "templates")
@@ -51,7 +53,7 @@ class LangfuseDocsTests(unittest.TestCase):
             if path.suffix in {".md", ".html", ".yml", ".yaml"}
         )
 
-        self.assertIn("maida-ai/maida-assert@v5", public_text)
+        self.assertIn(CONTRACT["action_ref"], public_text)
         self.assertNotIn("maida-ai/maida-assert@V4", public_text)
         self.assertNotIn("maida-ai/maida-assert@V5", public_text)
 
