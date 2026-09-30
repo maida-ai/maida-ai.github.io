@@ -106,15 +106,15 @@ class HomepageTests(unittest.TestCase):
                 self.assertIn('<span class="brand-wordmark">Maida</span>', html)
                 self.assertNotIn('<img src="/static/favicon.svg"', html)
                 self.assertNotIn('class="brand-lockup__ai"', html)
-                self.assertNotIn('id="diff-diamond"', html)
+                self.assertNotIn('id="maida-symbol"', html)
 
         site_mark = (PROJECT_ROOT / "static" / "favicon.svg").read_text()
         docs_mark = (PROJECT_ROOT / "docs" / "assets" / "favicon.svg").read_text()
         self.assertEqual(site_mark, docs_mark)
-        self.assertIn('id="diff-diamond"', site_mark)
-        self.assertIn('id="added-arrow"', site_mark)
-        self.assertIn('id="changed-arrow"', site_mark)
-        self.assertNotIn("<rect", site_mark)
+        self.assertIn('id="maida-symbol"', site_mark)
+        self.assertIn('id="left-bracket"', site_mark)
+        self.assertIn('id="right-bracket"', site_mark)
+        self.assertIn('id="core-dot"', site_mark)
 
     def test_homepage_uses_accessible_trajectory_visuals(self) -> None:
         response = self.client.get("/")

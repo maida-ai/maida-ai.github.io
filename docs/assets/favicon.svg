@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <path id="diff-diamond" d="M16 1.75 30.25 16 16 30.25 1.75 16 16 1.75Z" fill="#171a17" stroke="#343a35"/>
-  <g id="added-arrow" stroke="#78d6a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8 16c3.5 0 4-6 8-6h7"/>
-    <path d="m20 7 3 3-3 3"/>
-  </g>
-  <g id="changed-arrow" stroke="#ed7958" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8 16c3.5 0 4 6 8 6h7"/>
-    <path d="m20 19 3 3-3 3"/>
-  </g>
-  <circle cx="8" cy="16" r="1.75" fill="#f2f1eb"/>
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="128" viewBox="0 0 144 128" role="img" aria-labelledby="title desc">
+<style>#left-bracket, #right-bracket {fill: #171A17;}@media (prefers-color-scheme: dark) {#left-bracket, #right-bracket {fill: #F2F1EB;}}</style>
+<title id="title">Maida symbol</title><desc id="desc">A solid circle inside two open square brackets.</desc>
+<g transform="translate(16 16) scale(1)"><g id="maida-symbol"><path id="left-bracket" d="M0 0H36V16H16V80H36V96H0Z"/><circle id="core-dot" fill="#ED7958" cx="56" cy="48" r="20"/><path id="right-bracket" d="M112 0H76V16H96V80H76V96H112Z"/></g></g>
 </svg>
