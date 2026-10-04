@@ -27,7 +27,7 @@ reference/index
       <span>60 second quickstart</span>
       <span class="docs-quickstart__status">local | no keys</span>
     </div>
-    <pre><code>uv tool install "maida-ai==0.6.0"
+    <pre><code>uv tool install "maida-ai==0.6.1"
 maida demo --regression</code></pre>
     <svg class="docs-trajectory" viewBox="0 0 560 142" role="img" aria-label="A healthy baseline path and a pull request path that diverges through repeated search calls and a new CRM tool">
       <path class="docs-trajectory__path docs-trajectory__path--pass" d="M20 36H138L208 36H318L388 36H538" />
