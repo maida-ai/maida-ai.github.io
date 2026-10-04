@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth no-js">
+<html lang="en" class="scroll-smooth no-js" data-maida-theme="{% block maida_theme %}dark{% endblock %}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +9,7 @@
     <!-- Primary Meta -->
     <title>{% block title %}Maida -- Pre-merge behavioral regression gate for AI agents{% endblock %}</title>
     <meta name="description" content="{% block description %}Your agent still returns the right answer -- but now it calls 3x the tools. Maida is the pre-merge behavioral regression gate for AI agents. Local-first, no cloud.{% endblock %}" />
-    <meta name="theme-color" content="{% block theme_color %}#0f1110{% endblock %}" />
+    <meta name="theme-color" content="{% block theme_color %}#171A17{% endblock %}" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -40,7 +40,8 @@
       rel="stylesheet"
     />
 
-    <!-- Tailwind CSS -->
+    <!-- Brand tokens, then compiled site CSS -->
+    <link rel="stylesheet" href="/static/brand-tokens.css" />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body class="bg-bg text-text-primary font-sans antialiased {% block body_class %}{% endblock %}">

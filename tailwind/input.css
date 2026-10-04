@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --green: #5fd292;
-    --green-rgb: 95, 210, 146;
-    --bg: #0f1110;
+    --green: var(--maida-mint);
+    --green-rgb: 120, 214, 162;
+    --bg: var(--maida-ink);
   }
 
   * {
@@ -23,12 +23,12 @@
   }
 
   ::selection {
-    background: rgba(95, 210, 146, 0.22);
+    background: color-mix(in srgb, var(--maida-mint) 22%, transparent);
     color: inherit;
   }
 
   :focus-visible {
-    outline: 3px solid #e56b4a;
+    outline: 3px solid var(--maida-coral);
     outline-offset: 4px;
   }
 
@@ -38,18 +38,18 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0f1110;
+    background: var(--maida-ink);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #3b403c;
+    background: var(--maida-rule-on-ink);
     border-radius: 999px;
   }
 }
 
 /* Shared legacy surfaces used by the About and Blog routes. */
 .text-gradient {
-  color: #78d6a2;
+  color: var(--maida-mint);
 }
 
 .hover-underline {
@@ -78,21 +78,21 @@
   padding: 0.15em 0.4em;
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 0.85em;
-  color: #78d6a2;
-  background: rgba(95, 210, 146, 0.08);
-  border: 1px solid rgba(95, 210, 146, 0.18);
+  color: var(--maida-mint);
+  background: color-mix(in srgb, var(--maida-mint) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--maida-mint) 18%, transparent);
   border-radius: 4px;
 }
 
 details.faq-item[open] .faq-arrow {
-  color: #78d6a2;
+  color: var(--maida-mint);
   transform: rotate(180deg);
 }
 
 details.faq-item[open] > summary {
   padding-left: calc(1.25rem - 2px);
-  color: #78d6a2;
-  border-left: 2px solid #78d6a2;
+  color: var(--maida-mint);
+  border-left: 2px solid var(--maida-mint);
 }
 
 details.faq-item > summary::-webkit-details-marker,
@@ -107,7 +107,7 @@ table tbody tr:last-child td:last-child {
 
 .terminal-window,
 .terminal-bar {
-  background: #111411;
+  background: color-mix(in srgb, var(--maida-paper) 4%, var(--maida-ink));
 }
 
 /* Content remains visible without JavaScript. */
@@ -136,7 +136,7 @@ table tbody tr:last-child td:last-child {
   z-index: 100;
   padding: 0.65rem 0.9rem;
   color: #f7f6f0;
-  background: #171a17;
+  background: var(--maida-ink);
   border-radius: 0.35rem;
   transform: translateY(-160%);
   transition: transform 150ms ease;
@@ -153,7 +153,7 @@ table tbody tr:last-child td:last-child {
   right: 0;
   left: 0;
   z-index: 50;
-  color: #f3f2ed;
+  color: var(--maida-paper);
   background: rgba(15, 17, 16, 0.88);
   border-bottom: 1px solid rgba(255, 255, 255, 0.09);
   backdrop-filter: blur(18px);
@@ -178,6 +178,7 @@ table tbody tr:last-child td:last-child {
 .brand-lockup {
   display: inline-flex;
   align-items: center;
+  gap: 0.55rem;
   flex-shrink: 0;
   min-height: 2.75rem;
   color: inherit;
@@ -185,6 +186,21 @@ table tbody tr:last-child td:last-child {
   font-weight: 700;
   letter-spacing: -0.04em;
   text-decoration: none;
+}
+
+.brand-mark {
+  display: block;
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 1.2rem;
+}
+
+.brand-mark__bracket {
+  fill: var(--maida-logo-bracket);
+}
+
+.brand-mark__dot {
+  fill: var(--maida-logo-dot);
 }
 
 .brand-wordmark {
@@ -202,7 +218,7 @@ table tbody tr:last-child td:last-child {
 .site-nav__toc a {
   position: relative;
   padding: 0.35rem 0;
-  color: #aeb3ad;
+  color: color-mix(in srgb, var(--maida-paper) 68%, var(--maida-ink));
   font-size: 0.82rem;
   font-weight: 560;
   text-decoration: none;
@@ -211,7 +227,7 @@ table tbody tr:last-child td:last-child {
 
 .site-nav__toc a:hover,
 .site-nav__toc a[aria-current="location"] {
-  color: #f3f2ed;
+  color: var(--maida-paper);
 }
 
 .site-nav__toc a[aria-current="location"]::after {
@@ -221,7 +237,7 @@ table tbody tr:last-child td:last-child {
   left: 0;
   height: 2px;
   content: '';
-  background: #78d6a2;
+  background: var(--maida-mint);
 }
 
 .site-nav__actions {
@@ -236,12 +252,12 @@ table tbody tr:last-child td:last-child {
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  color: #aeb3ad;
+  color: color-mix(in srgb, var(--maida-paper) 68%, var(--maida-ink));
   transition: color 150ms ease;
 }
 
 .site-nav__github:hover {
-  color: #f3f2ed;
+  color: var(--maida-paper);
 }
 
 .site-nav__cta {
@@ -253,8 +269,8 @@ table tbody tr:last-child td:last-child {
   font-size: 0.78rem;
   font-weight: 750;
   text-decoration: none;
-  background: #78d6a2;
-  border: 1px solid #78d6a2;
+  background: var(--maida-mint);
+  border: 1px solid var(--maida-mint);
   border-radius: 0.3rem;
   transition:
     background-color 150ms ease,
@@ -334,37 +350,37 @@ table tbody tr:last-child td:last-child {
 
 .mobile-navigation a span {
   width: 1.4rem;
-  color: #78d6a2;
+  color: var(--maida-mint);
   font-family: "JetBrains Mono", monospace;
   font-size: 0.65rem;
   font-weight: 500;
 }
 
 .maida-home .site-nav {
-  color: #171a17;
+  color: var(--maida-ink);
   background: rgba(242, 241, 235, 0.9);
   border-color: rgba(23, 26, 23, 0.12);
 }
 
 .maida-home .site-nav__toc a,
 .maida-home .site-nav__github {
-  color: #62675f;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
 }
 
 .maida-home .site-nav__toc a:hover,
 .maida-home .site-nav__toc a[aria-current="location"],
 .maida-home .site-nav__github:hover {
-  color: #171a17;
+  color: var(--maida-ink);
 }
 
 .maida-home .site-nav__toc a[aria-current="location"]::after {
-  background: #21764a;
+  background: color-mix(in srgb, var(--maida-mint) 48%, var(--maida-ink));
 }
 
 .maida-home .site-nav__cta {
   color: #f6f5ef;
-  background: #171a17;
-  border-color: #171a17;
+  background: var(--maida-ink);
+  border-color: var(--maida-ink);
 }
 
 .maida-home .site-nav__cta:hover {
@@ -381,13 +397,13 @@ table tbody tr:last-child td:last-child {
 }
 
 .maida-home .mobile-navigation a span {
-  color: #21764a;
+  color: color-mix(in srgb, var(--maida-mint) 48%, var(--maida-ink));
 }
 
 /* Shared footer */
 .site-footer {
-  color: #f3f2ed;
-  background: #0f1110;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
   border-top: 1px solid #292d2a;
 }
 
@@ -422,7 +438,7 @@ table tbody tr:last-child td:last-child {
 
 .site-footer__groups h2 {
   margin-bottom: 0.45rem;
-  color: #f3f2ed;
+  color: var(--maida-paper);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -448,7 +464,7 @@ table tbody tr:last-child td:last-child {
 .site-footer__groups a:hover,
 .site-footer__links a:hover,
 .site-footer__meta a:hover {
-  color: #f3f2ed;
+  color: var(--maida-paper);
 }
 
 .site-footer__meta {
@@ -476,40 +492,41 @@ table tbody tr:last-child td:last-child {
 }
 
 .maida-home .site-footer--compact {
-  color: #171a17;
-  background: #f2f1eb;
-  border-color: #d1d2cb;
+  color: var(--maida-ink);
+  background: var(--maida-paper);
+  border-color: var(--maida-rule-on-paper);
 }
 
 .maida-home .site-footer--compact .site-footer__brand p,
 .maida-home .site-footer--compact .site-footer__links a,
 .maida-home .site-footer--compact .site-footer__meta,
 .maida-home .site-footer--compact .site-footer__meta a {
-  color: #686c65;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
 }
 
 .maida-home .site-footer--compact .site-footer__links a:hover,
 .maida-home .site-footer--compact .site-footer__meta a:hover {
-  color: #171a17;
+  color: var(--maida-ink);
 }
 
 .maida-home .site-footer--compact .site-footer__meta {
-  border-color: #d1d2cb;
+  border-color: var(--maida-rule-on-paper);
 }
 
-/* Homepage foundations */
+/* Homepage foundations — surface aliases over Branding/spec tokens */
 .maida-home {
-  --home-paper: #f2f1eb;
-  --home-paper-bright: #f8f7f2;
-  --home-ink: #171a17;
-  --home-muted: #62675f;
-  --home-line: #ced0c8;
-  --pass: #21764a;
-  --pass-bright: #78d6a2;
-  --pass-soft: #d9eadf;
-  --fail: #ad3f29;
-  --fail-bright: #ed7958;
-  --fail-soft: #fae9e3;
+  --home-paper: var(--maida-paper);
+  --home-paper-bright: color-mix(in srgb, var(--maida-paper) 92%, white);
+  --home-ink: var(--maida-ink);
+  --home-muted: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
+  --home-line: var(--maida-rule-on-paper);
+  /* Darker mixes for small status text on paper; bright accents stay mint/coral. */
+  --pass: color-mix(in srgb, var(--maida-mint) 48%, var(--maida-ink));
+  --pass-bright: var(--maida-mint);
+  --pass-soft: color-mix(in srgb, var(--maida-mint) 18%, var(--maida-paper));
+  --fail: color-mix(in srgb, var(--maida-coral) 58%, var(--maida-ink));
+  --fail-bright: var(--maida-coral);
+  --fail-soft: color-mix(in srgb, var(--maida-coral) 14%, var(--maida-paper));
   color: var(--home-ink);
   background: var(--home-paper);
 }
@@ -617,7 +634,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .button--primary {
-  color: #f8f7f2;
+  color: color-mix(in srgb, var(--maida-paper) 92%, white);
   background: var(--home-ink);
   border-color: var(--home-ink);
 }
@@ -627,9 +644,9 @@ table tbody tr:last-child td:last-child {
 }
 
 .button--dark {
-  color: #171a17;
-  background: #f3f2ed;
-  border-color: #f3f2ed;
+  color: var(--maida-ink);
+  background: var(--maida-paper);
+  border-color: var(--maida-paper);
 }
 
 .button--dark:hover {
@@ -866,17 +883,17 @@ table tbody tr:last-child td:last-child {
 
 /* Chapter 02 — Divergence */
 .divergence-chapter {
-  --home-muted: #a7aca5;
-  --home-line: #343a35;
-  --pass: #78d6a2;
-  --fail: #ed7958;
+  --home-muted: color-mix(in srgb, var(--maida-paper) 62%, var(--maida-ink));
+  --home-line: var(--maida-rule-on-ink);
+  --pass: var(--maida-mint);
+  --fail: var(--maida-coral);
   min-height: 110svh;
-  color: #f5f4ee;
-  background: #171a17;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
 }
 
 .divergence-chapter .chapter-index span {
-  color: #78d6a2;
+  color: var(--maida-mint);
 }
 
 .divergence-comparison {
@@ -894,12 +911,12 @@ table tbody tr:last-child td:last-child {
 }
 
 .comparison-divider {
-  stroke: #343a35;
+  stroke: var(--maida-rule-on-ink);
   stroke-width: 1;
 }
 
 .comparison-branch {
-  fill: #f5f4ee;
+  fill: var(--maida-paper);
   font-size: 12px;
   font-weight: 720;
   letter-spacing: 0.14em;
@@ -912,7 +929,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .comparison-node circle {
-  fill: #171a17;
+  fill: var(--maida-ink);
   stroke-width: 2;
   vector-effect: non-scaling-stroke;
 }
@@ -930,7 +947,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .comparison-result {
-  fill: #f5f4ee;
+  fill: var(--maida-paper);
   font-size: 11px;
   font-weight: 650;
 }
@@ -943,7 +960,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .divergence-comparison figcaption code {
-  color: #f5f4ee;
+  color: var(--maida-paper);
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -1007,7 +1024,7 @@ table tbody tr:last-child td:last-child {
 
 /* Chapter 03 — Gate */
 .gate-chapter {
-  background: #e8e3d9;
+  background: color-mix(in srgb, var(--maida-coral) 6%, var(--maida-paper));
 }
 
 .gate-system {
@@ -1066,7 +1083,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .gate-step--pr {
-  border-top-color: #171a17;
+  border-top-color: var(--maida-ink);
 }
 
 .gate-step--compare {
@@ -1197,19 +1214,19 @@ table tbody tr:last-child td:last-child {
 
 /* Chapter 04 — Behavior fingerprint */
 .behavior-chapter {
-  --home-muted: #a5ada8;
-  --home-line: #34423a;
-  --pass: #78d6a2;
-  --fail: #ed7958;
-  color: #f2f4f0;
-  background: #101715;
+  --home-muted: color-mix(in srgb, var(--maida-paper) 62%, var(--maida-ink));
+  --home-line: var(--maida-rule-on-ink);
+  --pass: var(--maida-mint);
+  --fail: var(--maida-coral);
+  color: var(--maida-paper);
+  background: var(--maida-ink);
 }
 
 .behavior-fingerprint {
   margin-top: clamp(4rem, 7vw, 6.5rem);
-  background: #151e1a;
-  border-top: 1px solid #34423a;
-  border-bottom: 1px solid #34423a;
+  background: color-mix(in srgb, var(--maida-paper) 5%, var(--maida-ink));
+  border-top: 1px solid var(--maida-rule-on-ink);
+  border-bottom: 1px solid var(--maida-rule-on-ink);
 }
 
 .behavior-fingerprint > figcaption {
@@ -1217,7 +1234,7 @@ table tbody tr:last-child td:last-child {
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #34423a;
+  border-bottom: 1px solid var(--maida-rule-on-ink);
 }
 
 .behavior-fingerprint figcaption > div:first-child {
@@ -1247,7 +1264,7 @@ table tbody tr:last-child td:last-child {
   height: 190px;
   padding: 1.4rem 1.5rem 0.5rem;
   overflow: hidden;
-  border-bottom: 1px solid #34423a;
+  border-bottom: 1px solid var(--maida-rule-on-ink);
 }
 
 .fingerprint-paths svg {
@@ -1406,7 +1423,7 @@ table tbody tr:last-child td:last-child {
 
 /* Chapter 05 — Evidence */
 .evidence-chapter {
-  background: #f7f4ed;
+  background: color-mix(in srgb, var(--maida-paper) 96%, white);
 }
 
 .evidence-heading {
@@ -1463,10 +1480,10 @@ table tbody tr:last-child td:last-child {
   width: 2rem;
   height: 2rem;
   place-items: center;
-  color: #f8f7f2;
+  color: color-mix(in srgb, var(--maida-paper) 92%, white);
   font-size: 0.72rem;
   font-weight: 750;
-  background: #171a17;
+  background: var(--maida-ink);
   border-radius: 0.3rem;
 }
 
@@ -1481,7 +1498,7 @@ table tbody tr:last-child td:last-child {
 
 .pr-evidence__repo small,
 .pr-evidence__check {
-  color: #686c65;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
   font-family: "JetBrains Mono", monospace;
   font-size: 0.61rem;
 }
@@ -1493,7 +1510,7 @@ table tbody tr:last-child td:last-child {
 
 .pr-evidence__summary {
   padding: clamp(2rem, 4vw, 3.5rem);
-  background: #171a17;
+  background: var(--maida-ink);
 }
 
 .evidence-label {
@@ -1510,7 +1527,7 @@ table tbody tr:last-child td:last-child {
   height: 3.2rem;
   margin: 3rem 0 1.4rem;
   place-items: center;
-  color: #171a17;
+  color: var(--maida-ink);
   font-size: 1.5rem;
   font-weight: 780;
   background: var(--fail-bright);
@@ -1526,7 +1543,7 @@ table tbody tr:last-child td:last-child {
 
 .pr-evidence__summary > p:nth-of-type(3) {
   margin-top: 0.65rem;
-  color: #f3f2ed;
+  color: var(--maida-paper);
   font-size: 0.9rem;
 }
 
@@ -1568,7 +1585,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .report-heading span {
-  color: #686c65;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
   font-family: "JetBrains Mono", monospace;
   font-size: 0.58rem;
   text-transform: uppercase;
@@ -1603,7 +1620,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .report-table thead th {
-  color: #686c65;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
   font-family: "JetBrains Mono", monospace;
   font-size: 0.56rem;
   font-weight: 550;
@@ -1679,7 +1696,7 @@ table tbody tr:last-child td:last-child {
   align-items: center;
   justify-content: space-between;
   padding-top: 1rem;
-  color: #686c65;
+  color: color-mix(in srgb, var(--maida-ink) 55%, var(--maida-paper));
   font-size: 0.65rem;
   border-top: 1px solid #dedcd4;
 }
@@ -1692,7 +1709,7 @@ table tbody tr:last-child td:last-child {
 
 /* Chapter 06 — Workflow */
 .workflow-chapter {
-  background: #dfe6e2;
+  background: color-mix(in srgb, var(--maida-mint) 10%, var(--maida-paper));
 }
 
 .workflow-sequence {
@@ -1754,7 +1771,7 @@ table tbody tr:last-child td:last-child {
   align-items: center;
   padding: clamp(2rem, 4vw, 3.5rem);
   color: #f2f3ef;
-  background: #171a17;
+  background: var(--maida-ink);
 }
 
 .demo-strip__copy > span {
@@ -1787,16 +1804,16 @@ table tbody tr:last-child td:last-child {
 }
 
 .demo-strip pre span {
-  color: #78d6a2;
+  color: var(--maida-mint);
 }
 
 /* Chapter 07 — Local first */
 .local-chapter {
-  --home-muted: #a3ada6;
-  --home-line: #39453e;
-  --pass: #78d6a2;
-  color: #f1f3ee;
-  background: #18211c;
+  --home-muted: color-mix(in srgb, var(--maida-paper) 62%, var(--maida-ink));
+  --home-line: var(--maida-rule-on-ink);
+  --pass: var(--maida-mint);
+  color: var(--maida-paper);
+  background: var(--maida-ink);
 }
 
 .local-heading {
@@ -1898,7 +1915,7 @@ table tbody tr:last-child td:last-child {
 
 .local-object--trace strong,
 .local-object--verdict strong {
-  color: #78d6a2;
+  color: var(--maida-mint);
 }
 
 .local-flow > i {
@@ -1933,7 +1950,7 @@ table tbody tr:last-child td:last-child {
 
 .local-boundary__facts span::before {
   margin-right: 0.5rem;
-  color: #78d6a2;
+  color: var(--maida-mint);
   content: '✓';
 }
 

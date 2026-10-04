@@ -12,4 +12,24 @@
   {{ super() }}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {# Keep Branding data-maida-theme aligned with the Sphinx/PyData data-theme
+     toggle so brand-tokens.css does not keep following the OS preference. #}
+  <script>
+    (function () {
+      function syncMaidaTheme() {
+        var root = document.documentElement;
+        var theme = root.getAttribute("data-theme");
+        if (theme === "light" || theme === "dark") {
+          root.setAttribute("data-maida-theme", theme);
+        } else {
+          root.removeAttribute("data-maida-theme");
+        }
+      }
+      syncMaidaTheme();
+      new MutationObserver(syncMaidaTheme).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+    })();
+  </script>
 {% endblock %}

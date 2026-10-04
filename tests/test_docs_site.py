@@ -88,16 +88,24 @@ class DocumentationSiteTests(unittest.TestCase):
                 self.assertTrue(page.exists())
                 self.assertIn(f"integrations/{slug}", overview)
 
-    def test_docs_brand_is_text_only_and_assets_keep_stable_paths(self) -> None:
+    def test_docs_brand_uses_inline_mark_and_assets_keep_stable_paths(self) -> None:
         brand = (
             DOCS_ROOT / "_templates" / "maida-brand.html"
+        ).read_text(encoding="utf-8")
+        stylesheet = (
+            DOCS_ROOT / "_static" / "maida-docs.css"
         ).read_text(encoding="utf-8")
         config = (DOCS_ROOT / "conf.py").read_text(encoding="utf-8")
         integrations = (DOCS_ROOT / "integrations.md").read_text(encoding="utf-8")
 
-        self.assertIn(">Maida<", brand)
+        self.assertIn("maida-docs-brand__name", brand)
+        self.assertIn(">Maida</span>", brand)
         self.assertIn(">Docs<", brand)
+        self.assertIn('class="brand-mark"', brand)
+        self.assertIn("brand-mark__bracket", brand)
         self.assertNotIn("<img", brand)
+        self.assertIn("var(--maida-logo-bracket)", stylesheet)
+        self.assertIn("var(--maida-logo-dot)", stylesheet)
         self.assertIn('destination = Path(app.outdir) / "assets" / "examples"', config)
         self.assertIn('app.connect("build-finished", _copy_download_assets)', config)
         self.assertTrue(
@@ -114,10 +122,21 @@ class DocumentationSiteTests(unittest.TestCase):
             DOCS_ROOT / "_templates" / "layout.html"
         ).read_text(encoding="utf-8")
 
-        self.assertIn('html[data-theme="light"]', stylesheet)
-        self.assertIn('html[data-theme="dark"]', stylesheet)
+        self.assertIn(':root[data-theme="light"]', stylesheet)
+        self.assertIn(':root[data-theme="dark"]', stylesheet)
         self.assertIn("--maida-green", stylesheet)
         self.assertIn("--maida-danger", stylesheet)
+        self.assertIn("var(--maida-paper)", stylesheet)
+        self.assertIn("var(--maida-mint)", stylesheet)
+        self.assertIn("var(--maida-coral)", stylesheet)
+        config = (DOCS_ROOT / "conf.py").read_text(encoding="utf-8")
+        self.assertIn('"brand-tokens.css"', config)
+        self.assertLess(
+            config.index('"brand-tokens.css"'),
+            config.index('"maida-docs.css"'),
+        )
+        self.assertTrue((DOCS_ROOT / "_static" / "brand-tokens.css").is_file())
+        self.assertIn("data-maida-theme", layout)
         self.assertIn('class="maida-docs-home"', layout)
         self.assertIn(
             "body.maida-docs-home .bd-main .bd-content .bd-article-container",
