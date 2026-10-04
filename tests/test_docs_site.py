@@ -13,6 +13,8 @@ CLI_COMMAND_PAGES = (
     "scenario-run",
     "demo",
     "init",
+    "check",
+    "detach",
     "import-langfuse",
     "list",
     "view",
