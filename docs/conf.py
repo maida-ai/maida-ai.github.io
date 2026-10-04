@@ -30,6 +30,7 @@ html_static_path = ["_static"]
 templates_path = ["_templates"]
 html_css_files = [
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+    "brand-tokens.css",
     "maida-docs.css",
 ]
 html_copy_source = False

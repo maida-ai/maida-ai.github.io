@@ -1,32 +1,41 @@
+/* Docs theme tokens derive from Branding/spec brand-tokens.css (loaded first). */
+
 :root {
   --maida-font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --maida-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-  --maida-green: #21764a;
-  --maida-warning: #9a551f;
-  --maida-danger: #b44932;
-  --maida-info: #446b96;
   --maida-radius: 0.4rem;
   --maida-header-height: 4.25rem;
+  --maida-green: color-mix(in srgb, var(--maida-mint) 48%, var(--maida-ink));
+  --maida-warning: color-mix(in srgb, var(--maida-coral) 55%, var(--maida-ink));
+  --maida-danger: color-mix(in srgb, var(--maida-coral) 58%, var(--maida-ink));
+  --maida-info: color-mix(in srgb, var(--maida-mint) 25%, var(--maida-ink));
 }
 
-html[data-theme="light"] {
-  --maida-bg: #f2f1eb;
-  --maida-surface: #f8f7f2;
-  --maida-surface-muted: #eae9e2;
-  --maida-surface-raised: #ffffff;
-  --maida-border: #ced0c8;
-  --maida-border-strong: #bfc3bc;
-  --maida-text: #171a17;
-  --maida-text-secondary: #62675f;
-  --maida-text-muted: #737a73;
-  --maida-code: #183c2a;
-  --maida-green-soft: #d9eadf;
-  --maida-warning-soft: #f9eadc;
-  --maida-danger-soft: #fae9e3;
+/* :root[data-theme] matches brand-tokens OS dark specificity
+   (:root:not([data-maida-theme])) so the Sphinx theme toggle wins. */
+:root[data-theme="light"] {
+  /* Elevation ladder (not brand primitives): page < code fill < raised chrome. */
+  --maida-bg: var(--maida-paper);
+  --maida-surface: color-mix(in srgb, white 42%, var(--maida-paper));
+  --maida-surface-muted: color-mix(in srgb, var(--maida-ink) 6%, var(--maida-paper));
+  --maida-surface-raised: white;
+  --maida-border: var(--maida-rule-on-paper);
+  --maida-border-strong: color-mix(in srgb, var(--maida-ink) 24%, var(--maida-paper));
+  --maida-text: var(--maida-ink);
+  --maida-text-secondary: color-mix(in srgb, var(--maida-ink) 58%, var(--maida-paper));
+  --maida-text-muted: color-mix(in srgb, var(--maida-ink) 50%, var(--maida-paper));
+  --maida-code: color-mix(in srgb, var(--maida-mint) 28%, var(--maida-ink));
+  --maida-green: color-mix(in srgb, var(--maida-mint) 48%, var(--maida-ink));
+  --maida-warning: color-mix(in srgb, var(--maida-coral) 55%, var(--maida-ink));
+  --maida-danger: color-mix(in srgb, var(--maida-coral) 58%, var(--maida-ink));
+  --maida-info: color-mix(in srgb, var(--maida-mint) 25%, var(--maida-ink));
+  --maida-green-soft: color-mix(in srgb, var(--maida-mint) 22%, var(--maida-paper));
+  --maida-warning-soft: color-mix(in srgb, var(--maida-coral) 12%, var(--maida-paper));
+  --maida-danger-soft: color-mix(in srgb, var(--maida-coral) 16%, var(--maida-paper));
   --pst-color-primary: var(--maida-green);
-  --pst-color-secondary: #4e6357;
+  --pst-color-secondary: color-mix(in srgb, var(--maida-mint) 30%, var(--maida-ink));
   --pst-color-link: var(--maida-green);
-  --pst-color-link-hover: #1d5438;
+  --pst-color-link-hover: color-mix(in srgb, var(--maida-mint) 40%, var(--maida-ink));
   --pst-color-background: var(--maida-bg);
   --pst-color-on-background: var(--maida-surface);
   --pst-color-surface: var(--maida-surface-muted);
@@ -38,28 +47,29 @@ html[data-theme="light"] {
   color-scheme: light;
 }
 
-html[data-theme="dark"] {
-  --maida-bg: #0f1110;
-  --maida-surface: #161916;
-  --maida-surface-muted: #1b1f1b;
-  --maida-surface-raised: #202420;
-  --maida-border: #303630;
-  --maida-border-strong: #434a43;
-  --maida-text: #f3f2ed;
-  --maida-text-secondary: #b2b7b1;
-  --maida-text-muted: #858c85;
-  --maida-code: #b9e8cd;
-  --maida-green: #78d6a2;
-  --maida-warning: #e8a35f;
-  --maida-danger: #ed7958;
-  --maida-info: #7fa6d9;
-  --maida-green-soft: #1c3024;
-  --maida-warning-soft: #32271d;
-  --maida-danger-soft: #35231e;
+:root[data-theme="dark"] {
+  /* Deep stage under ink keeps mint/coral brighter; surfaces step up clearly. */
+  --maida-bg: color-mix(in srgb, black 28%, var(--maida-ink));
+  --maida-surface: color-mix(in srgb, var(--maida-paper) 8%, var(--maida-ink));
+  --maida-surface-muted: color-mix(in srgb, var(--maida-paper) 12%, var(--maida-ink));
+  --maida-surface-raised: color-mix(in srgb, var(--maida-paper) 16%, var(--maida-ink));
+  --maida-border: var(--maida-rule-on-ink);
+  --maida-border-strong: color-mix(in srgb, var(--maida-paper) 26%, var(--maida-ink));
+  --maida-text: var(--maida-paper);
+  --maida-text-secondary: color-mix(in srgb, var(--maida-paper) 72%, var(--maida-ink));
+  --maida-text-muted: color-mix(in srgb, var(--maida-paper) 52%, var(--maida-ink));
+  --maida-code: color-mix(in srgb, var(--maida-mint) 78%, var(--maida-paper));
+  --maida-green: var(--maida-mint);
+  --maida-warning: color-mix(in srgb, var(--maida-coral) 78%, var(--maida-mint));
+  --maida-danger: var(--maida-coral);
+  --maida-info: color-mix(in srgb, var(--maida-mint) 40%, var(--maida-paper));
+  --maida-green-soft: color-mix(in srgb, var(--maida-mint) 18%, var(--maida-ink));
+  --maida-warning-soft: color-mix(in srgb, var(--maida-coral) 16%, var(--maida-ink));
+  --maida-danger-soft: color-mix(in srgb, var(--maida-coral) 20%, var(--maida-ink));
   --pst-color-primary: var(--maida-green);
-  --pst-color-secondary: #aab6ad;
+  --pst-color-secondary: color-mix(in srgb, var(--maida-paper) 68%, var(--maida-ink));
   --pst-color-link: var(--maida-green);
-  --pst-color-link-hover: #a0e8bd;
+  --pst-color-link-hover: color-mix(in srgb, var(--maida-mint) 72%, var(--maida-paper));
   --pst-color-background: var(--maida-bg);
   --pst-color-on-background: var(--maida-surface);
   --pst-color-surface: var(--maida-surface-muted);
@@ -135,6 +145,27 @@ body {
 .maida-docs-brand a {
   color: var(--maida-text);
   text-decoration: none;
+}
+
+.maida-docs-brand__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.maida-docs-brand .brand-mark {
+  display: block;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.1rem;
+}
+
+.maida-docs-brand .brand-mark__bracket {
+  fill: var(--maida-logo-bracket);
+}
+
+.maida-docs-brand .brand-mark__dot {
+  fill: var(--maida-logo-dot);
 }
 
 .maida-docs-brand__name {

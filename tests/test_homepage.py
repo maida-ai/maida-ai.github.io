@@ -91,7 +91,7 @@ class HomepageTests(unittest.TestCase):
         self.assertIn('data-section-link="product"', html)
         self.assertIn('aria-controls="mobile-navigation"', html)
 
-    def test_brand_uses_a_text_wordmark_and_reserves_the_mark_for_favicons(self) -> None:
+    def test_brand_uses_inline_mark_with_wordmark_and_theme_tokens(self) -> None:
         for path in (
             "/",
             "/about/",
@@ -104,9 +104,16 @@ class HomepageTests(unittest.TestCase):
 
                 self.assertEqual(response.status_code, 200)
                 self.assertIn('<span class="brand-wordmark">Maida</span>', html)
+                self.assertIn('class="brand-mark"', html)
+                self.assertIn("brand-mark__bracket", html)
+                self.assertIn("brand-mark__dot", html)
                 self.assertNotIn('<img src="/static/favicon.svg"', html)
                 self.assertNotIn('class="brand-lockup__ai"', html)
-                self.assertNotIn('id="maida-symbol"', html)
+
+        home = self.client.get("/").get_data(as_text=True)
+        about = self.client.get("/about/").get_data(as_text=True)
+        self.assertIn('data-maida-theme="light"', home)
+        self.assertIn('data-maida-theme="dark"', about)
 
         site_mark = (PROJECT_ROOT / "static" / "favicon.svg").read_text()
         docs_mark = (PROJECT_ROOT / "docs" / "assets" / "favicon.svg").read_text()
@@ -115,6 +122,14 @@ class HomepageTests(unittest.TestCase):
         self.assertIn('id="left-bracket"', site_mark)
         self.assertIn('id="right-bracket"', site_mark)
         self.assertIn('id="core-dot"', site_mark)
+        self.assertIn("prefers-color-scheme: dark", site_mark)
+        self.assertIn("--maida-logo-bracket", site_mark)
+        self.assertIn("--maida-logo-dot", site_mark)
+
+        css = (PROJECT_ROOT / "tailwind" / "input.css").read_text()
+        self.assertIn(".brand-mark__bracket", css)
+        self.assertIn("var(--maida-logo-bracket)", css)
+        self.assertIn("var(--maida-logo-dot)", css)
 
     def test_homepage_uses_accessible_trajectory_visuals(self) -> None:
         response = self.client.get("/")
@@ -127,6 +142,21 @@ class HomepageTests(unittest.TestCase):
         self.assertIn("Baseline and pull request execution trajectories", text)
         self.assertIn("The final answer is identical", text)
         self.assertIn("Behavior: regression", text)
+
+    def test_site_loads_brand_tokens_before_compiled_styles(self) -> None:
+        response = self.client.get("/")
+        html = response.get_data(as_text=True)
+        tokens = '<link rel="stylesheet" href="/static/brand-tokens.css" />'
+        styles = '<link rel="stylesheet" href="/static/styles.css" />'
+        self.assertIn(tokens, html)
+        self.assertIn(styles, html)
+        self.assertLess(html.index(tokens), html.index(styles))
+
+        css = (PROJECT_ROOT / "tailwind" / "input.css").read_text()
+        self.assertIn("--home-paper: var(--maida-paper);", css)
+        self.assertIn("--pass-bright: var(--maida-mint);", css)
+        self.assertIn("--fail-bright: var(--maida-coral);", css)
+        self.assertNotIn("--home-paper: #f2f1eb;", css)
 
     def test_homepage_uses_semantic_status_color_not_neon_decoration(self) -> None:
         response = self.client.get("/")
