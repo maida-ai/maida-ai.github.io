@@ -23,8 +23,7 @@
       <figcaption id="gate-figure-title">The Maida pre-merge CI workflow</figcaption>
       <p id="gate-figure-description" class="sr-only">
         A pull request runs the agent, compares its trace with the checked-in
-        baseline, and applies policy. Passing behavior can merge; a regression
-        blocks the pull request.
+        baseline, and applies policy. A FAIL reports a policy violation. Merge enforcement depends on tested required checks and workflow protection in the consumer repository.
       </p>
 
       <div class="gate-system__flow">
@@ -46,10 +45,10 @@
         <i class="gate-connector gate-connector--split" aria-hidden="true"></i>
         <div class="gate-outcomes">
           <div class="gate-outcome gate-outcome--pass">
-            <span>PASS</span><strong>Merge allowed</strong>
+            <span>PASS</span><strong>Checks passed</strong>
           </div>
           <div class="gate-outcome gate-outcome--fail">
-            <span>FAIL</span><strong>PR blocked</strong>
+            <span>FAIL</span><strong>Policy violated</strong>
           </div>
         </div>
       </div>
@@ -60,10 +59,11 @@
       </div>
 
       <div class="gate-contract" aria-label="Maida gate implementation contract">
-        <p><span>CLI</span><code>maida run my_agent.py</code></p>
-        <p><span>Action</span><code>maida-ai/maida-assert@v0.6.0</code></p>
+        <p><span>CLI</span><code>maida run coding_agent.py</code></p>
+        <p><span>Action release</span><a href="https://github.com/maida-ai/maida-assert#add-the-merge-boundary"><code>maida-ai/maida-assert@v0.6.0</code></a></p>
         <p><span>Permission</span><code>checks: write</code></p>
       </div>
+      <p class="behavior-chapter__note">Pin the Action's full commit SHA in your workflow. Follow the linked setup for required checks and workflow protection; this rehearsal does not verify a consumer repository's merge boundary.</p>
     </figure>
 
     <div class="gate-context reveal" data-reveal>

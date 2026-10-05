@@ -11,8 +11,7 @@
         <h2 id="local-title">Your agent behavior<br />stays in your environment.</h2>
       </div>
       <p>
-        No Maida cloud required. The core workflow runs on your machine or CI
-        runner, with no account and no telemetry by default.
+        No Maida cloud required. Task evidence is not uploaded to Maida by default. Capture may use a local telemetry receiver; that is not telemetry to Maida. Your coding agent still uses its normal provider.
       </p>
     </header>
 
@@ -37,9 +36,9 @@
 
         <div class="local-flow">
           <div class="local-object local-object--source">
-            <span>agent.py</span>
-            <strong>Agent code</strong>
-            <code>@trace</code>
+            <span>coding_agent.py</span>
+            <strong>Storefront harness</strong>
+            <code>local tool events</code>
           </div>
           <i aria-hidden="true"></i>
           <div class="local-object local-object--trace">
@@ -57,7 +56,7 @@
           <i aria-hidden="true"></i>
           <div class="local-object local-object--verdict">
             <span>CI VERDICT</span>
-            <strong>Pass / block</strong>
+            <strong>PASS / FAIL / INCONCLUSIVE</strong>
             <code>before merge</code>
           </div>
         </div>
