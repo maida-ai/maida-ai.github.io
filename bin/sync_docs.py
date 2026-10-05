@@ -79,15 +79,20 @@ def engine_ref() -> str:
     return contract["engine_ref"]
 
 
-def fetch_engine_docs(destination: Path) -> tuple[Path, str]:
+def fetch_engine_docs(
+    destination: Path, *, ref: str | None = None, local: str | None = None
+) -> tuple[Path, str]:
     """Return the engine checkout root and a human-readable source label."""
-    if local := os.environ.get("MAIDA_DOCS_PATH"):
+    # Explicit refs isolate the published channels from preview overrides.
+    if ref is None and local is None:
+        local = os.environ.get("MAIDA_DOCS_PATH")
+    if local:
         root = Path(local).expanduser().resolve()
         if not (root / "docs").is_dir():
             sys.exit(f"error: MAIDA_DOCS_PATH has no docs directory: {root / 'docs'}")
         return root, f"local checkout {root}"
 
-    ref = engine_ref()
+    ref = ref or engine_ref()
     subprocess.run(
         [
             "git",
@@ -120,22 +125,30 @@ def synced_files(source: Path) -> list[Path]:
     return results
 
 
-def sync_examples(engine_root: Path, check_only: bool) -> list[str]:
+def sync_examples(
+    engine_root: Path, check_only: bool, docs_root: Path | None = None
+) -> list[str]:
     """Copy the downloadable example scripts, or report which are stale."""
     stale: list[str] = []
+    docs_root = docs_root if docs_root is not None else DOCS_ROOT
     source_docs = "\n".join(
         page.read_text(encoding="utf-8")
         for page in (engine_root / "docs").rglob("*.md")
     )
     for relative_source, relative_target in EXAMPLE_SOURCES.items():
         origin = engine_root / relative_source
-        target = DOCS_ROOT / relative_target
+        target = docs_root / relative_target
         if not origin.is_file():
             # New engine docs link to the tutorials repository. Keep building
             # older released docs and their downloads, without requiring an
             # independently drifting copy in the new engine tree.
             if relative_target in source_docs:
                 sys.exit(f"error: referenced engine example missing: {relative_source}")
+            if target.exists():
+                if check_only:
+                    stale.append(f"{relative_target} (removed upstream)")
+                else:
+                    target.unlink()
             continue
         if check_only:
             if not target.exists() or not filecmp.cmp(origin, target, shallow=False):
@@ -146,7 +159,10 @@ def sync_examples(engine_root: Path, check_only: bool) -> list[str]:
     return stale
 
 
-def sync(engine_root: Path, check_only: bool) -> int:
+def sync(
+    engine_root: Path, check_only: bool, docs_root: Path | None = None
+) -> int:
+    docs_root = docs_root if docs_root is not None else DOCS_ROOT
     source = engine_root / "docs"
     files = synced_files(source)
     if not files:
@@ -156,7 +172,7 @@ def sync(engine_root: Path, check_only: bool) -> int:
     copied = 0
 
     for relative in files:
-        target = DOCS_ROOT / relative
+        target = docs_root / relative
         origin = source / relative
         if check_only:
             if not target.exists() or not filecmp.cmp(origin, target, shallow=False):
@@ -167,11 +183,11 @@ def sync(engine_root: Path, check_only: bool) -> int:
         copied += 1
 
     # A page deleted upstream must not linger in the built site.
-    expected = {DOCS_ROOT / relative for relative in files}
-    for path in sorted(DOCS_ROOT.rglob("*")):
+    expected = {docs_root / relative for relative in files}
+    for path in sorted(docs_root.rglob("*")):
         if not path.is_file():
             continue
-        relative = path.relative_to(DOCS_ROOT)
+        relative = path.relative_to(docs_root)
         if relative.parts[0] in SITE_OWNED:
             continue
         if path not in expected:
@@ -181,7 +197,7 @@ def sync(engine_root: Path, check_only: bool) -> int:
                 path.unlink()
                 print(f"  removed {relative}")
 
-    stale.extend(sync_examples(engine_root, check_only))
+    stale.extend(sync_examples(engine_root, check_only, docs_root))
 
     if check_only:
         if stale:

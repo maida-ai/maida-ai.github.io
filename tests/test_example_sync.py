@@ -48,6 +48,16 @@ class ExampleSyncTests(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "missing"):
             sync_docs.sync_examples(self.engine, False)
 
+    def test_removed_download_does_not_linger_after_migration(self):
+        target = self.site / "assets/examples/minimal.py"
+        target.parent.mkdir(parents=True)
+        target.write_text("print('obsolete download')\n")
+        self.assertEqual(sync_docs.sync_examples(self.engine, True), [
+            "assets/examples/minimal.py (removed upstream)",
+        ])
+        sync_docs.sync_examples(self.engine, False)
+        self.assertFalse(target.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

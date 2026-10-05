@@ -153,12 +153,13 @@ class DocumentationSiteTests(unittest.TestCase):
 
     def test_ci_and_deploy_use_the_canonical_docs_build(self) -> None:
         makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+        builder = (REPO_ROOT / "bin/build_docs.py").read_text(encoding="utf-8")
         ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text()
         deploy = (REPO_ROOT / ".github" / "workflows" / "deploy.yml").read_text()
 
-        self.assertIn("sphinx-build", makefile)
-        self.assertIn("-W --keep-going", makefile)
-        self.assertIn("-b dirhtml", makefile)
+        self.assertIn("uv run python bin/build_docs.py", makefile)
+        self.assertIn('"-m", "sphinx", "-W", "--keep-going"', builder)
+        self.assertIn('"-b", "dirhtml"', builder)
         self.assertIn("run: make docs", ci)
         self.assertIn("run: make docs", deploy)
         self.assertNotIn("mkdocs build", deploy)

@@ -27,5 +27,5 @@ jobs:
       - name: Run documentation contract tests
         run: uv run python -m unittest discover -s tests
 
-      - name: Build documentation
+      - name: Build pinned release and main documentation
         run: make docs

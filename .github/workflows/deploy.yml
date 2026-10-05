@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Refresh engine main every Monday at 07:23 UTC; release stays pinned.
+    - cron: '23 7 * * 1'
 
 permissions:
   contents: read
@@ -37,7 +40,7 @@ jobs:
       - name: Build CSS
         run: ./bin/tailwindcss -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
-      - name: Build docs
+      - name: Build pinned release and main docs
         run: make docs
 
       - name: Freeze site

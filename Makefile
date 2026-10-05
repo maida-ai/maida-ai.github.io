@@ -9,17 +9,16 @@ dev: docs
 css:
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify
 
-# Documentation content lives in maida/docs and is pulled in at the pinned
-# engine release. Set MAIDA_DOCS_PATH=../maida to preview unreleased pages.
+# Documentation content lives in maida/docs. The standalone sync populates
+# docs/ at the pin for contract checks; the builder isolates both versions.
 docs-sync:
 	uv run python bin/sync_docs.py
 
 docs-check:
 	uv run python bin/sync_docs.py --check
 
-docs: docs-sync
-	uv run sphinx-build -M clean docs site
-	uv run sphinx-build -W --keep-going -E -b dirhtml -d .sphinx-doctrees docs site
+docs:
+	uv run python bin/build_docs.py
 
 build: css docs
 	rm -rf dist
