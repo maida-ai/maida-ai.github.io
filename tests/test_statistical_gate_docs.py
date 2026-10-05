@@ -77,7 +77,8 @@ class StatisticalGateDocsTests(unittest.TestCase):
         )
         scheduled = (REPO_ROOT / "docs" / "scheduled-checks.md").read_text()
 
-        for text in (index, getting_started, homepage):
+        self.assertIn("{{ maida_install_command }}", index)
+        for text in (getting_started, homepage):
             installs = re.findall(r"maida-ai(?:==|>=)[0-9][0-9.a-z]*", text)
             self.assertTrue(installs, "No install requirement shown")
             release = Version(contract["engine_ref"].removeprefix("v"))
