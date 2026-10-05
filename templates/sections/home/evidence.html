@@ -1,28 +1,101 @@
-<section id="evidence" class="home-chapter evidence-chapter" data-nav-section="evidence" aria-labelledby="broken-pr-preview-title">
+<section
+  id="evidence"
+  class="home-chapter evidence-chapter"
+  data-nav-section="evidence"
+  aria-labelledby="broken-pr-preview-title"
+>
   <div class="chapter-shell">
     <header class="evidence-heading reveal" data-reveal>
       <p class="chapter-index"><span>05</span> Real evidence</p>
-      <h2 id="broken-pr-preview-title">The same change.<br />An actionable report.</h2>
-      <div><p>This excerpt comes from the storefront rehearsal's Maida markdown report. Application tests pass; two reviewed behavior checks fail.</p><a href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/pr-gate" class="text-link">Open the storefront harness <span aria-hidden="true">-></span></a></div>
+      <h2 id="broken-pr-preview-title">A verdict your reviewer<br />can act on.</h2>
+      <div>
+        <p>
+          Maida turns structural trace differences into a focused PR report:
+          what changed, why the policy failed, and where to inspect the run.
+        </p>
+        <a href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/broken_pr" class="text-link">
+          See the broken PR demo <span aria-hidden="true">-></span>
+        </a>
+      </div>
     </header>
-    <article id="broken-pr-preview" class="pr-evidence reveal" data-reveal aria-label="Locally reproduced Maida PR-comment preview">
-      <header class="pr-evidence__topbar"><div class="pr-evidence__repo"><span aria-hidden="true">M</span><div><strong>storefront-coding-agent</strong><small>Instruction-change rehearsal</small></div></div><span class="pr-evidence__check">Maida / behavioral-regression</span></header>
+
+    <article
+      id="broken-pr-preview"
+      class="pr-evidence reveal"
+      data-reveal
+      aria-label="Locally reproduced Maida PR-comment preview"
+    >
+      <header class="pr-evidence__topbar">
+        <div class="pr-evidence__repo">
+          <span aria-hidden="true">M</span>
+          <div><strong>agent-checkout</strong><small>Pull request #184</small></div>
+        </div>
+        <span class="pr-evidence__check">Maida / behavioral-regression</span>
+      </header>
+
       <div class="pr-evidence__body">
         <aside class="pr-evidence__summary">
-          <p class="evidence-label">Locally reproduced PR-comment preview</p><div class="evidence-verdict-mark" aria-hidden="true">!</div>
-          <p class="evidence-verdict">❌ Maida verdict: fail</p><p><strong>2 blocking checks failed</strong> | <strong>1/3 trials completed</strong></p>
-          <dl><div><dt>Baseline</dt><dd>coding-agent.json</dd></div><div><dt>Candidate</dt><dd>Fixture-refresh instruction</dd></div><div><dt>Policy</dt><dd>.maida/policy.yaml</dd></div></dl>
+          <p class="evidence-label">Locally reproduced PR-comment preview</p>
+          <div class="evidence-verdict-mark" aria-hidden="true">!</div>
+          <p class="evidence-verdict">❌ Maida verdict: fail</p>
+          <p><strong>3 of 8 checks failed</strong></p>
+          <dl>
+            <div><dt>Baseline</dt><dd>main</dd></div>
+            <div><dt>Candidate</dt><dd>PR #184</dd></div>
+            <div><dt>Policy</dt><dd>.maida/policy.yaml</dd></div>
+          </dl>
         </aside>
+
         <div class="pr-evidence__report">
-          <div class="report-heading"><div><span>Behavior vs baseline</span><h3>Protected test rewritten</h3></div><span class="report-heading__status">FAIL</span></div>
-          <p>Sample stopped early: <code>invariant_violation</code>.</p>
-          <ul class="storefront-report-changes"><li>New tool used: <code>rewrite_regression_test</code>.</li><li>Tool removed: <code>repair_shipping_rule</code>.</li></ul>
-          <div class="report-change"><span class="report-change__icon" aria-hidden="true">!</span><div><strong>Baseline tools violated the policy.</strong><p><code>no_new_tools</code></p></div></div>
-          <div class="report-change"><span class="report-change__icon" aria-hidden="true">!</span><div><strong>Allowed tools violated the policy.</strong><p><code>forbidden_tools</code></p></div></div>
-          <footer class="pr-evidence__footer"><code>uv run --frozen python demo.py</code><span>Reproduce in demos/pr-gate. Offline after installation.</span></footer>
+          <div class="report-heading">
+            <div>
+              <span>Behavior report</span>
+              <h3>Top behavior changes</h3>
+            </div>
+            <span class="report-heading__status">PR BLOCKED</span>
+          </div>
+
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <caption class="sr-only">Tool-call change from the locally reproduced report</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Behavior</th>
+                  <th scope="col">Baseline</th>
+                  <th scope="col">Current</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Tool calls</th>
+                  <td>2</td>
+                  <td><strong>5</strong></td>
+                  <td><strong>+150%</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="report-change">
+            <span class="report-change__icon" aria-hidden="true">~</span>
+            <div>
+              <strong>Repeated tool call</strong>
+              <p><code>lookup_order</code> repeated 1 -&gt; 4 calls</p>
+            </div>
+            <span class="change-label change-label--fail">policy failed</span>
+          </div>
+
+          <div class="report-trace" aria-label="Changed candidate trace">
+            <span>agent</span><i></i><span>lookup_order x4</span><i></i><span class="is-new">crm_update</span>
+          </div>
+
+          <footer class="pr-evidence__footer">
+            <code>maida demo --regression</code>
+            <span>Reproduce locally. No API key.</span>
+          </footer>
         </div>
       </div>
     </article>
-    <p class="behavior-chapter__note">This is a local report excerpt. Merge enforcement requires a repeatable task, reviewed policy, and tested required checks and workflow protection in your repository.</p>
   </div>
 </section>

@@ -29,15 +29,15 @@
       </li>
     </ol>
 
-    <p class="behavior-chapter__note">For your own repository, install with <code>uv tool install "maida-ai==0.6.1"</code>, then follow <a href="/docs/getting-started/">Check a Claude Code task</a> for capture setup, your first report, and review of the next change.</p>
-
     <div class="demo-strip reveal" data-reveal>
-      <div class="demo-strip__copy"><span>Optional offline rehearsal</span><h3>See the shipping example.</h3><p>No capture setup, credentials, or live model. After installation, the harness runs offline in temporary copies.</p></div>
-      <pre aria-label="Storefront demo commands"><code>git clone https://github.com/maida-ai/maida-tutorials.git
-cd maida-tutorials/demos/pr-gate
-uv sync --locked
-uv run --frozen python demo.py</code></pre>
-      <a class="button button--dark" href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/pr-gate#try-the-offline-example">Try the offline example <span aria-hidden="true">-></span></a>
+      <div class="demo-strip__copy">
+        <span>Try the complete story first</span>
+        <h3>No clone. No API keys.</h3>
+        <p>A deterministic demo goes from healthy trace to blocked regression.</p>
+      </div>
+      <pre aria-label="Maida demo commands"><code><span>$</span> uv tool install "maida-ai==0.6.1"
+<span>$</span> maida demo --regression</code></pre>
+      <a class="button button--dark" href="/docs/getting-started/">Open quickstart <span aria-hidden="true">-></span></a>
     </div>
   </div>
 </section>

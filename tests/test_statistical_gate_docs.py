@@ -88,7 +88,7 @@ class StatisticalGateDocsTests(unittest.TestCase):
         self.assertIn(contract["action_ref"], homepage)
         self.assertIn("checks: write", homepage)
         self.assertIn(
-            f'maida {contract["cli"]["primary_gate"]} coding_agent.py', homepage
+            f'maida {contract["cli"]["primary_gate"]} my_agent.py', homepage
         )
         self.assertIn(f'Baseline schema `{contract["schemas"]["baseline"]}`', regression)
         self.assertIn(f'Report schema `{contract["schemas"]["report"]}`', regression)

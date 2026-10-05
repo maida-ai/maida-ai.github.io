@@ -6,8 +6,8 @@ from pathlib import Path
 from app import app
 
 
-STOREFRONT_DEMO_URL = (
-    "https://github.com/maida-ai/maida-tutorials/tree/main/demos/pr-gate"
+BROKEN_PR_DEMO_URL = (
+    "https://github.com/maida-ai/maida-tutorials/tree/main/demos/broken_pr"
 )
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,30 +55,13 @@ class HomepageTests(unittest.TestCase):
         app.config.update(TESTING=True)
         self.client = app.test_client()
 
-    def test_homepage_links_to_storefront_demo(self) -> None:
+    def test_homepage_links_to_broken_pr_demo(self) -> None:
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        self.assertIn(f'href="{STOREFRONT_DEMO_URL}"', html)
-        self.assertIn("Try the offline example", html)
-
-    def test_first_screen_proves_the_shipping_regression_before_setup(self) -> None:
-        html = self.client.get("/").get_data(as_text=True)
-        hero = html.split('id="product"', 1)[1].split('</section>', 1)[0]
-        for fact in (
-            "VIP shipping remains $0", "VIP shipping becomes $15",
-            "Original regression test preserved", "Agent changes the test expectation",
-            "Application tests pass", "Application tests also pass",
-            "Reviewed Maida check passes", "Reviewed Maida check rejects the change",
-        ):
-            self.assertIn(fact, hero)
-        self.assertLess(hero.index("shipping-proof"), hero.index("Check a Claude Code task"))
-        self.assertIn('class="button button--primary" href="/docs/getting-started/"', hero)
-        self.assertIn(f'href="{STOREFRONT_DEMO_URL}#try-the-offline-example"', hero)
-        self.assertIn("Try the offline example", hero)
-        self.assertIn('/static/storefront-proof.png', hero)
-        self.assertEqual(self.client.get('/static/storefront-proof.png').status_code, 200)
+        self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
+        self.assertIn("See the broken PR demo", html)
 
     def test_homepage_is_structured_as_eight_editorial_chapters(self) -> None:
         response = self.client.get("/")
@@ -154,11 +137,11 @@ class HomepageTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
         text = unescape(html)
-        self.assertGreaterEqual(html.count('class="trajectory-graphic'), 1)
-        self.assertIn("Shipping refactor execution comparison", text)
-        self.assertIn("Both paths finish with four passing application tests", text)
-        self.assertNotIn("lookup_order", text)
-        self.assertNotIn("crm_update", text)
+        self.assertGreaterEqual(html.count('class="trajectory-graphic'), 2)
+        self.assertGreaterEqual(html.count('role="img"'), 3)
+        self.assertIn("Baseline and pull request execution trajectories", text)
+        self.assertIn("The final answer is identical", text)
+        self.assertIn("Behavior: regression", text)
 
     def test_site_loads_brand_tokens_before_compiled_styles(self) -> None:
         response = self.client.get("/")
@@ -189,15 +172,16 @@ class HomepageTests(unittest.TestCase):
         ):
             self.assertNotIn(obsolete_class, html)
 
-    def test_homepage_offers_task_and_offline_example_with_local_first_claims(self) -> None:
+    def test_homepage_leads_with_demo_and_local_first_claims(self) -> None:
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
         text = unescape(response.get_data(as_text=True))
-        self.assertIn("Green tests can hide", text)
-        self.assertIn("a broken agent change.", text)
+        self.assertIn("Agents change when code changes.", text)
+        self.assertIn("Catch it before merge.", text)
         self.assertIn("Don't let broken", text)
-        self.assertIn("uv run --frozen python demo.py", text)
+        self.assertIn("maida demo", text)
+        self.assertIn("maida demo --regression", text)
         self.assertIn("No Maida cloud required", text)
         self.assertIn("OTel-compatible", text)
 
@@ -247,15 +231,13 @@ class HomepageTests(unittest.TestCase):
         self.assertIn('aria-labelledby="broken-pr-preview-title"', html)
         self.assertIn("Locally reproduced PR-comment preview", text)
         self.assertIn("❌ Maida verdict: fail", text)
-        self.assertIn("2 blocking checks failed", text)
-        self.assertIn("1/3 trials completed", text)
-        self.assertIn("invariant_violation", text)
-        self.assertIn("New tool used: <code>rewrite_regression_test</code>", html)
-        self.assertIn("Tool removed: <code>repair_shipping_rule</code>", html)
-        self.assertIn("no_new_tools", text)
-        self.assertIn("forbidden_tools", text)
-        self.assertNotIn("+150%", text)
-        self.assertIn(f'href="{STOREFRONT_DEMO_URL}"', html)
+        self.assertIn("3 of 8 checks failed", text)
+        self.assertIn("Tool calls", text)
+        self.assertIn("+150%", text)
+        self.assertIn("lookup_order", text)
+        self.assertIn("lookup_order x4", text)
+        self.assertIn("repeated 1 -> 4 calls", text)
+        self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
 
 
 if __name__ == "__main__":

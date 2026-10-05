@@ -1,40 +1,100 @@
-<section id="why-maida" class="home-chapter divergence-chapter" data-nav-section="why-maida" aria-labelledby="divergence-title">
+<section
+  id="why-maida"
+  class="home-chapter divergence-chapter"
+  data-nav-section="why-maida"
+  aria-labelledby="divergence-title"
+>
   <div class="chapter-shell">
     <header class="chapter-heading chapter-heading--split reveal" data-reveal>
-      <div><p class="chapter-index"><span>02</span> Why Maida</p><h2 id="divergence-title">Same green suite.<br />Different behavior.</h2></div>
-      <div class="chapter-heading__aside"><p>The task is to simplify shipping without changing what customers pay. The original VIP regression test catches a bad refactor. Safe instructions repair the implementation; the changed instructions tell the agent to refresh the test expectation instead.</p><p class="mono-note">Compare execution, alongside correctness tests.</p></div>
-    </header>
-    <figure class="divergence-comparison reveal" data-reveal>
-      <svg class="trajectory-graphic trajectory-graphic--comparison" viewBox="0 0 1080 650" role="img" aria-labelledby="comparison-title comparison-description">
-        <title id="comparison-title">Shipping refactor execution comparison</title>
-        <desc id="comparison-description">Both agents refactor shipping and encounter a failing VIP test. The safe path repairs shipping and preserves the test. The candidate rewrites the regression test to approve fifteen dollars. Both paths finish with four passing application tests.</desc>
-        <text x="88" y="67" class="comparison-branch">SAFE INSTRUCTIONS</text>
-        <text x="617" y="67" class="comparison-branch">CHANGED INSTRUCTIONS</text>
-        <line x1="540" y1="32" x2="540" y2="587" class="comparison-divider" />
-        <path class="trace-track" d="M120 124V528M650 124V528" />
-        <path class="trace-draw trace-draw--pass" d="M120 124V528" />
-        <path class="trace-draw trace-draw--fail" d="M650 124V528" />
-        <g class="comparison-node comparison-node--pass">
-          <circle cx="120" cy="124" r="8" /><text x="146" y="130">refactor shipping</text>
-          <circle cx="120" cy="252" r="8" /><text x="146" y="258">VIP test fails</text>
-          <circle cx="120" cy="380" r="12" /><text x="146" y="386">repair implementation</text>
-          <circle cx="120" cy="528" r="8" /><text x="146" y="534">four tests pass</text>
-        </g>
-        <g class="comparison-node comparison-node--fail">
-          <circle cx="650" cy="124" r="8" /><text x="676" y="130">refactor shipping</text>
-          <circle cx="650" cy="252" r="8" /><text x="676" y="258">VIP test fails</text>
-          <circle cx="650" cy="380" r="15" class="comparison-node__new" /><text x="676" y="386">rewrite test: $0 → $15</text>
-          <circle cx="650" cy="528" r="8" /><text x="676" y="534">four tests also pass</text>
-        </g>
-        <text x="88" y="619" class="comparison-result">VIP SHIPPING: $0 · MAIDA PASS</text>
-        <text x="617" y="619" class="comparison-result">VIP SHIPPING: $15 · MAIDA FAIL</text>
-      </svg>
-      <div class="comparison-mobile" aria-hidden="true">
-        <div><p>Safe instructions</p><ol><li>refactor shipping</li><li>VIP test fails</li><li>repair implementation</li><li>four tests pass</li></ol></div>
-        <div class="comparison-mobile__changed"><p>Changed instructions</p><ol><li>refactor shipping</li><li>VIP test fails</li><li><strong>new</strong> rewrite test: $0 → $15</li><li>four tests also pass</li></ol></div>
+      <div>
+        <p class="chapter-index"><span>02</span> Why Maida</p>
+        <h2 id="divergence-title">Same answer.<br />Different behavior.</h2>
       </div>
-      <figcaption>Both paths finish with four passing application tests. The candidate changes what the tests approve.</figcaption>
+      <div class="chapter-heading__aside">
+        <p>
+          Output-only checks see a pass. Maida compares the path that produced
+          it--and catches the regression hiding underneath.
+        </p>
+        <p class="mono-note">Compare execution, not just completion.</p>
+      </div>
+    </header>
+
+    <figure class="divergence-comparison reveal" data-reveal>
+      <svg
+        class="trajectory-graphic trajectory-graphic--comparison"
+        viewBox="0 0 1080 650"
+        role="img"
+        aria-labelledby="comparison-title comparison-description"
+      >
+        <title id="comparison-title">Main and PR number 184 execution comparison</title>
+        <desc id="comparison-description">
+          Main calls lookup order once before answering. PR number 184 calls
+          lookup order four times, adds a new CRM update, and then returns the
+          identical answer.
+        </desc>
+
+        <text x="88" y="67" class="comparison-branch">MAIN</text>
+        <text x="617" y="67" class="comparison-branch">PR #184</text>
+        <line x1="540" y1="32" x2="540" y2="587" class="comparison-divider" />
+
+        <path class="trace-track" d="M265 124V528" />
+        <path class="trace-draw trace-draw--pass" d="M265 124V528" />
+        <g class="comparison-node comparison-node--pass">
+          <circle cx="265" cy="124" r="8" /><text x="291" y="130">user request</text>
+          <circle cx="265" cy="252" r="13" /><text x="291" y="258">agent</text>
+          <circle cx="265" cy="380" r="8" /><text x="291" y="386">lookup_order</text>
+          <circle cx="265" cy="528" r="12" /><text x="291" y="534">answer</text>
+        </g>
+
+        <path class="trace-track" d="M793 124V557" />
+        <path class="trace-draw trace-draw--fail" d="M793 124V557" />
+        <g class="comparison-node comparison-node--fail">
+          <circle cx="793" cy="124" r="8" /><text x="819" y="130">user request</text>
+          <circle cx="793" cy="210" r="13" /><text x="819" y="216">agent</text>
+          <circle cx="793" cy="286" r="8" /><text x="819" y="292">lookup_order</text>
+          <circle cx="793" cy="352" r="8" /><text x="819" y="358">lookup_order</text>
+          <circle cx="793" cy="418" r="8" /><text x="819" y="424">lookup_order x2</text>
+          <circle cx="793" cy="484" r="15" class="comparison-node__new" />
+          <text x="819" y="490">crm_update</text>
+          <text x="767" y="489" text-anchor="end" class="trace-alert">NEW</text>
+          <circle cx="793" cy="557" r="12" /><text x="819" y="563">answer</text>
+        </g>
+
+        <text x="88" y="619" class="comparison-result">ORDER #4821 | SHIPPED</text>
+        <text x="617" y="619" class="comparison-result">ORDER #4821 | SHIPPED</text>
+      </svg>
+
+      <div class="comparison-mobile" aria-hidden="true">
+        <div>
+          <p>Main</p>
+          <ol>
+            <li>user request</li><li>agent</li><li>lookup_order</li><li>answer</li>
+          </ol>
+        </div>
+        <div class="comparison-mobile__changed">
+          <p>PR #184</p>
+          <ol>
+            <li>user request</li><li>agent</li><li>lookup_order x4</li><li><strong>new</strong> crm_update</li><li>answer</li>
+          </ol>
+        </div>
+      </div>
+
+      <figcaption>
+        Both runs return <code>ORDER #4821 | SHIPPED</code>. The final answer is identical.
+      </figcaption>
     </figure>
-    <p class="behavior-chapter__note">The harness simulates coding decisions deterministically; it edits real files and runs real tests. This evidence covers the harness's observed tools and reviewed requirements. Keep application correctness tests and review alongside Maida.</p>
+
+    <div class="divergence-verdict reveal" data-reveal aria-label="Output identical, behavior regression">
+      <div>
+        <span>Output</span>
+        <strong>Identical</strong>
+      </div>
+      <span class="divergence-verdict__operator" aria-hidden="true">!=</span>
+      <div class="divergence-verdict__failure">
+        <span>Behavior</span>
+        <strong>Regression</strong>
+      </div>
+      <p>Behavior: regression</p>
+    </div>
   </div>
 </section>
