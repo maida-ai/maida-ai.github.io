@@ -140,6 +140,21 @@ def _copy_download_assets(app, exception) -> None:
 def setup(app) -> None:
     app.connect("build-finished", _copy_download_assets)
     app.connect("source-read", _render_install_command)
+    app.connect("source-read", _include_optional_navigation)
+
+
+def _include_optional_navigation(app, docname, source) -> None:
+    """Place newer capture pages in navigation without breaking older releases."""
+    optional_pages = {
+        "guides/index": ["codex"],
+        "cli": ["cli/capture-codex-hook"],
+    }
+    pages = [
+        f"/{page}" for page in optional_pages.get(docname, [])
+        if (Path(app.srcdir) / f"{page}.md").is_file()
+    ]
+    if pages:
+        source[0] += "\n\n```{toctree}\n:hidden:\n\n" + "\n".join(pages) + "\n```\n"
 
 
 def _render_install_command(app, docname, source) -> None:

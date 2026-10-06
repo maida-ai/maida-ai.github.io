@@ -137,6 +137,34 @@ class VersionedDocsTests(unittest.TestCase):
         self.assertFalse((self.output / "main/assets/examples/langchain-minimal.py").exists())
         self.assertTrue((self.output / "assets/examples/langchain-minimal.py").exists())
 
+    def test_optional_capture_pages_join_navigation_only_where_available(self):
+        for engine in (self.release, self.main):
+            (engine / "docs/guides").mkdir()
+            (engine / "docs/guides/index.md").write_text("# Guides\n")
+            (engine / "docs/cli.md").write_text("# CLI reference\n")
+            with (engine / "docs/getting-started.md").open("a") as page:
+                page.write("\n```{toctree}\nguides/index\ncli\n```\n")
+        (self.main / "docs/cli").mkdir()
+        (self.main / "docs/codex.md").write_text("# Native Codex capture\n")
+        (self.main / "docs/cli/capture-codex-hook.md").write_text(
+            "# Codex hook receiver\n"
+        )
+        self.build()
+        for parent, child, href in (
+            ("guides", "codex", "../codex/"),
+            ("cli", "cli/capture-codex-hook", "capture-codex-hook/"),
+        ):
+            with self.subTest(child=child):
+                self.assertTrue((self.output / "main" / child / "index.html").is_file())
+                self.assertFalse((self.output / child).exists())
+                main_nav = (self.output / "main" / parent / "index.html").read_text()
+                release_nav = (self.output / parent / "index.html").read_text()
+                self.assertIn(f'href="{href}"', main_nav)
+                self.assertNotIn("codex", release_nav.lower())
+        # Navigation is presentation: never rewrite the upstream content.
+        self.assertEqual((self.main / "docs/guides/index.md").read_text(), "# Guides\n")
+        self.assertEqual((self.main / "docs/cli.md").read_text(), "# CLI reference\n")
+
 
 class EngineSourceTests(unittest.TestCase):
     def test_explicit_release_ignores_preview_environment(self):
