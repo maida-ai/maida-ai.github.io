@@ -539,8 +539,8 @@ table tbody tr:last-child td:last-child {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 92svh;
-  padding: clamp(6.5rem, 10vw, 10rem) 0;
+  min-height: auto;
+  padding: clamp(4rem, 6vw, 6rem) 0;
   scroll-margin-top: 4.25rem;
 }
 
@@ -574,7 +574,7 @@ table tbody tr:last-child td:last-child {
 .cta-chapter h2 {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(3.2rem, 6.4vw, 6.1rem);
+  font-size: clamp(2.7rem, 4.8vw, 4.5rem);
   font-weight: 740;
   line-height: 0.98;
   letter-spacing: -0.065em;
@@ -705,9 +705,9 @@ table tbody tr:last-child td:last-child {
 /* Chapter 01 — Hero */
 .hero-chapter {
   align-items: flex-start;
-  min-height: 100svh;
-  padding-top: clamp(7.75rem, 10vw, 9rem);
-  padding-bottom: 4.5rem;
+  min-height: auto;
+  padding-top: clamp(6.5rem, 8vw, 7.5rem);
+  padding-bottom: 4rem;
   background: var(--home-paper);
 }
 
@@ -718,7 +718,7 @@ table tbody tr:last-child td:last-child {
 .hero-copy h1 {
   max-width: 1090px;
   margin: 0;
-  font-size: clamp(4rem, 7.1vw, 7rem);
+  font-size: clamp(4rem, 6.4vw, 6rem);
   font-weight: 760;
   line-height: 0.9;
   letter-spacing: -0.072em;
@@ -746,7 +746,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .hero-trajectory {
-  margin-top: clamp(3.5rem, 6vw, 5rem);
+  margin-top: 3rem;
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
 }
@@ -887,7 +887,7 @@ table tbody tr:last-child td:last-child {
   --home-line: var(--maida-rule-on-ink);
   --pass: var(--maida-mint);
   --fail: var(--maida-coral);
-  min-height: 110svh;
+  min-height: auto;
   color: var(--maida-paper);
   background: var(--maida-ink);
 }
@@ -897,7 +897,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .divergence-comparison {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 2rem;
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
 }
@@ -1223,7 +1223,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .behavior-fingerprint {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 3rem;
   background: color-mix(in srgb, var(--maida-paper) 5%, var(--maida-ink));
   border-top: 1px solid var(--maida-rule-on-ink);
   border-bottom: 1px solid var(--maida-rule-on-ink);
@@ -1452,7 +1452,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .pr-evidence {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 2rem;
   overflow: hidden;
   background: #fcfbf7;
   border: 1px solid #cbc9c1;
@@ -1715,7 +1715,7 @@ table tbody tr:last-child td:last-child {
 .workflow-sequence {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  margin-top: clamp(4.5rem, 8vw, 7rem);
+  margin-top: 2.5rem;
   counter-reset: workflow;
 }
 
@@ -2122,13 +2122,13 @@ table tbody tr:last-child td:last-child {
 @media (max-width: 800px) {
   .home-chapter {
     min-height: auto;
-    padding: 6.5rem 0;
+    padding: 4rem 0;
   }
 
   .hero-chapter {
-    min-height: 100svh;
-    padding-top: 8.5rem;
-    padding-bottom: 3.5rem;
+    min-height: auto;
+    padding-top: 6.5rem;
+    padding-bottom: 2rem;
   }
 
   .trajectory-graphic--hero,
@@ -2139,7 +2139,7 @@ table tbody tr:last-child td:last-child {
   .trajectory-mobile {
     display: grid;
     gap: 1.5rem;
-    padding: 2.5rem 0;
+    padding: 4rem 0;
   }
 
   .trajectory-mobile__row {
@@ -2508,12 +2508,12 @@ table tbody tr:last-child td:last-child {
   }
 
   .home-chapter {
-    padding: 5.75rem 0;
+    padding: 4rem 0;
   }
 
   .hero-chapter {
-    padding-top: 7.25rem;
-    padding-bottom: 3.5rem;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
   }
 
   .chapter-index {
@@ -2763,43 +2763,10 @@ table tbody tr:last-child td:last-child {
   }
 }
 
-/* Behavior-led homepage copy and reserved verdict visual. */
+/* Behavior-led homepage copy. */
 .section-anchor {
   display: block;
   scroll-margin-top: 6rem;
-}
-
-.verdict-lines {
-  margin-top: 3rem;
-}
-
-.verdict-lines > div {
-  display: grid;
-  grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1fr);
-  gap: 1rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--home-line);
-}
-
-.verdict-lines dt {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 700;
-}
-
-.verdict-lines dd {
-  color: var(--home-muted);
-  line-height: 1.65;
-}
-
-.verdict-placeholder {
-  display: grid;
-  place-items: center;
-  min-height: 15rem;
-  margin-top: 2rem;
-  padding: 2rem;
-  color: var(--home-muted);
-  text-align: center;
-  border: 1px dashed var(--home-line);
 }
 
 .install-details {
@@ -2844,8 +2811,7 @@ table tbody tr:last-child td:last-child {
 }
 
 @media (max-width: 800px) {
-  .install-details,
-  .verdict-lines > div {
+  .install-details {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -2865,4 +2831,164 @@ table tbody tr:last-child td:last-child {
 
 .divergence-chapter .trajectory-mobile__row > span:not(.trajectory-mobile__label) {
   background: color-mix(in srgb, var(--maida-paper) 8%, var(--maida-ink));
+}
+
+/* Landing-page preview of the regression-demo PR comment. */
+.verdict-lines {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.verdict-lines > div {
+  display: block;
+  padding: 1rem 0;
+}
+
+.verdict-lines dd {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.pr-comment {
+  max-width: 1060px;
+  margin: 2.5rem auto 0;
+  color: var(--home-ink);
+  background: var(--home-paper-bright);
+  border-color: var(--home-line);
+}
+
+.pr-comment .pr-evidence__topbar {
+  min-height: 3.5rem;
+  gap: 1rem;
+  border-color: var(--home-line);
+  font-size: 0.85rem;
+}
+
+.pr-comment .pr-evidence__topbar span {
+  color: var(--home-muted);
+  font-size: 0.7rem;
+}
+
+.pr-comment__layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.75fr) minmax(0, 2fr);
+}
+
+.pr-comment__verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
+}
+
+.pr-comment__mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  color: var(--maida-ink);
+  background: var(--fail-bright);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 750;
+}
+
+.pr-comment h3 {
+  color: var(--fail-bright);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pr-comment__verdict p { font-size: 0.85rem; }
+
+.pr-comment__body {
+  min-width: 0;
+  padding: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.pr-comment h4 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pr-comment__table { table-layout: fixed; }
+
+.pr-comment__table th,
+.pr-comment__table td {
+  padding: 0.75rem 0.25rem;
+  border-color: var(--home-line);
+}
+
+.pr-comment__changes {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pr-comment__changes li:not(.pr-comment__removed) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
+  background: color-mix(in srgb, var(--fail-soft) 30%, var(--home-paper));
+  border-left: 2px solid var(--fail);
+}
+
+.pr-comment__changes strong { font-size: 0.8rem; }
+.pr-comment__changes p { font-size: 0.75rem; line-height: 1.6; }
+.pr-comment__changes strong + p { margin-top: 0.2rem; }
+.pr-comment__removed { color: var(--home-muted); }
+.pr-comment code { font-family: "JetBrains Mono", monospace; font-size: 0.9em; }
+
+.pr-comment__reason {
+  color: var(--fail);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  .pr-comment__layout { grid-template-columns: minmax(0, 1fr); }
+  .pr-comment__verdict { padding: 1.25rem; gap: 0.65rem; }
+  .pr-comment__mark { display: none; }
+  .pr-comment__body { padding: 1.25rem; }
+}
+
+@media (max-width: 600px) {
+  .verdict-lines { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .verdict-lines > div { padding: 0.75rem 0; }
+  .verdict-lines dd { margin-top: 0.25rem; }
+  .pr-comment { margin-right: 0; margin-left: 0; }
+  .pr-comment .pr-evidence__topbar { flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .pr-comment__table thead th { font-size: 0.5rem; letter-spacing: 0; }
+  .pr-comment__table tbody th,
+  .pr-comment__table tbody td { font-size: 0.7rem; }
+}
+
+/* Separate dense content blocks without reserving empty viewport space. */
+.workflow-chapter .demo-strip {
+  margin-top: 2rem;
+}
+
+.workflow-chapter .install-details {
+  margin-top: 4rem;
+}
+
+.vision-chapter .chapter-heading h2 {
+  max-width: 48rem;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+@media (max-width: 600px) {
+  .hero-chapter { padding-bottom: 3rem; }
+  .workflow-chapter .install-details { margin-top: 3rem; }
 }

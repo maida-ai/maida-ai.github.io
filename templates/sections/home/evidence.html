@@ -10,9 +10,40 @@
       <div><dt class="status-key--fail">FAIL</dt><dd>The observed behavior violates your approved checks.</dd></div>
       <div><dt>INCONCLUSIVE</dt><dd>There is not enough evidence to decide; this is never an approval.</dd></div>
     </dl>
-    <div id="verdict-visual-placeholder" class="verdict-placeholder reveal" data-reveal role="region" aria-label="PR verdict visual placeholder">
-      <p>PR verdict visual placeholder</p>
-      <!-- A separate task will supply the verdict visual here. -->
-    </div>
+    <article id="verdict-report" class="pr-evidence pr-comment reveal" data-reveal aria-labelledby="pr-comment-verdict">
+      <header class="pr-evidence__topbar">
+        <strong>Maida</strong>
+        <span>Demo PR-comment excerpt</span>
+      </header>
+      <div class="pr-comment__layout">
+        <div class="pr-comment__verdict">
+          <span class="pr-comment__mark" aria-hidden="true">!</span>
+          <h3 id="pr-comment-verdict">❌ Maida verdict: fail</h3>
+          <p><strong>5 of 7 checks failed</strong></p>
+        </div>
+        <div class="pr-comment__body">
+          <h4 id="pr-behavior-changes">Top behavior changes</h4>
+          <table class="report-table pr-comment__table" aria-labelledby="pr-behavior-changes">
+            <thead>
+              <tr><th scope="col">Behavior</th><th scope="col">Baseline</th><th scope="col">Current</th><th scope="col">Change</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Tool calls</th><td>3</td><td>7</td><td><strong>+133%</strong></td></tr>
+            </tbody>
+          </table>
+          <ul class="pr-comment__changes" aria-label="Tool changes">
+            <li>
+              <div><strong>Repeated tool call</strong><p><code>search_kb</code> — repeated 1 -&gt; 5 calls</p></div>
+              <span class="pr-comment__reason">tool_call_count_exceeded</span>
+            </li>
+            <li>
+              <div><strong>New tool</strong><p><code>escalate_to_human</code> — new tool, not in baseline</p></div>
+              <span class="pr-comment__reason">new_tool_path</span>
+            </li>
+            <li class="pr-comment__removed"><p><code>send_reply</code> — no longer called</p></li>
+          </ul>
+        </div>
+      </div>
+    </article>
   </div>
 </section>

@@ -23,3 +23,6 @@ bin/tailwindcss
 .vscode/
 *.swp
 .DS_Store
+
+# AI reports
+_ai_reports/

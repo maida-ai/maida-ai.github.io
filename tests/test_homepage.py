@@ -145,7 +145,8 @@ class HomepageTests(unittest.TestCase):
         self.assertIn("Baseline and pull request execution trajectories", text)
         self.assertIn("Your agent still returns the right answer, but now it calls 3x the tools.", text)
         hero = html.split('id="product"', 1)[1].split('</section>', 1)[0]
-        self.assertNotIn("<figure", hero)
+        self.assertIn("<figure", hero)
+        self.assertNotIn("hero-branching", html)
         self.assertNotIn("<code", hero)
 
     def test_site_loads_brand_tokens_before_compiled_styles(self) -> None:
@@ -260,15 +261,27 @@ class HomepageTests(unittest.TestCase):
         self.assertEqual(parser.role_images_without_labels, [])
         self.assertEqual(set(parser.label_references) - set(parser.ids), set())
 
-    def test_verdict_explains_uncertainty_and_reserves_visual(self) -> None:
+    def test_verdict_explains_uncertainty_and_shows_real_demo_excerpt(self) -> None:
         html = self.client.get("/").get_data(as_text=True)
         verdict = html.split('id="evidence"', 1)[1].split('</section>', 1)[0]
         self.assertIn("The verdict on your pull request.", verdict)
         for status in ("PASS", "FAIL", "INCONCLUSIVE"):
             self.assertRegex(verdict, rf'<dt[^>]*>{status}</dt>')
         self.assertIn("There is not enough evidence to decide; this is never an approval.", verdict)
-        self.assertIn('id="verdict-visual-placeholder"', verdict)
-        self.assertIn('aria-label="PR verdict visual placeholder"', verdict)
+        self.assertNotIn("verdict-visual-placeholder", verdict)
+        self.assertIn('<article id="verdict-report"', verdict)
+        for expected in (
+            "Demo PR-comment excerpt", "❌ Maida verdict: fail", "5 of 7 checks failed",
+            "Top behavior changes", "Repeated tool call", "New tool",
+            "escalate_to_human</code> — new tool, not in baseline",
+            "send_reply</code> — no longer called",
+            "search_kb</code> — repeated 1 -&gt; 5 calls",
+            '<th scope="row">Tool calls</th><td>3</td><td>7</td>', "+133%",
+            "tool_call_count_exceeded", "new_tool_path",
+        ):
+            self.assertIn(expected, verdict)
+        self.assertNotIn("<pre", verdict)
+        self.assertNotIn("<details", verdict)
         self.assertNotIn("3 of 8 checks failed", verdict)
 
 
