@@ -1,3 +1,4 @@
+import re
 import unittest
 from html import unescape
 from html.parser import HTMLParser
@@ -14,11 +15,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE_CHAPTERS = (
     "product",
     "why-maida",
-    "gate",
     "behavior",
     "evidence",
-    "how-it-works",
     "local-first",
+    "how-it-works",
     "get-started",
 )
 
@@ -63,7 +63,7 @@ class HomepageTests(unittest.TestCase):
         self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
         self.assertIn("See the broken PR demo", html)
 
-    def test_homepage_is_structured_as_eight_editorial_chapters(self) -> None:
+    def test_homepage_has_seven_chapters_in_requested_order(self) -> None:
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
@@ -72,7 +72,10 @@ class HomepageTests(unittest.TestCase):
         for chapter in HOMEPAGE_CHAPTERS:
             self.assertIn(f'id="{chapter}"', html)
             self.assertIn(f'data-nav-section="{chapter}"', html)
-        self.assertEqual(html.count("data-nav-section="), len(HOMEPAGE_CHAPTERS))
+        self.assertEqual(
+            re.findall(r'data-nav-section="([^"]+)"', html),
+            list(HOMEPAGE_CHAPTERS),
+        )
 
     def test_navigation_acts_as_a_homepage_table_of_contents(self) -> None:
         response = self.client.get("/")
@@ -81,9 +84,9 @@ class HomepageTests(unittest.TestCase):
         html = response.get_data(as_text=True)
         for href, label in (
             ("/#product", "Product"),
-            ("/#why-maida", "Why Maida"),
-            ("/#how-it-works", "How it works"),
-            ("/#local-first", "Local-first"),
+            ("/#why-maida", "The incident"),
+            ("/#how-it-works", "Install"),
+            ("/#local-first", "Runs locally"),
             ("/docs", "Docs"),
         ):
             self.assertIn(f'href="{href}"', html)
@@ -137,11 +140,13 @@ class HomepageTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
         text = unescape(html)
-        self.assertGreaterEqual(html.count('class="trajectory-graphic'), 2)
-        self.assertGreaterEqual(html.count('role="img"'), 3)
+        self.assertEqual(html.count('class="trajectory-graphic'), 1)
+        self.assertGreaterEqual(html.count('role="img"'), 2)
         self.assertIn("Baseline and pull request execution trajectories", text)
-        self.assertIn("The final answer is identical", text)
-        self.assertIn("Behavior: regression", text)
+        self.assertIn("Your agent still returns the right answer, but now it calls 3x the tools.", text)
+        hero = html.split('id="product"', 1)[1].split('</section>', 1)[0]
+        self.assertNotIn("<figure", hero)
+        self.assertNotIn("<code", hero)
 
     def test_site_loads_brand_tokens_before_compiled_styles(self) -> None:
         response = self.client.get("/")
@@ -172,18 +177,51 @@ class HomepageTests(unittest.TestCase):
         ):
             self.assertNotIn(obsolete_class, html)
 
-    def test_homepage_leads_with_demo_and_local_first_claims(self) -> None:
-        response = self.client.get("/")
+    def test_homepage_uses_required_copy_and_metadata(self) -> None:
+        html = self.client.get("/").get_data(as_text=True)
+        text = " ".join(unescape(re.sub(r"<[^>]+>", " ", html)).split())
+        for expected in (
+            "The behavior layer for AI agents",
+            "You review the diff. Nobody reviews the behavior.",
+            "Maida shows how your agent behaves, and fails the pull request check when that behavior changes in ways you didn't approve.",
+            "Runs on your machine or CI runner. No Maida cloud account required.",
+            "Maida's evaluation runs locally and does not upload raw traces to Maida. Your agent's own model and tool calls are a separate flow Maida does not create or remove. Anything you choose to enable states where it sends data and what it sends.",
+            "Delegate the work. Keep the responsibility.",
+            "Agents will do more work than people can watch. That only works if their behavior is understood well enough to be trusted in advance, not inspected after. Maida starts at the pull request, where a change can still be stopped. We are building toward a standard for how agents should behave, on any model and any harness.",
+        ):
+            self.assertIn(expected, text)
+        description = "Maida shows how your AI agent behaves and fails the pull request check when that behavior changes in ways you didn't approve."
+        for attribute in ('name="description"', 'property="og:description"', 'name="twitter:description"'):
+            self.assertIn(f'{attribute} content="{description}"', html)
+        title = "Maida — You review the diff. Nobody reviews the behavior."
+        self.assertIn(f"<title>{title}</title>", html)
+        for attribute in ('property="og:title"', 'name="twitter:title"'):
+            self.assertIn(f'{attribute} content="{title}"', html)
+        for forbidden in ("no telemetry", "telemetry by default", "telemetry is off by default", "everything stays on your machine", "guarantee"):
+            self.assertNotIn(forbidden, text.lower())
 
-        self.assertEqual(response.status_code, 200)
-        text = unescape(response.get_data(as_text=True))
-        self.assertIn("Agents change when code changes.", text)
-        self.assertIn("Catch it before merge.", text)
-        self.assertIn("Don't let broken", text)
-        self.assertIn("maida demo", text)
-        self.assertIn("maida demo --regression", text)
-        self.assertIn("No Maida cloud required", text)
-        self.assertIn("OTel-compatible", text)
+    def test_install_contains_all_commands_and_policy(self) -> None:
+        html = self.client.get("/").get_data(as_text=True)
+        before, rest = html.split('<section\n  id="how-it-works"', 1)
+        install, after = rest.split("</section>", 1)
+        for other in (before, after):
+            self.assertNotIn("maida run", other)
+            self.assertNotIn("maida demo", other)
+            self.assertNotIn("uv tool install", other)
+            self.assertNotIn("<pre", other)
+            self.assertNotIn("policy.yaml", other)
+        for expected in ("maida demo --regression", 'uv tool install "maida-ai==0.6.1"', "maida run my_agent.py", "version: 2", "step_count:", '/docs/reference/policy/'):
+            self.assertIn(expected, unescape(install))
+        hero = before.split('id="product"', 1)[1].split("</section>", 1)[0]
+        self.assertRegex(hero, r'href="/docs/getting-started/">\s*Start with one task')
+        self.assertRegex(hero, r'href="https://github.com/maida-ai/maida">\s*View on GitHub')
+
+    def test_homepage_fragments_resolve(self) -> None:
+        html = self.client.get("/").get_data(as_text=True)
+        ids = set(re.findall(r'\bid="([^"]+)"', html))
+        for fragment in re.findall(r'href="/?#([^"]+)"', html):
+            self.assertIn(fragment, ids)
+        self.assertIn("gate", ids)  # Preserve existing incoming fragments.
 
     def test_motion_has_a_reduced_motion_fallback(self) -> None:
         css = (PROJECT_ROOT / "tailwind" / "input.css").read_text()
@@ -222,22 +260,16 @@ class HomepageTests(unittest.TestCase):
         self.assertEqual(parser.role_images_without_labels, [])
         self.assertEqual(set(parser.label_references) - set(parser.ids), set())
 
-    def test_homepage_shows_local_regression_report_preview(self) -> None:
-        response = self.client.get("/")
-
-        self.assertEqual(response.status_code, 200)
-        html = response.get_data(as_text=True)
-        text = unescape(html)
-        self.assertIn('aria-labelledby="broken-pr-preview-title"', html)
-        self.assertIn("Locally reproduced PR-comment preview", text)
-        self.assertIn("❌ Maida verdict: fail", text)
-        self.assertIn("3 of 8 checks failed", text)
-        self.assertIn("Tool calls", text)
-        self.assertIn("+150%", text)
-        self.assertIn("lookup_order", text)
-        self.assertIn("lookup_order x4", text)
-        self.assertIn("repeated 1 -> 4 calls", text)
-        self.assertIn(f'href="{BROKEN_PR_DEMO_URL}"', html)
+    def test_verdict_explains_uncertainty_and_reserves_visual(self) -> None:
+        html = self.client.get("/").get_data(as_text=True)
+        verdict = html.split('id="evidence"', 1)[1].split('</section>', 1)[0]
+        self.assertIn("The verdict on your pull request.", verdict)
+        for status in ("PASS", "FAIL", "INCONCLUSIVE"):
+            self.assertRegex(verdict, rf'<dt[^>]*>{status}</dt>')
+        self.assertIn("There is not enough evidence to decide; this is never an approval.", verdict)
+        self.assertIn('id="verdict-visual-placeholder"', verdict)
+        self.assertIn('aria-label="PR verdict visual placeholder"', verdict)
+        self.assertNotIn("3 of 8 checks failed", verdict)
 
 
 if __name__ == "__main__":

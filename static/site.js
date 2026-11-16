@@ -67,9 +67,9 @@
   const sections = [...document.querySelectorAll('[data-nav-section]')];
   const sectionLinks = [...document.querySelectorAll('[data-section-link]')];
   const sectionToNavigationItem = {
-    gate: 'product',
     behavior: 'product',
     evidence: 'product',
+    'get-started': 'product',
   };
 
   const setActiveSection = (sectionId) => {

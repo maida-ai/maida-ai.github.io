@@ -2762,3 +2762,107 @@ table tbody tr:last-child td:last-child {
     opacity: 1;
   }
 }
+
+/* Behavior-led homepage copy and reserved verdict visual. */
+.section-anchor {
+  display: block;
+  scroll-margin-top: 6rem;
+}
+
+.verdict-lines {
+  margin-top: 3rem;
+}
+
+.verdict-lines > div {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--home-line);
+}
+
+.verdict-lines dt {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+}
+
+.verdict-lines dd {
+  color: var(--home-muted);
+  line-height: 1.65;
+}
+
+.verdict-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  color: var(--home-muted);
+  text-align: center;
+  border: 1px dashed var(--home-line);
+}
+
+.install-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.install-details h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+.install-details p {
+  margin: 1rem 0;
+  color: var(--home-muted);
+  line-height: 1.65;
+}
+
+.install-details pre {
+  padding: 1.25rem;
+  overflow-x: auto;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+.install-details .text-link {
+  margin-right: 1.5rem;
+}
+
+.vision-chapter {
+  min-height: auto;
+  background: var(--home-paper);
+}
+
+.vision-chapter .chapter-heading__lede {
+  max-width: 48rem;
+}
+
+@media (max-width: 800px) {
+  .install-details,
+  .verdict-lines > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The existing trajectory now sits on the incident chapter's dark surface. */
+.divergence-chapter .trace-track {
+  stroke: #3d433e;
+}
+
+.divergence-chapter .trace-node circle {
+  fill: var(--maida-ink);
+}
+
+.divergence-chapter .trace-node--agent circle {
+  stroke: var(--home-muted);
+}
+
+.divergence-chapter .trajectory-mobile__row > span:not(.trajectory-mobile__label) {
+  background: color-mix(in srgb, var(--maida-paper) 8%, var(--maida-ink));
+}

@@ -1,13 +1,13 @@
 {% extends "_base.html" %}
 
-{% block title %}Maida -- Pre-merge behavioral regression gate for AI agents{% endblock %}
-{% block description %}Your agent still returns the right answer -- but now it calls 3x the tools. Maida is the pre-merge behavioral regression gate for AI agents. Local-first, no cloud.{% endblock %}
+{% block title %}Maida — You review the diff. Nobody reviews the behavior.{% endblock %}
+{% block description %}Maida shows how your AI agent behaves and fails the pull request check when that behavior changes in ways you didn't approve.{% endblock %}
 {% block theme_color %}#F2F1EB{% endblock %}
 {% block maida_theme %}light{% endblock %}
-{% block og_title %}Don't let broken agent changes merge{% endblock %}
-{% block og_description %}Your agent still returns the right answer -- but now it calls 3x the tools. Maida compares agent traces against a checked-in baseline and blocks the PR.{% endblock %}
-{% block tw_title %}Don't let broken agent changes merge{% endblock %}
-{% block tw_description %}Your agent still returns the right answer -- but now it calls 3x the tools. Maida compares agent traces against a checked-in baseline and blocks the PR.{% endblock %}
+{% block og_title %}Maida — You review the diff. Nobody reviews the behavior.{% endblock %}
+{% block og_description %}Maida shows how your AI agent behaves and fails the pull request check when that behavior changes in ways you didn't approve.{% endblock %}
+{% block tw_title %}Maida — You review the diff. Nobody reviews the behavior.{% endblock %}
+{% block tw_description %}Maida shows how your AI agent behaves and fails the pull request check when that behavior changes in ways you didn't approve.{% endblock %}
 {% block body_class %}maida-home{% endblock %}
 
 {% block content %}
@@ -17,11 +17,10 @@
   <main id="main-content">
     {% include "sections/home/hero.html" %}
     {% include "sections/home/divergence.html" %}
-    {% include "sections/home/gate.html" %}
     {% include "sections/home/behavior.html" %}
     {% include "sections/home/evidence.html" %}
-    {% include "sections/home/workflow.html" %}
     {% include "sections/home/local.html" %}
+    {% include "sections/home/workflow.html" %}
     {% include "sections/home/cta.html" %}
   </main>
 
