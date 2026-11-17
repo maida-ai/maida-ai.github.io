@@ -2803,12 +2803,111 @@ table tbody tr:last-child td:last-child {
 }
 
 .vision-chapter {
+  --home-muted: color-mix(in srgb, var(--maida-paper) 62%, var(--maida-ink));
+  --home-line: var(--maida-rule-on-ink);
+  --pass: var(--maida-mint);
   min-height: auto;
-  background: var(--home-paper);
+  color: var(--maida-paper);
+  background: var(--maida-ink);
 }
 
 .vision-chapter .chapter-heading__lede {
   max-width: 48rem;
+}
+
+.vision-ladder {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vision-ladder li {
+  position: relative;
+  padding: 1.5rem 2rem 0 0;
+  border-top: 1px solid var(--home-line);
+}
+
+.vision-ladder li:not(:last-child)::after {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 9px;
+  height: 9px;
+  content: '';
+  background: var(--maida-ink);
+  border-top: 1px solid var(--home-line);
+  border-right: 1px solid var(--home-line);
+  transform: rotate(45deg);
+}
+
+.vision-ladder__now {
+  border-top-color: var(--pass);
+  border-top-width: 2px;
+}
+
+.vision-ladder li > span {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  min-height: 1.5rem;
+  color: var(--home-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vision-ladder li div {
+  margin-top: 2.2rem;
+}
+
+.vision-ladder strong {
+  display: block;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.vision-ladder li:not(.vision-ladder__now) strong {
+  color: color-mix(in srgb, var(--maida-paper) 82%, var(--maida-ink));
+}
+
+.vision-ladder p {
+  max-width: 15rem;
+  margin-top: 0.65rem;
+  color: var(--home-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.vision-chapter__invite {
+  max-width: 48rem;
+  margin-top: 3.5rem;
+  color: var(--home-muted);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.vision-chapter__invite a {
+  margin-left: 0.35rem;
+  color: var(--maida-paper);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.hero-copy .chapter-index {
+  color: var(--pass);
+  font-size: 0.74rem;
+}
+
+.behavior-chapter__note strong {
+  color: var(--maida-paper);
+  font-weight: 650;
 }
 
 @media (max-width: 800px) {
@@ -2992,4 +3091,36 @@ table tbody tr:last-child td:last-child {
 @media (max-width: 600px) {
   .hero-chapter { padding-bottom: 3rem; }
   .workflow-chapter .install-details { margin-top: 3rem; }
+}
+
+@media (max-width: 800px) {
+  .vision-ladder {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+
+  .vision-ladder li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    column-gap: 0.5rem;
+    align-items: start;
+    padding: 1.2rem 0;
+  }
+
+  .vision-ladder li > span {
+    min-height: 0;
+    padding-top: 0.35rem;
+  }
+
+  .vision-ladder li:not(:last-child)::after {
+    display: none;
+  }
+
+  .vision-ladder li div {
+    margin: 0;
+  }
+
+  .vision-ladder p {
+    max-width: none;
+  }
 }

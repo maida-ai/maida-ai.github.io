@@ -69,7 +69,6 @@
   const sectionToNavigationItem = {
     behavior: 'product',
     evidence: 'product',
-    'get-started': 'product',
   };
 
   const setActiveSection = (sectionId) => {

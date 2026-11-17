@@ -87,6 +87,7 @@ class HomepageTests(unittest.TestCase):
             ("/#why-maida", "The incident"),
             ("/#how-it-works", "Install"),
             ("/#local-first", "Runs locally"),
+            ("/#get-started", "Where this goes"),
             ("/docs", "Docs"),
         ):
             self.assertIn(f'href="{href}"', html)
@@ -188,6 +189,13 @@ class HomepageTests(unittest.TestCase):
             "Runs on your machine or CI runner. No Maida cloud account required.",
             "Maida's evaluation runs locally and does not upload raw traces to Maida. Your agent's own model and tool calls are a separate flow Maida does not create or remove. Anything you choose to enable states where it sends data and what it sends.",
             "Delegate the work. Keep the responsibility.",
+            "How your agent actually behaves.",
+            "Accept change on purpose.",
+            "The pull request gate",
+            "Understand how agents decide",
+            "A standard for agent behavior",
+            "Protecting an agent in a setup we haven't shown? Tell us what it does.",
+            "The behavior layer for AI agents. Starting with the pre-merge gate.",
             "Agents will do more work than people can watch. That only works if their behavior is understood well enough to be trusted in advance, not inspected after. Maida starts at the pull request, where a change can still be stopped. We are building toward a standard for how agents should behave, on any model and any harness.",
         ):
             self.assertIn(expected, text)
