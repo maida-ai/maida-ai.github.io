@@ -1,10 +1,11 @@
 .PHONY: dev css docs docs-sync docs-check build clean
 
 TAILWIND_BIN ?= ./bin/tailwindcss
+WEB_PORT ?= 5000
 
 dev: docs
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --watch &
-	uv run python -m flask --app app run --debug
+	uv run python -m flask --app app run --debug --port $(WEB_PORT)
 
 css:
 	$(TAILWIND_BIN) -c tailwind.config.js -i tailwind/input.css -o static/styles.css --minify

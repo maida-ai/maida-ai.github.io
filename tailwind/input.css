@@ -539,8 +539,8 @@ table tbody tr:last-child td:last-child {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 92svh;
-  padding: clamp(6.5rem, 10vw, 10rem) 0;
+  min-height: auto;
+  padding: clamp(4rem, 6vw, 6rem) 0;
   scroll-margin-top: 4.25rem;
 }
 
@@ -574,7 +574,7 @@ table tbody tr:last-child td:last-child {
 .cta-chapter h2 {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(3.2rem, 6.4vw, 6.1rem);
+  font-size: clamp(2.7rem, 4.8vw, 4.5rem);
   font-weight: 740;
   line-height: 0.98;
   letter-spacing: -0.065em;
@@ -705,9 +705,9 @@ table tbody tr:last-child td:last-child {
 /* Chapter 01 — Hero */
 .hero-chapter {
   align-items: flex-start;
-  min-height: 100svh;
-  padding-top: clamp(7.75rem, 10vw, 9rem);
-  padding-bottom: 4.5rem;
+  min-height: auto;
+  padding-top: clamp(6.5rem, 8vw, 7.5rem);
+  padding-bottom: 4rem;
   background: var(--home-paper);
 }
 
@@ -718,7 +718,7 @@ table tbody tr:last-child td:last-child {
 .hero-copy h1 {
   max-width: 1090px;
   margin: 0;
-  font-size: clamp(4rem, 7.1vw, 7rem);
+  font-size: clamp(4rem, 6.4vw, 6rem);
   font-weight: 760;
   line-height: 0.9;
   letter-spacing: -0.072em;
@@ -746,7 +746,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .hero-trajectory {
-  margin-top: clamp(3.5rem, 6vw, 5rem);
+  margin-top: 3rem;
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
 }
@@ -887,7 +887,7 @@ table tbody tr:last-child td:last-child {
   --home-line: var(--maida-rule-on-ink);
   --pass: var(--maida-mint);
   --fail: var(--maida-coral);
-  min-height: 110svh;
+  min-height: auto;
   color: var(--maida-paper);
   background: var(--maida-ink);
 }
@@ -897,7 +897,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .divergence-comparison {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 2rem;
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
 }
@@ -1223,7 +1223,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .behavior-fingerprint {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 3rem;
   background: color-mix(in srgb, var(--maida-paper) 5%, var(--maida-ink));
   border-top: 1px solid var(--maida-rule-on-ink);
   border-bottom: 1px solid var(--maida-rule-on-ink);
@@ -1452,7 +1452,7 @@ table tbody tr:last-child td:last-child {
 }
 
 .pr-evidence {
-  margin-top: clamp(4rem, 7vw, 6.5rem);
+  margin-top: 2rem;
   overflow: hidden;
   background: #fcfbf7;
   border: 1px solid #cbc9c1;
@@ -1715,7 +1715,7 @@ table tbody tr:last-child td:last-child {
 .workflow-sequence {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  margin-top: clamp(4.5rem, 8vw, 7rem);
+  margin-top: 2.5rem;
   counter-reset: workflow;
 }
 
@@ -2122,13 +2122,13 @@ table tbody tr:last-child td:last-child {
 @media (max-width: 800px) {
   .home-chapter {
     min-height: auto;
-    padding: 6.5rem 0;
+    padding: 4rem 0;
   }
 
   .hero-chapter {
-    min-height: 100svh;
-    padding-top: 8.5rem;
-    padding-bottom: 3.5rem;
+    min-height: auto;
+    padding-top: 6.5rem;
+    padding-bottom: 2rem;
   }
 
   .trajectory-graphic--hero,
@@ -2139,7 +2139,7 @@ table tbody tr:last-child td:last-child {
   .trajectory-mobile {
     display: grid;
     gap: 1.5rem;
-    padding: 2.5rem 0;
+    padding: 4rem 0;
   }
 
   .trajectory-mobile__row {
@@ -2508,12 +2508,12 @@ table tbody tr:last-child td:last-child {
   }
 
   .home-chapter {
-    padding: 5.75rem 0;
+    padding: 4rem 0;
   }
 
   .hero-chapter {
-    padding-top: 7.25rem;
-    padding-bottom: 3.5rem;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
   }
 
   .chapter-index {
@@ -2528,6 +2528,7 @@ table tbody tr:last-child td:last-child {
 
   .hero-copy h1 {
     font-size: clamp(2.9rem, 11.5vw, 4rem);
+    text-wrap: balance;
   }
 
   .hero-copy__lede {
@@ -2760,5 +2761,366 @@ table tbody tr:last-child td:last-child {
 
   .js .reveal .trace-node {
     opacity: 1;
+  }
+}
+
+/* Behavior-led homepage copy. */
+.section-anchor {
+  display: block;
+  scroll-margin-top: 6rem;
+}
+
+.install-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.install-details h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+.install-details p {
+  margin: 1rem 0;
+  color: var(--home-muted);
+  line-height: 1.65;
+}
+
+.install-details pre {
+  padding: 1.25rem;
+  overflow-x: auto;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+.install-details .text-link {
+  margin-right: 1.5rem;
+}
+
+.vision-chapter {
+  --home-muted: color-mix(in srgb, var(--maida-paper) 62%, var(--maida-ink));
+  --home-line: var(--maida-rule-on-ink);
+  --pass: var(--maida-mint);
+  min-height: auto;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
+}
+
+.vision-chapter .chapter-heading__lede {
+  max-width: 48rem;
+}
+
+.vision-ladder {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vision-ladder li {
+  position: relative;
+  padding: 1.5rem 2rem 0 0;
+  border-top: 1px solid var(--home-line);
+}
+
+.vision-ladder li:not(:last-child)::after {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 9px;
+  height: 9px;
+  content: '';
+  background: var(--maida-ink);
+  border-top: 1px solid var(--home-line);
+  border-right: 1px solid var(--home-line);
+  transform: rotate(45deg);
+}
+
+.vision-ladder__now {
+  border-top-color: var(--pass);
+  border-top-width: 2px;
+}
+
+.vision-ladder li > span {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  min-height: 1.5rem;
+  color: var(--home-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vision-ladder li div {
+  margin-top: 2.2rem;
+}
+
+.vision-ladder strong {
+  display: block;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.vision-ladder li:not(.vision-ladder__now) strong {
+  color: color-mix(in srgb, var(--maida-paper) 82%, var(--maida-ink));
+}
+
+.vision-ladder p {
+  max-width: 15rem;
+  margin-top: 0.65rem;
+  color: var(--home-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.vision-chapter__invite {
+  max-width: 48rem;
+  margin-top: 3.5rem;
+  color: var(--home-muted);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.vision-chapter__invite a {
+  margin-left: 0.35rem;
+  color: var(--maida-paper);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.hero-copy .chapter-index {
+  color: var(--pass);
+  font-size: 0.74rem;
+}
+
+.behavior-chapter__note strong {
+  color: var(--maida-paper);
+  font-weight: 650;
+}
+
+@media (max-width: 800px) {
+  .install-details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The existing trajectory now sits on the incident chapter's dark surface. */
+.divergence-chapter .trace-track {
+  stroke: #3d433e;
+}
+
+.divergence-chapter .trace-node circle {
+  fill: var(--maida-ink);
+}
+
+.divergence-chapter .trace-node--agent circle {
+  stroke: var(--home-muted);
+}
+
+.divergence-chapter .trajectory-mobile__row > span:not(.trajectory-mobile__label) {
+  background: color-mix(in srgb, var(--maida-paper) 8%, var(--maida-ink));
+}
+
+/* Landing-page preview of the regression-demo PR comment. */
+.verdict-lines {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.verdict-lines > div {
+  display: block;
+  padding: 1rem 0;
+}
+
+.verdict-lines dd {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.pr-comment {
+  max-width: 1060px;
+  margin: 2.5rem auto 0;
+  color: var(--home-ink);
+  background: var(--home-paper-bright);
+  border-color: var(--home-line);
+}
+
+.pr-comment .pr-evidence__topbar {
+  min-height: 3.5rem;
+  gap: 1rem;
+  border-color: var(--home-line);
+  font-size: 0.85rem;
+}
+
+.pr-comment .pr-evidence__topbar span {
+  color: var(--home-muted);
+  font-size: 0.7rem;
+}
+
+.pr-comment__layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.75fr) minmax(0, 2fr);
+}
+
+.pr-comment__verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: var(--maida-paper);
+  background: var(--maida-ink);
+}
+
+.pr-comment__mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  color: var(--maida-ink);
+  background: var(--fail-bright);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 750;
+}
+
+.pr-comment h3 {
+  color: var(--fail-bright);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pr-comment__verdict p { font-size: 0.85rem; }
+
+.pr-comment__body {
+  min-width: 0;
+  padding: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.pr-comment h4 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pr-comment__table { table-layout: fixed; }
+
+.pr-comment__table th,
+.pr-comment__table td {
+  padding: 0.75rem 0.25rem;
+  border-color: var(--home-line);
+}
+
+.pr-comment__changes {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pr-comment__changes li:not(.pr-comment__removed) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
+  background: color-mix(in srgb, var(--fail-soft) 30%, var(--home-paper));
+  border-left: 2px solid var(--fail);
+}
+
+.pr-comment__changes strong { font-size: 0.8rem; }
+.pr-comment__changes p { font-size: 0.75rem; line-height: 1.6; }
+.pr-comment__changes strong + p { margin-top: 0.2rem; }
+.pr-comment__removed { color: var(--home-muted); }
+.pr-comment code { font-family: "JetBrains Mono", monospace; font-size: 0.9em; }
+
+.pr-comment__reason {
+  color: var(--fail);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  .pr-comment__layout { grid-template-columns: minmax(0, 1fr); }
+  .pr-comment__verdict { padding: 1.25rem; gap: 0.65rem; }
+  .pr-comment__mark { display: none; }
+  .pr-comment__body { padding: 1.25rem; }
+}
+
+@media (max-width: 600px) {
+  .verdict-lines { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .verdict-lines > div { padding: 0.75rem 0; }
+  .verdict-lines dd { margin-top: 0.25rem; }
+  .pr-comment { margin-right: 0; margin-left: 0; }
+  .pr-comment .pr-evidence__topbar { flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .pr-comment__table thead th { font-size: 0.5rem; letter-spacing: 0; }
+  .pr-comment__table tbody th,
+  .pr-comment__table tbody td { font-size: 0.7rem; }
+}
+
+/* Separate dense content blocks without reserving empty viewport space. */
+.workflow-chapter .demo-strip {
+  margin-top: 2rem;
+}
+
+.workflow-chapter .install-details {
+  margin-top: 4rem;
+}
+
+.vision-chapter .chapter-heading h2 {
+  max-width: 48rem;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+@media (max-width: 600px) {
+  .hero-chapter { padding-bottom: 3rem; }
+  .workflow-chapter .install-details { margin-top: 3rem; }
+}
+
+@media (max-width: 800px) {
+  .vision-ladder {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+
+  .vision-ladder li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    column-gap: 0.5rem;
+    align-items: start;
+    padding: 1.2rem 0;
+  }
+
+  .vision-ladder li > span {
+    min-height: 0;
+    padding-top: 0.35rem;
+  }
+
+  .vision-ladder li:not(:last-child)::after {
+    display: none;
+  }
+
+  .vision-ladder li div {
+    margin: 0;
+  }
+
+  .vision-ladder p {
+    max-width: none;
   }
 }

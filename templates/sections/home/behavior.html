@@ -7,12 +7,14 @@
   <div class="chapter-shell">
     <header class="chapter-heading chapter-heading--split reveal" data-reveal>
       <div>
-        <p class="chapter-index"><span>04</span> Behavioral signal</p>
-        <h2 id="behavior-title">Maida sees the shape<br />of agent execution.</h2>
+        <p class="chapter-index"><span>03</span> The behavior</p>
+        <h2 id="behavior-title">How your agent actually behaves.</h2>
       </div>
       <p class="chapter-heading__aside">
-        Sequence, repetition, branching, timing, and cost become one behavior
-        fingerprint--then Maida compares that shape across the code change.
+        Which tools it calls and in what order. How many calls and steps it
+        takes, where it retries, where it risks a loop. How latency and cost
+        move with all of it. That is the behavior you review, and the behavior
+        every later change is held to.
       </p>
     </header>
 
@@ -80,7 +82,7 @@
             </tr>
             <tr>
               <th scope="row">Loop risk</th><td>none</td><td>detected</td>
-              <td><span class="change-label change-label--fail">blocked</span></td>
+              <td><span class="change-label change-label--fail">flagged</span></td>
             </tr>
             <tr style="--baseline: 24%; --candidate: 76%;">
               <th scope="row">Latency</th><td>1.2 s</td><td>3.8 s</td>
@@ -96,8 +98,9 @@
     </figure>
 
     <p class="behavior-chapter__note reveal" data-reveal>
-      Policy decides which differences are acceptable. A changed fingerprint
-      is evidence--not a vague score.
+      <strong>Accept change on purpose.</strong> You decide which behavior
+      changes are acceptable. Maida compares each run with the behavior you
+      approved, and nothing else.
     </p>
   </div>
 </section>

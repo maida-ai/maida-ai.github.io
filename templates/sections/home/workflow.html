@@ -6,8 +6,8 @@
 >
   <div class="chapter-shell">
     <header class="chapter-heading reveal" data-reveal>
-      <p class="chapter-index"><span>06</span> How it works</p>
-      <h2 id="workflow-title">From one agent run<br />to a merge gate.</h2>
+      <p class="chapter-index"><span>06</span> Install</p>
+      <h2 id="workflow-title">Install Maida.</h2>
     </header>
 
     <ol class="workflow-sequence reveal" data-reveal>
@@ -33,11 +33,38 @@
       <div class="demo-strip__copy">
         <span>Try the complete story first</span>
         <h3>No clone. No API keys.</h3>
-        <p>A deterministic demo goes from healthy trace to blocked regression.</p>
+        <p>A deterministic demo goes from a healthy trace to a failed check.</p>
       </div>
       <pre aria-label="Maida demo commands"><code><span>$</span> uv tool install "maida-ai==0.6.1"
 <span>$</span> maida demo --regression</code></pre>
       <a class="button button--dark" href="/docs/getting-started/">Open quickstart <span aria-hidden="true">-></span></a>
+    </div>
+    <div class="install-details reveal" data-reveal>
+      <div>
+        <h3>Choose the behavior you want to protect.</h3>
+        <p>A short policy example from the pinned release docs:</p>
+        <pre aria-label="Example .maida/policy.yaml"><code>version: 2
+trials: 3
+fail_fast: true
+metrics:
+  stop_condition_reached: {kind: invariant, require: true}
+  step_count:
+    kind: measured
+    direction: upper
+    tolerance: {relative: 0.5}</code></pre>
+        <a class="text-link" href="/docs/reference/policy/">Read the policy reference <span aria-hidden="true">-></span></a>
+      </div>
+      <div>
+        <h3>Add the check to your pull request.</h3>
+        <p>For a traced Python entrypoint with a reviewed baseline:</p>
+        <pre aria-label="Maida gate command"><code>maida run my_agent.py --baseline .maida/baselines/my_agent.json \
+  --policy .maida/policy.yaml --format markdown</code></pre>
+        <p>Follow the <a href="https://github.com/maida-ai/maida-assert#blocking-mode-and-required-repository-settings">Action setup</a> to configure a required PR check that reads the verdict.</p>
+        <p>GitHub Action: <code>maida-ai/maida-assert@v0.6.0</code></p>
+        <p>Check permission: <code>checks: write</code></p>
+        <a class="text-link" href="https://github.com/maida-ai/maida-tutorials/tree/main/demos/broken_pr">See the broken PR demo <span aria-hidden="true">-></span></a>
+        <a class="text-link" href="/docs/">Docs <span aria-hidden="true">-></span></a>
+      </div>
     </div>
   </div>
 </section>
