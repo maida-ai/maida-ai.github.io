@@ -2528,6 +2528,7 @@ table tbody tr:last-child td:last-child {
 
   .hero-copy h1 {
     font-size: clamp(2.9rem, 11.5vw, 4rem);
+    text-wrap: balance;
   }
 
   .hero-copy__lede {
